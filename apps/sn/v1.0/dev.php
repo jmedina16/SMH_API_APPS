@@ -35,6 +35,9 @@ class sn {
             case "remove_facebook_authorization":
                 $this->remove_facebook_authorization();
                 break;
+            case 'facebook_deauthorization':
+                $this->facebook_deauthorization();
+                break;
             case "create_sn_livestreams":
                 $this->create_sn_livestreams();
                 break;
@@ -116,6 +119,13 @@ class sn {
         $ks = urlencode($_POST['ks']);
         $action = "sn_config/remove_facebook_authorization?";
         $args = "ks=" . $ks;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function facebook_deauthorization() {
+        $signed_request = urlencode($_GET['signed_request']);
+        $action = "sn_config/facebook_deauthorization?";
+        $args = "signed_request=" . $signed_request;
         echo $this->curl_request($action, $args);
     }
 

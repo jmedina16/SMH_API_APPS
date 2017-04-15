@@ -36,7 +36,7 @@ function store_facebook_authorization($pid, $ks, $code) {
                 echo '<div style="width: 675px; margin-left: auto; margin-right: auto; margin-top: 150px; font-size: 17px;" id="loading">
                         <div style="margin: 30px auto 50px; width: 675px; margin-left: auto; margin-right: auto; text-align: center; height: 125px;">
                             <h3><img src="/img/facebook_logo.png" width="150px"></h3>
-                            <h3>You have successfully authorized your Facebook account!</h3>
+                            <h3>You have successfully connected your Facebook account!</h3>
                             You may now close this window. 
                         </div>
                         <div class="modal-footer">

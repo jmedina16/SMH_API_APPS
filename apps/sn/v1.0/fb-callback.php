@@ -64,7 +64,7 @@ function store_facebook_authorization($pid, $ks, $code) {
             echo '<div style="width: 500px; margin-left: auto; margin-right: auto; margin-top: 200px; font-size: 17px;" id="loading">
             <div style="margin-top: 30px; width: 450px; margin-left: auto; margin-right: auto; text-align: center; height: 125px;">
                 <h3><img src="/img/facebook_logo.png" width="150px"></h3>
-                Authorization has been denied to your Facebook account. 
+                Access has been denied to your Facebook account. 
             </div>            
         </div>';
         } else {

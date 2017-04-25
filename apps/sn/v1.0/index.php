@@ -23,11 +23,20 @@ class sn {
             case "get_sn_config":
                 $this->get_sn_config();
                 break;
+            case "store_facebook_authorization":
+                $this->store_facebook_authorization();
+                break;
             case "store_youtube_authorization":
                 $this->store_youtube_authorization();
                 break;
             case "remove_youtube_authorization":
                 $this->remove_youtube_authorization();
+                break;
+            case "remove_facebook_authorization":
+                $this->remove_facebook_authorization();
+                break;
+            case 'facebook_deauthorization':
+                $this->facebook_deauthorization();
                 break;
             case "create_sn_livestreams":
                 $this->create_sn_livestreams();
@@ -56,6 +65,12 @@ class sn {
             case 'youtube_entry_complete':
                 $this->youtube_entry_complete();
                 break;
+            case 'sn_livestreams_complete':
+                $this->sn_livestreams_complete();
+                break;
+            case 'create_fb_livestream':
+                $this->create_fb_livestream();
+                break;
             default:
                 echo "Action not found!";
         }
@@ -77,6 +92,14 @@ class sn {
         echo $this->curl_request($action, $args);
     }
 
+    public function store_facebook_authorization() {
+        $ks = urlencode($_GET['ks']);
+        $code = $_GET['code'];
+        $action = "sn_config/store_facebook_authorization?";
+        $args = "ks=" . $ks . "&code=" . $code;
+        echo $this->curl_request($action, $args);
+    }
+
     public function store_youtube_authorization() {
         $ks = urlencode($_GET['ks']);
         $code = $_GET['code'];
@@ -89,6 +112,20 @@ class sn {
         $ks = urlencode($_POST['ks']);
         $action = "sn_config/remove_youtube_authorization?";
         $args = "ks=" . $ks;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function remove_facebook_authorization() {
+        $ks = urlencode($_POST['ks']);
+        $action = "sn_config/remove_facebook_authorization?";
+        $args = "ks=" . $ks;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function facebook_deauthorization() {
+        $signed_request = urlencode($_GET['signed_request']);
+        $action = "sn_config/facebook_deauthorization?";
+        $args = "signed_request=" . $signed_request;
         echo $this->curl_request($action, $args);
     }
 
@@ -168,6 +205,27 @@ class sn {
         $eid = urlencode($_POST['eid']);
         $action = "sn_config/youtube_entry_complete?";
         $args = "ks=" . $ks . "&eid=" . $eid;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function sn_livestreams_complete() {
+        $ks = urlencode($_POST['ks']);
+        $eid = urlencode($_POST['eid']);
+        $action = "sn_config/sn_livestreams_complete?";
+        $args = "ks=" . $ks . "&eid=" . $eid;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function create_fb_livestream() {
+        $ks = urlencode($_POST['ks']);
+        $stream_to = $_POST['stream_to'];
+        $asset_id = $_POST['asset_id'];
+        $privacy = $_POST['privacy'];
+        $create_vod = $_POST['create_vod'];
+        $cont_streaming = $_POST['cont_streaming'];
+        $projection = $_POST['projection'];
+        $action = "sn_config/create_fb_livestream?";
+        $args = "ks=" . $ks . "&stream_to=" . $stream_to . "&asset_id=" . $asset_id . "&privacy=" . $privacy . "&create_vod=" . $create_vod . "&cont_streaming=" . $cont_streaming . '&projection=' . $projection;
         echo $this->curl_request($action, $args);
     }
 

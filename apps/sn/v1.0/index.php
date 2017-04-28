@@ -71,6 +71,9 @@ class sn {
             case 'create_fb_livestream':
                 $this->create_fb_livestream();
                 break;
+            case 'resync_fb_account':
+                $this->resync_fb_account();
+                break;
             default:
                 echo "Action not found!";
         }
@@ -226,6 +229,13 @@ class sn {
         $projection = $_POST['projection'];
         $action = "sn_config/create_fb_livestream?";
         $args = "ks=" . $ks . "&stream_to=" . $stream_to . "&asset_id=" . $asset_id . "&privacy=" . $privacy . "&create_vod=" . $create_vod . "&cont_streaming=" . $cont_streaming . '&projection=' . $projection;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function resync_fb_account() {
+        $ks = urlencode($_GET['ks']);
+        $action = "sn_config/resync_fb_account?";
+        $args = "ks=" . $ks;
         echo $this->curl_request($action, $args);
     }
 

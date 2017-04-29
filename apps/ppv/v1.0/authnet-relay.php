@@ -65,7 +65,7 @@ class authnet {
     }
 
     public function recordOrder($sm_ak, $order_id, $firstName, $lastName, $payerEmail, $city, $paymentStatus, $avsCode, $authCode, $transactionId, $itemName, $ticket_type, $smh_aff) {
-        $url = "http://api.streamingmediahosting.com/index.php/api/ppv_orders/insert_authnet_details?sm_ak=" . $sm_ak . "&order_id=" . $order_id . "&firstName=" . $firstName . "&lastName=" . $lastName . "&payerEmail=" . $payerEmail . "&city=" . $city . "&paymentStatus=" . $paymentStatus . "&avsCode=" . $avsCode . "&authCode=" . $authCode . "&transactionId=" . $transactionId . "&itemName=" . $itemName . "&ticket_type=" . $ticket_type . "&smh_aff=" . $smh_aff . "&format=json";
+        $url = "http://api.streamingmediahosting.com/index.php/api_dev/ppv_orders/insert_authnet_details?sm_ak=" . $sm_ak . "&order_id=" . $order_id . "&firstName=" . $firstName . "&lastName=" . $lastName . "&payerEmail=" . $payerEmail . "&city=" . $city . "&paymentStatus=" . $paymentStatus . "&avsCode=" . $avsCode . "&authCode=" . $authCode . "&transactionId=" . $transactionId . "&itemName=" . $itemName . "&ticket_type=" . $ticket_type . "&smh_aff=" . $smh_aff . "&format=json";
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -75,7 +75,7 @@ class authnet {
     }
 
     public function createRecurringProfile($sm_ak, $order_id, $sub_id, $payerEmail, $firstName, $lastName, $city) {
-        $url = "http://api.streamingmediahosting.com/index.php/api/ppv_orders/createAuthnetSub?sm_ak=" . $sm_ak . "&order_id=" . $order_id . "&sub_id=" . $sub_id . "&firstName=" . $firstName . "&lastName=" . $lastName . "&payerEmail=" . $payerEmail . "&city=" . $city . "&format=json";
+        $url = "http://api.streamingmediahosting.com/index.php/api_dev/ppv_orders/createAuthnetSub?sm_ak=" . $sm_ak . "&order_id=" . $order_id . "&sub_id=" . $sub_id . "&firstName=" . $firstName . "&lastName=" . $lastName . "&payerEmail=" . $payerEmail . "&city=" . $city . "&format=json";
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

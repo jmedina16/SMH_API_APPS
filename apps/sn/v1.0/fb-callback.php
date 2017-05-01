@@ -37,7 +37,7 @@ function store_facebook_authorization($pid, $ks, $code) {
                         <div style="margin: 30px auto 50px; width: 675px; margin-left: auto; margin-right: auto; text-align: center; height: 125px;">
                             <h3><img src="/img/facebook_logo.png" width="150px"></h3>
                             <h3>You have successfully connected your Facebook account!</h3>
-                            You may now close this window. 
+                            To complete your setup, please close this window and choose where you will stream to by configuring the Facebook Live settings on the Platform. 
                         </div>
                         <div class="modal-footer">
                             <button style="margin-left: auto; margin-right: auto; width: 112px; display: block; font-size: 15px;" type="button" class="btn btn-primary" data-dismiss="modal" onclick="closeWindow();">close</button>

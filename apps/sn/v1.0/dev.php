@@ -74,6 +74,9 @@ class sn {
             case 'resync_fb_account':
                 $this->resync_fb_account();
                 break;
+            case 'get_facebook_embed':
+                $this->get_facebook_embed();
+                break;
             default:
                 echo "Action not found!";
         }
@@ -236,6 +239,12 @@ class sn {
         $ks = urlencode($_GET['ks']);
         $action = "sn_config/resync_fb_account?";
         $args = "ks=" . $ks;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function get_facebook_embed() {
+        $action = "sn_config/get_facebook_embed?";
+        $args = "";
         echo $this->curl_request($action, $args);
     }
 

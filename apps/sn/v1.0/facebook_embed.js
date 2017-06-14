@@ -21,7 +21,7 @@ smh_facebook.prototype = {
             dataType: 'json'
         }).done(function (data) {
             if (data['success']) {
-                var src = data['src'] + '&width=' + width;
+                var src = data['src'] + '&width=' + width + '&height='+height;
                 $smh('#smhFacebookContainer').html('<iframe width="' + width + '" height="' + height + '" src="' + src + '" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allowFullScreen="true"></iframe>');
             }
         });

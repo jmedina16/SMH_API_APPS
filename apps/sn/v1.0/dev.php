@@ -77,6 +77,9 @@ class sn {
             case 'get_facebook_embed':
                 $this->get_facebook_embed();
                 break;
+            case 'upload_queued_video_to_youtube':
+                $this->upload_queued_video_to_youtube();
+                break;
             default:
                 echo "Action not found!";
         }
@@ -245,6 +248,13 @@ class sn {
     public function get_facebook_embed() {
         $action = "sn_config/get_facebook_embed?";
         $args = "";
+        echo $this->curl_request($action, $args);
+    }
+
+    public function upload_queued_video_to_youtube() {
+        $eid = urlencode($_POST['eid']);
+        $action = "sn_config/upload_queued_video_to_youtube?";
+        $args = "eid=" . $eid;
         echo $this->curl_request($action, $args);
     }
 

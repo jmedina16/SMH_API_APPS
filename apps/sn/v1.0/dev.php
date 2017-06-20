@@ -83,6 +83,9 @@ class sn {
             case 'upload_queued_video_to_youtube':
                 $this->upload_queued_video_to_youtube();
                 break;
+            case 'update_yt_settings':
+                $this->update_yt_settings();
+                break;
             default:
                 echo "Action not found!";
         }
@@ -265,6 +268,14 @@ class sn {
         $eid = urlencode($_POST['eid']);
         $action = "sn_config/upload_queued_video_to_youtube?";
         $args = "eid=" . $eid;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function update_yt_settings() {
+        $ks = urlencode($_POST['ks']);
+        $auto_upload = urlencode($_POST['auto_upload']);
+        $action = "sn_config/update_yt_settings?";
+        $args = "ks=" . $ks . "&auto_upload=" . $auto_upload;
         echo $this->curl_request($action, $args);
     }
 

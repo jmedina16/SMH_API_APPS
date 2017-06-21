@@ -86,6 +86,9 @@ class sn {
             case 'update_yt_settings':
                 $this->update_yt_settings();
                 break;
+            case 'add_to_upload_queue':
+                $this->add_to_upload_queue();
+                break;
             default:
                 echo "Action not found!";
         }
@@ -276,6 +279,13 @@ class sn {
         $auto_upload = urlencode($_POST['auto_upload']);
         $action = "sn_config/update_yt_settings?";
         $args = "ks=" . $ks . "&auto_upload=" . $auto_upload;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function add_to_upload_queue() {
+        $eid = urlencode($_GET['eid']);
+        $action = "sn_config/add_to_upload_queue?";
+        $args = "eid=" . $eid;
         echo $this->curl_request($action, $args);
     }
 

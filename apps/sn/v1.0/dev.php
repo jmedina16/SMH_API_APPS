@@ -105,8 +105,9 @@ class sn {
 
     public function get_sn_config() {
         $ks = urlencode($_GET['ks']);
+        $projection = urlencode($_GET['projection']);
         $action = "sn_config/get_sn_config?";
-        $args = "ks=" . $ks;
+        $args = "ks=" . $ks . "&projection=" . $projection;
         echo $this->curl_request($action, $args);
     }
 
@@ -121,8 +122,9 @@ class sn {
     public function store_youtube_authorization() {
         $ks = urlencode($_GET['ks']);
         $code = $_GET['code'];
+        $projection = urlencode($_GET['projection']);
         $action = "sn_config/store_youtube_authorization?";
-        $args = "ks=" . $ks . "&code=" . $code;
+        $args = "ks=" . $ks . "&code=" . $code . "&projection=" . $projection;
         echo $this->curl_request($action, $args);
     }
 

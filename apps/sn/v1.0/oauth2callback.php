@@ -1,8 +1,8 @@
 <?php
 
-function store_youtube_authorization($pid, $ks, $code) {
+function store_youtube_authorization($pid, $ks, $projection, $code) {
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, "https://mediaplatform.streamingmediahosting.com/apps/sn/v1.0/dev.php?action=store_youtube_authorization&pid=" . $pid . "&ks=" . $ks . "&code=" . $code);
+    curl_setopt($ch, CURLOPT_URL, "http://devplatform.streamingmediahosting.com/apps/sn/v1.0/dev.php?action=store_youtube_authorization&pid=" . $pid . "&ks=" . $ks . "&projection=" . $projection . "&code=" . $code);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     $output = curl_exec($ch);
     curl_close($ch);
@@ -30,7 +30,8 @@ function store_youtube_authorization($pid, $ks, $code) {
             $state = explode("|", $_GET['state']);
             $pid = $state[0];
             $ks = $state[1];
-            $auth = store_youtube_authorization($pid, $ks, $_GET['code']);
+            $projection = $state[2];
+            $auth = store_youtube_authorization($pid, $ks, $projection, $_GET['code']);
             $response = json_decode($auth, true);
             if ($response['success']) {
                 echo '<div style="width: 675px; margin-left: auto; margin-right: auto; margin-top: 150px; font-size: 17px;" id="loading">

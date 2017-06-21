@@ -6,22 +6,19 @@ class uploadQueue {
     protected $partner_id;
     protected $entry_id;
     protected $status;
+    protected $media_type;
 
     public function __construct() {
-        syslog(LOG_NOTICE, "SMH DEBUG : curl_request1: " . print_r($_POST, true));
-        syslog(LOG_NOTICE, "SMH DEBUG : curl_request2: " . print_r($_POST["notification_type"], true));
         $this->notify_type = $_POST["notification_type"];
         $this->partner_id = $_POST["partner_id"];
         $this->entry_id = $_POST["entry_id"];
         $this->status = $_POST["status"];
-        //syslog(LOG_NOTICE, "SMH DEBUG : notify_type: " . print_r($this->notify_type, true));
+        $this->media_type = $_POST["media_type"];
     }
 
     //run api
     public function run() {
-        syslog(LOG_NOTICE, "SMH DEBUG : notify_type: " . print_r($this->notify_type, true));
-        syslog(LOG_NOTICE, "SMH DEBUG : status: " . print_r($this->status, true));
-        if ($this->notify_type == 'entry_update' && $this->status == 2) {
+        if ($this->notify_type == 'entry_update' && $this->status == 2 && $this->media_type == 1) {
             $this->curl_request($this->partner_id, $this->entry_id);
         }
     }
@@ -32,7 +29,6 @@ class uploadQueue {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $output = curl_exec($ch);
         curl_close($ch);
-        syslog(LOG_NOTICE, "SMH DEBUG : curl_request: " . print_r($output, true));
         return $output;
     }
 

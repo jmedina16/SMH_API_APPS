@@ -9,6 +9,7 @@ class uploadQueue {
     protected $media_type;
 
     public function __construct() {
+        syslog(LOG_NOTICE, "SMH DEBUG : uploadQueue: " . print_r($_POST, true));
         $this->notify_type = $_POST["notification_type"];
         $this->partner_id = $_POST["partner_id"];
         $this->entry_id = $_POST["entry_id"];
@@ -18,7 +19,7 @@ class uploadQueue {
 
     //run api
     public function run() {
-        if ($this->notify_type == 'entry_update' && $this->status == 2 && $this->media_type == 1) {
+        if ($this->notify_type == 'entry_add' && $this->status == 7 && $this->media_type == 1) {
             $this->curl_request($this->partner_id, $this->entry_id);
         }
     }

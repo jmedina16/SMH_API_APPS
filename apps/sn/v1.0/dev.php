@@ -296,9 +296,11 @@ class sn {
 
     public function update_sn_vod_config() {
         $ks = urlencode($_POST['ks']);
-        $platforms = urlencode($_POST['platforms']);
+        $eid = urlencode($_POST['eid']);
+        $snConfig = urlencode($_POST['snConfig']);
+        $projection = urlencode($_POST['projection']);
         $action = "sn_config/update_sn_vod_config?";
-        $args = "ks=" . $ks . "&platforms=" . $platforms;
+        $args = "ks=" . $ks . "&snConfig=" . $snConfig . "&eid=" . $eid . "&projection=" . $projection;
         echo $this->curl_request($action, $args);
     }
 

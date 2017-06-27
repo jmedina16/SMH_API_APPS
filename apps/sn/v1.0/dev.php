@@ -89,6 +89,9 @@ class sn {
             case 'add_to_upload_queue':
                 $this->add_to_upload_queue();
                 break;
+            case 'update_sn_vod_config':
+                $this->update_sn_vod_config();
+                break;
             default:
                 echo "Action not found!";
         }
@@ -288,6 +291,14 @@ class sn {
         $eid = urlencode($_GET['eid']);
         $action = "sn_config/add_to_upload_queue?";
         $args = "eid=" . $eid;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function update_sn_vod_config() {
+        $ks = urlencode($_POST['ks']);
+        $platforms = urlencode($_POST['platforms']);
+        $action = "sn_config/update_sn_vod_config?";
+        $args = "ks=" . $ks . "&platforms=" . $platforms;
         echo $this->curl_request($action, $args);
     }
 

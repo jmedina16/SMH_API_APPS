@@ -9,7 +9,6 @@ class uploadQueue {
     protected $media_type;
 
     public function __construct() {
-        syslog(LOG_NOTICE, "SMH DEBUG : uploadQueue: " . print_r($_POST, true));
         $this->notify_type = $_POST["notification_type"];
         $this->partner_id = $_POST["partner_id"];
         $this->entry_id = $_POST["entry_id"];

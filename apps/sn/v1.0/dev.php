@@ -53,6 +53,9 @@ class sn {
             case 'delete_sn_livestream':
                 $this->delete_sn_livestream();
                 break;
+            case 'delete_sn_entry':
+                $this->delete_sn_entry();
+                break;
             case 'get_youtube_broadcast_id':
                 $this->get_youtube_broadcast_id();
                 break;
@@ -198,6 +201,14 @@ class sn {
         $ks = urlencode($_POST['ks']);
         $eid = urlencode($_POST['eid']);
         $action = "sn_config/delete_sn_livestream?";
+        $args = "ks=" . $ks . "&eid=" . $eid;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function delete_sn_entry() {
+        $ks = urlencode($_POST['ks']);
+        $eid = urlencode($_POST['eid']);
+        $action = "sn_config/delete_sn_entry?";
         $args = "ks=" . $ks . "&eid=" . $eid;
         echo $this->curl_request($action, $args);
     }

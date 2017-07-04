@@ -44,8 +44,11 @@ class sn {
             case 'update_sn_livestreams':
                 $this->update_sn_livestreams();
                 break;
-            case 'update_sn_metadata':
-                $this->update_sn_metadata();
+            case 'update_live_sn_metadata':
+                $this->update_live_sn_metadata();
+                break;
+            case 'update_vod_sn_metadata':
+                $this->update_vod_sn_metadata();
                 break;
             case 'update_sn_thumbnail':
                 $this->update_sn_thumbnail();
@@ -179,12 +182,22 @@ class sn {
         echo $this->curl_request($action, $args);
     }
 
-    public function update_sn_metadata() {
+    public function update_live_sn_metadata() {
         $ks = urlencode($_POST['ks']);
         $name = urlencode($_POST['name']);
         $desc = urlencode($_POST['desc']);
         $eid = urlencode($_POST['eid']);
-        $action = "sn_config/update_sn_metadata?";
+        $action = "sn_config/update_live_sn_metadata?";
+        $args = "ks=" . $ks . "&name=" . $name . "&desc=" . $desc . "&eid=" . $eid;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function update_vod_sn_metadata() {
+        $ks = urlencode($_POST['ks']);
+        $name = urlencode($_POST['name']);
+        $desc = urlencode($_POST['desc']);
+        $eid = urlencode($_POST['eid']);
+        $action = "sn_config/update_vod_sn_metadata?";
         $args = "ks=" . $ks . "&name=" . $name . "&desc=" . $desc . "&eid=" . $eid;
         echo $this->curl_request($action, $args);
     }

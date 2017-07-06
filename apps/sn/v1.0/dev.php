@@ -265,14 +265,14 @@ class sn {
 
     public function create_fb_livestream() {
         $ks = urlencode($_POST['ks']);
-        $stream_to = $_POST['stream_to'];
+        $publish_to = $_POST['publish_to'];
         $asset_id = $_POST['asset_id'];
         $privacy = $_POST['privacy'];
         $create_vod = $_POST['create_vod'];
         $cont_streaming = $_POST['cont_streaming'];
         $projection = $_POST['projection'];
         $action = "sn_config/create_fb_livestream?";
-        $args = "ks=" . $ks . "&stream_to=" . $stream_to . "&asset_id=" . $asset_id . "&privacy=" . $privacy . "&create_vod=" . $create_vod . "&cont_streaming=" . $cont_streaming . '&projection=' . $projection;
+        $args = "ks=" . $ks . "&publish_to=" . $publish_to . "&asset_id=" . $asset_id . "&privacy=" . $privacy . "&create_vod=" . $create_vod . "&cont_streaming=" . $cont_streaming . '&projection=' . $projection;
         echo $this->curl_request($action, $args);
     }
 

@@ -270,9 +270,10 @@ class sn {
         $privacy = $_POST['privacy'];
         $create_vod = $_POST['create_vod'];
         $cont_streaming = $_POST['cont_streaming'];
+        $auto_upload = $_POST['auto_upload'];
         $projection = $_POST['projection'];
         $action = "sn_config/create_fb_livestream?";
-        $args = "ks=" . $ks . "&publish_to=" . $publish_to . "&asset_id=" . $asset_id . "&privacy=" . $privacy . "&create_vod=" . $create_vod . "&cont_streaming=" . $cont_streaming . '&projection=' . $projection;
+        $args = "ks=" . $ks . "&publish_to=" . $publish_to . "&asset_id=" . $asset_id . "&privacy=" . $privacy . "&create_vod=" . $create_vod . "&cont_streaming=" . $cont_streaming . '&projection=' . $projection . '&auto_upload=' . $auto_upload;
         echo $this->curl_request($action, $args);
     }
 

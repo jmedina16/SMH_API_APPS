@@ -324,8 +324,9 @@ class sn {
         $eid = urlencode($_POST['eid']);
         $snConfig = urlencode($_POST['snConfig']);
         $projection = urlencode($_POST['projection']);
+        $stereo_mode = urlencode($_POST['stereo_mode']);
         $action = "sn_config/update_sn_vod_config?";
-        $args = "ks=" . $ks . "&snConfig=" . $snConfig . "&eid=" . $eid . "&projection=" . $projection;
+        $args = "ks=" . $ks . "&snConfig=" . $snConfig . "&eid=" . $eid . "&projection=" . $projection . "&stereo_mode=" . $stereo_mode;
         echo $this->curl_request($action, $args);
     }
 

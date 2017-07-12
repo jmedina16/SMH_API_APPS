@@ -2,7 +2,7 @@
 
 function store_youtube_authorization($pid, $ks, $projection, $code) {
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, "http://mediaplatform.streamingmediahosting.com/apps/sn/v1.0/index.php?action=store_youtube_authorization&pid=" . $pid . "&ks=" . $ks . "&projection=" . $projection . "&code=" . $code);
+    curl_setopt($ch, CURLOPT_URL, "http://devplatform.streamingmediahosting.com/apps/sn/v1.0/dev.php?action=store_youtube_authorization&pid=" . $pid . "&ks=" . $ks . "&projection=" . $projection . "&code=" . $code);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     $output = curl_exec($ch);
     curl_close($ch);

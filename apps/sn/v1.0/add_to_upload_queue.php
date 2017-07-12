@@ -25,7 +25,7 @@ class uploadQueue {
 
     public function curl_request($pid, $eid) {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "http://devplatform.streamingmediahosting.com/apps/sn/v1.0/dev.php?action=add_to_upload_queue&pid=" . $pid . "&eid=" . $eid);
+        curl_setopt($ch, CURLOPT_URL, "http://mediaplatform.streamingmediahosting.com/apps/sn/v1.0/index.php?action=add_to_upload_queue&pid=" . $pid . "&eid=" . $eid);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $output = curl_exec($ch);
         curl_close($ch);

@@ -15,7 +15,7 @@ class deauthorize {
 
     public function curl_request($signed_request) {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://mediaplatform.streamingmediahosting.com/apps/sn/v1.0/dev.php?action=facebook_deauthorization&signed_request=" . $signed_request);
+        curl_setopt($ch, CURLOPT_URL, "https://mediaplatform.streamingmediahosting.com/apps/sn/v1.0/index.php?action=facebook_deauthorization&signed_request=" . $signed_request);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $output = curl_exec($ch);
         curl_close($ch);

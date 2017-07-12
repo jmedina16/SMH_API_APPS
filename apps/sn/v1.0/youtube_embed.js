@@ -43,7 +43,7 @@ function jq_noconflict() {
 var headTag = document.getElementsByTagName("head")[0];
 var jqTag = document.createElement('script');
 jqTag.type = 'text/javascript';
-jqTag.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'mediaplatform.streamingmediahosting.com/html5/html5lib/v2.52.3/resources/jquery/jquery.min.js?v=1.5';
+jqTag.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'mediaplatform.streamingmediahosting.com/html5/html5lib/v2.55/resources/jquery/jquery.min.js?v=1.5';
 jqTag.onload = jq_noconflict;
 headTag.appendChild(jqTag);
 youtube = new smh_youtube();

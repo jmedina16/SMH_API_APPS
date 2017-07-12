@@ -16,7 +16,7 @@ smh_facebook.prototype = {
         }
         $smh.ajax({
             type: "GET",
-            url: ('https:' == document.location.protocol ? 'https://' : 'http://') + "devplatform.streamingmediahosting.com/apps/sn/v1.0/dev.php?action=get_facebook_embed",
+            url: ('https:' == document.location.protocol ? 'https://' : 'http://') + "mediaplatform.streamingmediahosting.com/apps/sn/v1.0/dev.php?action=get_facebook_embed",
             data: sessData,
             dataType: 'json'
         }).done(function (data) {

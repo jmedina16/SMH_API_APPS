@@ -33,8 +33,9 @@ class playlist {
         curl_setopt($ch, CURLOPT_URL, "https://mediaplatform.streamingmediahosting.com/api_v3/index.php?service=baseEntry&action=get&format=1&" . $args);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $output = curl_exec($ch);
+        $result = json_decode($output, true);
         curl_close($ch);
-        return $output['playlistType'];
+        return $result['playlistType'];
     }
 
     public function get_playlist_type() {

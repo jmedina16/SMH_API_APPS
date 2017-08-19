@@ -40,7 +40,6 @@ class playlist {
     }
 
     public function is_playlist_rb() {
-        //header('Content-type: application/json');
         $eid = urlencode($_GET['eid']);
         $args = "entryId=" . $eid;
         echo $this->curl_request($args);

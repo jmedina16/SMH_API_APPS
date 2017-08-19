@@ -20,8 +20,8 @@ class playlist {
     //run ppv api
     public function run() {
         switch ($this->action) {
-            case "get_playlist_type":
-                $this->get_playlist_type();
+            case "is_playlist_rb":
+                $this->is_playlist_rb();
                 break;
             default:
                 echo "Action not found!";
@@ -35,10 +35,11 @@ class playlist {
         $output = curl_exec($ch);
         $result = json_decode($output, true);
         curl_close($ch);
-        return $result['playlistType'];
+        $bool = ($result['playlistType'] === 10) ? true : false;
+        return $bool;
     }
 
-    public function get_playlist_type() {
+    public function is_playlist_rb() {
         header('Content-type: application/json');
         $eid = urlencode($_GET['eid']);
         $args = "entryId=" . $eid;

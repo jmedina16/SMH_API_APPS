@@ -35,12 +35,12 @@ class playlist {
         $output = curl_exec($ch);
         $result = json_decode($output, true);
         curl_close($ch);
-        $bool = ($result['playlistType'] === 10) ? true : false;
+        $bool = ($result['playlistType'] === 10) ? 'true' : 'false';
         return $bool;
     }
 
     public function is_playlist_rb() {
-        header('Content-type: application/json');
+        //header('Content-type: application/json');
         $eid = urlencode($_GET['eid']);
         $args = "entryId=" . $eid;
         echo $this->curl_request($args);

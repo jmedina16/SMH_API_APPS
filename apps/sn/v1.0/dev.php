@@ -41,6 +41,9 @@ class sn {
             case 'facebook_deauthorization':
                 $this->facebook_deauthorization();
                 break;
+            case "remove_twitch_authorization":
+                $this->remove_twitch_authorization();
+                break;
             case "create_sn_livestreams":
                 $this->create_sn_livestreams();
                 break;
@@ -166,6 +169,13 @@ class sn {
         $signed_request = urlencode($_GET['signed_request']);
         $action = "sn_config/facebook_deauthorization?";
         $args = "signed_request=" . $signed_request;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function remove_twitch_authorization() {
+        $ks = urlencode($_POST['ks']);
+        $action = "sn_config/remove_twitch_authorization?";
+        $args = "ks=" . $ks;
         echo $this->curl_request($action, $args);
     }
 

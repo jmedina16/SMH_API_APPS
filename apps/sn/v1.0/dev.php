@@ -29,6 +29,9 @@ class sn {
             case "store_youtube_authorization":
                 $this->store_youtube_authorization();
                 break;
+            case "store_twitch_authorization":
+                $this->store_twitch_authorization();
+                break;
             case "remove_youtube_authorization":
                 $this->remove_youtube_authorization();
                 break;
@@ -134,6 +137,14 @@ class sn {
         $projection = urlencode($_GET['projection']);
         $action = "sn_config/store_youtube_authorization?";
         $args = "ks=" . $ks . "&code=" . $code . "&projection=" . $projection;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function store_twitch_authorization() {
+        $ks = urlencode($_GET['ks']);
+        $code = $_GET['code'];
+        $action = "sn_config/store_twitch_authorization?";
+        $args = "ks=" . $ks . "&code=" . $code;
         echo $this->curl_request($action, $args);
     }
 

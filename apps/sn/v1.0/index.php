@@ -29,9 +29,6 @@ class sn {
             case "store_youtube_authorization":
                 $this->store_youtube_authorization();
                 break;
-            case "store_twitch_authorization":
-                $this->store_twitch_authorization();
-                break;
             case "remove_youtube_authorization":
                 $this->remove_youtube_authorization();
                 break;
@@ -40,9 +37,6 @@ class sn {
                 break;
             case 'facebook_deauthorization':
                 $this->facebook_deauthorization();
-                break;
-            case "remove_twitch_authorization":
-                $this->remove_twitch_authorization();
                 break;
             case "create_sn_livestreams":
                 $this->create_sn_livestreams();
@@ -111,7 +105,7 @@ class sn {
 
     public function curl_request($action, $args) {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "http://api.streamingmediahosting.com/index.php/api_dev/" . $action . "pid=" . $this->pid . "&format=json&" . $args);
+        curl_setopt($ch, CURLOPT_URL, "http://api.streamingmediahosting.com/index.php/api/" . $action . "pid=" . $this->pid . "&format=json&" . $args);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $output = curl_exec($ch);
         curl_close($ch);
@@ -143,14 +137,6 @@ class sn {
         echo $this->curl_request($action, $args);
     }
 
-    public function store_twitch_authorization() {
-        $ks = urlencode($_GET['ks']);
-        $code = $_GET['code'];
-        $action = "sn_config/store_twitch_authorization?";
-        $args = "ks=" . $ks . "&code=" . $code;
-        echo $this->curl_request($action, $args);
-    }
-
     public function remove_youtube_authorization() {
         $ks = urlencode($_POST['ks']);
         $action = "sn_config/remove_youtube_authorization?";
@@ -169,13 +155,6 @@ class sn {
         $signed_request = urlencode($_GET['signed_request']);
         $action = "sn_config/facebook_deauthorization?";
         $args = "signed_request=" . $signed_request;
-        echo $this->curl_request($action, $args);
-    }
-
-    public function remove_twitch_authorization() {
-        $ks = urlencode($_POST['ks']);
-        $action = "sn_config/remove_twitch_authorization?";
-        $args = "ks=" . $ks;
         echo $this->curl_request($action, $args);
     }
 

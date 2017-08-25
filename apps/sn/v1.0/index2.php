@@ -44,14 +44,20 @@ class sn {
             case 'update_sn_livestreams':
                 $this->update_sn_livestreams();
                 break;
-            case 'update_sn_metadata':
-                $this->update_sn_metadata();
+            case 'update_live_sn_metadata':
+                $this->update_live_sn_metadata();
+                break;
+            case 'update_vod_sn_metadata':
+                $this->update_vod_sn_metadata();
                 break;
             case 'update_sn_thumbnail':
                 $this->update_sn_thumbnail();
                 break;
             case 'delete_sn_livestream':
                 $this->delete_sn_livestream();
+                break;
+            case 'delete_sn_entry':
+                $this->delete_sn_entry();
                 break;
             case 'get_youtube_broadcast_id':
                 $this->get_youtube_broadcast_id();
@@ -74,8 +80,23 @@ class sn {
             case 'resync_fb_account':
                 $this->resync_fb_account();
                 break;
+            case 'resync_yt_account':
+                $this->resync_yt_account();
+                break;
             case 'get_facebook_embed':
                 $this->get_facebook_embed();
+                break;
+            case 'upload_queued_video_to_youtube':
+                $this->upload_queued_video_to_youtube();
+                break;
+            case 'update_yt_settings':
+                $this->update_yt_settings();
+                break;
+            case 'add_to_upload_queue':
+                $this->add_to_upload_queue();
+                break;
+            case 'update_sn_vod_config':
+                $this->update_sn_vod_config();
                 break;
             default:
                 echo "Action not found!";
@@ -93,8 +114,9 @@ class sn {
 
     public function get_sn_config() {
         $ks = urlencode($_GET['ks']);
+        $projection = urlencode($_GET['projection']);
         $action = "sn_config/get_sn_config?";
-        $args = "ks=" . $ks;
+        $args = "ks=" . $ks . "&projection=" . $projection;
         echo $this->curl_request($action, $args);
     }
 
@@ -109,8 +131,9 @@ class sn {
     public function store_youtube_authorization() {
         $ks = urlencode($_GET['ks']);
         $code = $_GET['code'];
+        $projection = urlencode($_GET['projection']);
         $action = "sn_config/store_youtube_authorization?";
-        $args = "ks=" . $ks . "&code=" . $code;
+        $args = "ks=" . $ks . "&code=" . $code . "&projection=" . $projection;
         echo $this->curl_request($action, $args);
     }
 
@@ -159,12 +182,22 @@ class sn {
         echo $this->curl_request($action, $args);
     }
 
-    public function update_sn_metadata() {
+    public function update_live_sn_metadata() {
         $ks = urlencode($_POST['ks']);
         $name = urlencode($_POST['name']);
         $desc = urlencode($_POST['desc']);
         $eid = urlencode($_POST['eid']);
-        $action = "sn_config/update_sn_metadata?";
+        $action = "sn_config/update_live_sn_metadata?";
+        $args = "ks=" . $ks . "&name=" . $name . "&desc=" . $desc . "&eid=" . $eid;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function update_vod_sn_metadata() {
+        $ks = urlencode($_POST['ks']);
+        $name = urlencode($_POST['name']);
+        $desc = urlencode($_POST['desc']);
+        $eid = urlencode($_POST['eid']);
+        $action = "sn_config/update_vod_sn_metadata?";
         $args = "ks=" . $ks . "&name=" . $name . "&desc=" . $desc . "&eid=" . $eid;
         echo $this->curl_request($action, $args);
     }
@@ -181,6 +214,14 @@ class sn {
         $ks = urlencode($_POST['ks']);
         $eid = urlencode($_POST['eid']);
         $action = "sn_config/delete_sn_livestream?";
+        $args = "ks=" . $ks . "&eid=" . $eid;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function delete_sn_entry() {
+        $ks = urlencode($_POST['ks']);
+        $eid = urlencode($_POST['eid']);
+        $action = "sn_config/delete_sn_entry?";
         $args = "ks=" . $ks . "&eid=" . $eid;
         echo $this->curl_request($action, $args);
     }
@@ -224,14 +265,15 @@ class sn {
 
     public function create_fb_livestream() {
         $ks = urlencode($_POST['ks']);
-        $stream_to = $_POST['stream_to'];
+        $publish_to = $_POST['publish_to'];
         $asset_id = $_POST['asset_id'];
         $privacy = $_POST['privacy'];
         $create_vod = $_POST['create_vod'];
         $cont_streaming = $_POST['cont_streaming'];
+        $auto_upload = $_POST['auto_upload'];
         $projection = $_POST['projection'];
         $action = "sn_config/create_fb_livestream?";
-        $args = "ks=" . $ks . "&stream_to=" . $stream_to . "&asset_id=" . $asset_id . "&privacy=" . $privacy . "&create_vod=" . $create_vod . "&cont_streaming=" . $cont_streaming . '&projection=' . $projection;
+        $args = "ks=" . $ks . "&publish_to=" . $publish_to . "&asset_id=" . $asset_id . "&privacy=" . $privacy . "&create_vod=" . $create_vod . "&cont_streaming=" . $cont_streaming . '&projection=' . $projection . '&auto_upload=' . $auto_upload;
         echo $this->curl_request($action, $args);
     }
 
@@ -242,9 +284,49 @@ class sn {
         echo $this->curl_request($action, $args);
     }
 
+    public function resync_yt_account() {
+        $ks = urlencode($_GET['ks']);
+        $action = "sn_config/resync_yt_account?";
+        $args = "ks=" . $ks;
+        echo $this->curl_request($action, $args);
+    }
+
     public function get_facebook_embed() {
         $action = "sn_config/get_facebook_embed?";
         $args = "";
+        echo $this->curl_request($action, $args);
+    }
+
+    public function upload_queued_video_to_youtube() {
+        $eid = urlencode($_POST['eid']);
+        $action = "sn_config/upload_queued_video_to_youtube?";
+        $args = "eid=" . $eid;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function update_yt_settings() {
+        $ks = urlencode($_POST['ks']);
+        $auto_upload = urlencode($_POST['auto_upload']);
+        $action = "sn_config/update_yt_settings?";
+        $args = "ks=" . $ks . "&auto_upload=" . $auto_upload;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function add_to_upload_queue() {
+        $eid = urlencode($_GET['eid']);
+        $action = "sn_config/add_to_upload_queue?";
+        $args = "eid=" . $eid;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function update_sn_vod_config() {
+        $ks = urlencode($_POST['ks']);
+        $eid = urlencode($_POST['eid']);
+        $snConfig = urlencode($_POST['snConfig']);
+        $projection = urlencode($_POST['projection']);
+        $stereo_mode = urlencode($_POST['stereo_mode']);
+        $action = "sn_config/update_sn_vod_config?";
+        $args = "ks=" . $ks . "&snConfig=" . $snConfig . "&eid=" . $eid . "&projection=" . $projection . "&stereo_mode=" . $stereo_mode;
         echo $this->curl_request($action, $args);
     }
 

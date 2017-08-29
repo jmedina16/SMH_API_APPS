@@ -89,6 +89,9 @@ class sn {
             case 'resync_yt_account':
                 $this->resync_yt_account();
                 break;
+            case 'resync_twch_account':
+                $this->resync_twch_account();
+                break;
             case 'get_facebook_embed':
                 $this->get_facebook_embed();
                 break;
@@ -308,6 +311,13 @@ class sn {
     public function resync_yt_account() {
         $ks = urlencode($_GET['ks']);
         $action = "sn_config/resync_yt_account?";
+        $args = "ks=" . $ks;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function resync_twch_account() {
+        $ks = urlencode($_GET['ks']);
+        $action = "sn_config/resync_twch_account?";
         $args = "ks=" . $ks;
         echo $this->curl_request($action, $args);
     }

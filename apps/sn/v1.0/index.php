@@ -29,6 +29,9 @@ class sn {
             case "store_youtube_authorization":
                 $this->store_youtube_authorization();
                 break;
+            case "store_twitch_authorization":
+                $this->store_twitch_authorization();
+                break;
             case "remove_youtube_authorization":
                 $this->remove_youtube_authorization();
                 break;
@@ -37,6 +40,9 @@ class sn {
                 break;
             case 'facebook_deauthorization':
                 $this->facebook_deauthorization();
+                break;
+            case "remove_twitch_authorization":
+                $this->remove_twitch_authorization();
                 break;
             case "create_sn_livestreams":
                 $this->create_sn_livestreams();
@@ -83,6 +89,9 @@ class sn {
             case 'resync_yt_account':
                 $this->resync_yt_account();
                 break;
+            case 'resync_twch_account':
+                $this->resync_twch_account();
+                break;
             case 'get_facebook_embed':
                 $this->get_facebook_embed();
                 break;
@@ -91,6 +100,9 @@ class sn {
                 break;
             case 'update_yt_settings':
                 $this->update_yt_settings();
+                break;
+            case 'update_twch_settings':
+                $this->update_twch_settings();
                 break;
             case 'add_to_upload_queue':
                 $this->add_to_upload_queue();
@@ -137,6 +149,14 @@ class sn {
         echo $this->curl_request($action, $args);
     }
 
+    public function store_twitch_authorization() {
+        $ks = urlencode($_GET['ks']);
+        $code = $_GET['code'];
+        $action = "sn_config/store_twitch_authorization?";
+        $args = "ks=" . $ks . "&code=" . $code;
+        echo $this->curl_request($action, $args);
+    }
+
     public function remove_youtube_authorization() {
         $ks = urlencode($_POST['ks']);
         $action = "sn_config/remove_youtube_authorization?";
@@ -155,6 +175,13 @@ class sn {
         $signed_request = urlencode($_GET['signed_request']);
         $action = "sn_config/facebook_deauthorization?";
         $args = "signed_request=" . $signed_request;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function remove_twitch_authorization() {
+        $ks = urlencode($_POST['ks']);
+        $action = "sn_config/remove_twitch_authorization?";
+        $args = "ks=" . $ks;
         echo $this->curl_request($action, $args);
     }
 
@@ -291,6 +318,13 @@ class sn {
         echo $this->curl_request($action, $args);
     }
 
+    public function resync_twch_account() {
+        $ks = urlencode($_GET['ks']);
+        $action = "sn_config/resync_twch_account?";
+        $args = "ks=" . $ks;
+        echo $this->curl_request($action, $args);
+    }
+
     public function get_facebook_embed() {
         $action = "sn_config/get_facebook_embed?";
         $args = "";
@@ -308,6 +342,14 @@ class sn {
         $ks = urlencode($_POST['ks']);
         $auto_upload = urlencode($_POST['auto_upload']);
         $action = "sn_config/update_yt_settings?";
+        $args = "ks=" . $ks . "&auto_upload=" . $auto_upload;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function update_twch_settings() {
+        $ks = urlencode($_POST['ks']);
+        $auto_upload = urlencode($_POST['auto_upload']);
+        $action = "sn_config/update_twch_settings?";
         $args = "ks=" . $ks . "&auto_upload=" . $auto_upload;
         echo $this->curl_request($action, $args);
     }

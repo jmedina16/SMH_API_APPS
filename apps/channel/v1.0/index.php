@@ -50,10 +50,26 @@ class channel {
         return json_decode($response, true);
     }
 
+    //connect to database
+    public function connect() {
+        if (!is_null($this->link)) {
+            return;
+        }
+
+        try {
+            $this->link = new PDO("mysql:host=$this->hostname;port=3306;dbname=$this->database", $this->login, $this->password);
+            $this->link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            $date = date('Y-m-d H:i:s');
+            syslog(LOG_NOTICE, $date . " [Channel->connect] ERROR: Cannot connect to database: " . print_r($e->getMessage(), true));
+        }
+    }
+
     public function post_schedule() {
+        $channel_ids = array();
         $live_channels = $this->get_channels();
-        foreach($live_channels['objects'] as $live_channel){
-            echo $live_channel['id'];
+        foreach ($live_channels['objects'] as $live_channel) {
+            array_push($channel_ids, $live_channel['id']);
         }
     }
 

@@ -5,6 +5,12 @@ class channel {
 
     protected $pid;
     protected $action;
+    protected $link = null;
+    protected $login;
+    protected $password;
+    protected $database;
+    protected $hostname;
+    protected $port;
 
     public function __construct() {
         $method = $_SERVER['REQUEST_METHOD'];
@@ -15,6 +21,11 @@ class channel {
             isset($_GET["pid"]) ? $this->pid = $_GET["pid"] : $this->pid = '';
             isset($_GET["action"]) ? $this->action = $_GET["action"] : $this->action = '';
         }
+        $this->login = 'kaltura';
+        $this->password = 'nUKFRl7bE9hShpV';
+        $this->database = 'kaltura';
+        $this->hostname = '127.0.0.1';
+        $this->port = '3306';
     }
 
     //run ppv api
@@ -40,10 +51,13 @@ class channel {
     }
 
     public function post_schedule() {
-        print_r($this->get_channels());
+        $live_channels = $this->get_channels();
+        foreach($live_channels['objects'] as $live_channel){
+            echo $live_channel['id'];
+        }
     }
-    
-    public function get_channels(){
+
+    public function get_channels() {
         $url = 'https://mediaplatform.streamingmediahosting.com/api_v3/index.php';
         $data = array('ks' => $_POST['ks'], 'service' => 'liveChannel', 'action' => 'list', 'format' => 1);
         $liveChannels = $this->curlPost($url, $data);

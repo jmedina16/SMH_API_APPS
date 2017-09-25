@@ -5,12 +5,6 @@ class channel {
 
     protected $pid;
     protected $action;
-    protected $link = null;
-    protected $login;
-    protected $password;
-    protected $database;
-    protected $hostname;
-    protected $port;
 
     public function __construct() {
         $method = $_SERVER['REQUEST_METHOD'];
@@ -21,11 +15,6 @@ class channel {
             isset($_GET["pid"]) ? $this->pid = $_GET["pid"] : $this->pid = '';
             isset($_GET["action"]) ? $this->action = $_GET["action"] : $this->action = '';
         }
-        $this->login = 'kaltura';
-        $this->password = 'nUKFRl7bE9hShpV';
-        $this->database = 'kaltura';
-        $this->hostname = '127.0.0.1';
-        $this->port = '3306';
     }
 
     //run ppv api
@@ -37,6 +26,15 @@ class channel {
             default:
                 echo "Action not found!";
         }
+    }
+
+    public function curl_request($action, $args) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "http://api.streamingmediahosting.com/index.php/api_dev/" . $action . "pid=" . $this->pid . "&format=json&" . $args);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec($ch);
+        curl_close($ch);
+        return $output;
     }
 
     public function curlPost($url, $data) {
@@ -66,18 +64,10 @@ class channel {
     }
 
     public function post_schedule() {
-        $channel_ids = array();
-        $live_channels = $this->get_channels();
-        foreach ($live_channels['objects'] as $live_channel) {
-            array_push($channel_ids, $live_channel['id']);
-        }
-    }
-
-    public function get_channels() {
-        $url = 'https://mediaplatform.streamingmediahosting.com/api_v3/index.php';
-        $data = array('ks' => $_POST['ks'], 'service' => 'liveChannel', 'action' => 'list', 'format' => 1);
-        $liveChannels = $this->curlPost($url, $data);
-        return $liveChannels;
+        $ks = urlencode($_POST['ks']);
+        $action = "channel_config/post_schedule?";
+        $args = "ks=" . $ks;
+        echo $this->curl_request($action, $args);
     }
 
 }

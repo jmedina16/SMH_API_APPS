@@ -20,8 +20,8 @@ class stats {
     //run ppv api
     public function run() {
         switch ($this->action) {
-            case "get_sn_config":
-                $this->get_sn_config();
+            case "get_child_stats":
+                $this->get_child_stats();
                 break;
             default:
                 echo "Action not found!";

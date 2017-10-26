@@ -1,10 +1,18 @@
 <?php
 
 //header('Access-Control-Allow-Origin: *');
+require_once "/var/www/vhosts/api/application/libraries/PHPExcel/Classes/PHPExcel.php";
+
 class stats {
 
     protected $pid;
     protected $action;
+    protected $link = null;
+    protected $login;
+    protected $password;
+    protected $database;
+    protected $hostname;
+    protected $port;
 
     public function __construct() {
         $method = $_SERVER['REQUEST_METHOD'];
@@ -15,6 +23,11 @@ class stats {
             isset($_GET["pid"]) ? $this->pid = $_GET["pid"] : $this->pid = '';
             isset($_GET["action"]) ? $this->action = $_GET["action"] : $this->action = '';
         }
+        $this->login = 'smhstats';
+        $this->password = 'tVuasxXqy33Z3WkTbXHRruSC34dbVLnLNgq';
+        $this->database = 'smh_statistics';
+        $this->hostname = '127.0.0.1';
+        $this->port = '3306';
     }
 
     //run ppv api
@@ -32,6 +45,7 @@ class stats {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, "http://api.streamingmediahosting.com/index.php/api/" . $action . "pid=" . $this->pid . "&format=json&" . $args);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HEADER, true);
         $output = curl_exec($ch);
         curl_close($ch);
         return $output;
@@ -43,9 +57,10 @@ class stats {
         $start_date = urlencode($_GET['start_date']);
         $end_date = urlencode($_GET['end_date']);
         $action = "stats_config/get_child_stats?";
-        $args = "ks=" . $ks . "&cpid=" . $cpid . "&start_date=" . $start_date. "&end_date=" . $end_date;
+        $args = "ks=" . $ks . "&cpid=" . $cpid . "&start_date=" . $start_date . "&end_date=" . $end_date;
         echo $this->curl_request($action, $args);
     }
+
 }
 
 $stats = new stats();

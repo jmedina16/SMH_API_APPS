@@ -48,12 +48,14 @@ class stats {
         curl_setopt($ch, CURLOPT_HEADER, true);
         $output = curl_exec($ch);
 
+        syslog(LOG_NOTICE, "SMH DEBUG : " . print_r($output, true));
+
         list($headers, $response) = explode("\r\n\r\n", $output, 2);
         $headers = explode("\n", $headers);
         foreach ($headers as $header) {
-            if (stripos($header, 'Location:') !== false) {
+            //if (stripos($header, 'Location:') !== false) {
                 syslog(LOG_NOTICE, "SMH DEBUG : The location header is: " . $header);
-            }
+            //}
         }
 
         curl_close($ch);

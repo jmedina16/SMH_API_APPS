@@ -47,6 +47,15 @@ class stats {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HEADER, true);
         $output = curl_exec($ch);
+
+        list($headers, $response) = explode("\r\n\r\n", $output, 2);
+        $headers = explode("\n", $headers);
+        foreach ($headers as $header) {
+            if (stripos($header, 'Location:') !== false) {
+                syslog(LOG_NOTICE, "SMH DEBUG : The location header is: " . $header);
+            }
+        }
+
         curl_close($ch);
         return $output;
     }
@@ -58,7 +67,15 @@ class stats {
         $end_date = urlencode($_GET['end_date']);
         $action = "stats_config/get_child_stats?";
         $args = "ks=" . $ks . "&cpid=" . $cpid . "&start_date=" . $start_date . "&end_date=" . $end_date;
-        echo $this->curl_request($action, $args);
+        $resp = $this->curl_request($action, $args);
+        //syslog(LOG_NOTICE, "SMH DEBUG : get_child_stats: " . print_r($resp, true));
+//        list($headers, $response) = explode("\r\n\r\n", $resp, 2);
+//        $headers = explode("\n", $headers);
+//        foreach ($headers as $header) {
+//            if (stripos($header, 'Location:') !== false) {
+//                syslog(LOG_NOTICE, "SMH DEBUG : The location header is: " . $header);
+//            }
+//        }
     }
 
 }

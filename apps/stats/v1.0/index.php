@@ -23,11 +23,6 @@ class stats {
             isset($_GET["pid"]) ? $this->pid = $_GET["pid"] : $this->pid = '';
             isset($_GET["action"]) ? $this->action = $_GET["action"] : $this->action = '';
         }
-        $this->login = 'smhstats';
-        $this->password = 'tVuasxXqy33Z3WkTbXHRruSC34dbVLnLNgq';
-        $this->database = 'smh_statistics';
-        $this->hostname = '127.0.0.1';
-        $this->port = '3306';
     }
 
     //run ppv api
@@ -35,6 +30,9 @@ class stats {
         switch ($this->action) {
             case "get_child_stats":
                 $this->get_child_stats();
+                break;
+            case "get_all_child_stats":
+                $this->get_all_child_stats();
                 break;
             default:
                 echo "Action not found!";
@@ -65,7 +63,24 @@ class stats {
         foreach ($headers as $header) {
             header($header);
         }
-        
+
+        echo $response;
+    }
+
+    public function get_all_child_stats() {
+        $ks = urlencode($_GET['ks']);
+        $start_date = urlencode($_GET['start_date']);
+        $end_date = urlencode($_GET['end_date']);
+        $action = "stats_config/get_all_child_stats?";
+        $args = "ks=" . $ks . "&start_date=" . $start_date . "&end_date=" . $end_date;
+        $resp = $this->curl_request($action, $args);
+
+        list($headers, $response) = explode("\r\n\r\n", $resp, 2);
+        $headers = explode("\n", $headers);
+        foreach ($headers as $header) {
+            header($header);
+        }
+
         echo $response;
     }
 

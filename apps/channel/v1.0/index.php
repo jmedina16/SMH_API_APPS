@@ -64,7 +64,7 @@ class channel {
     }
 
     public function post_schedule() {
-        $ks = urlencode($_POST['ks']);
+        $ks = urlencode($_GET['ks']);
         $action = "channel_config/post_schedule?";
         $args = "ks=" . $ks;
         echo $this->curl_request($action, $args);

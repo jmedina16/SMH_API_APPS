@@ -23,6 +23,9 @@ class channel {
             case "post_schedule":
                 $this->post_schedule();
                 break;
+            case "get_schedule":
+                $this->get_schedules();
+                break;
             default:
                 echo "Action not found!";
         }
@@ -66,6 +69,13 @@ class channel {
     public function post_schedule() {
         $ks = urlencode($_POST['ks']);
         $action = "channel_config/post_schedule?";
+        $args = "ks=" . $ks;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function get_schedules() {
+        $ks = urlencode($_GET['ks']);
+        $action = "channel_config/get_schedules?";
         $args = "ks=" . $ks;
         echo $this->curl_request($action, $args);
     }

@@ -26,6 +26,9 @@ class channel {
             case "get_schedule":
                 $this->get_schedules();
                 break;
+            case "delete_channel":
+                $this->delete_channel();
+                break;
             default:
                 echo "Action not found!";
         }
@@ -77,6 +80,14 @@ class channel {
         $ks = urlencode($_GET['ks']);
         $action = "channel_config/get_schedules?";
         $args = "ks=" . $ks;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function delete_channel() {
+        $ks = urlencode($_POST['ks']);
+        $cid = urlencode($_POST['cid']);
+        $action = "channel_config/delete_channel?";
+        $args = "ks=" . $ks . "&cid=" . $cid;
         echo $this->curl_request($action, $args);
     }
 

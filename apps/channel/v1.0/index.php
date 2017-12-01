@@ -29,6 +29,9 @@ class channel {
             case "delete_channel":
                 $this->delete_channel();
                 break;
+            case "add_segment":
+                $this->add_segment();
+                break;
             default:
                 echo "Action not found!";
         }
@@ -88,6 +91,19 @@ class channel {
         $cid = urlencode($_POST['cid']);
         $action = "channel_config/delete_channel?";
         $args = "ks=" . $ks . "&cid=" . $cid;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function add_segment() {
+        $ks = urlencode($_POST['ks']);
+        $cid = urlencode($_POST['cid']);
+        $eid = urlencode($_POST['eid']);
+        $name = urlencode($_POST['name']);
+        $desc = urlencode($_POST['desc']);
+        $repeat = urlencode($_POST['repeat']);
+        $scheduled = urlencode($_POST['scheduled']);
+        $action = "channel_config/add_segment?";
+        $args = "ks=" . $ks . "&cid=" . $cid . "&eid=" . $eid . "&name=" . $name . "&desc=" . $desc . "&repeat=" . $repeat . "&scheduled=" . $scheduled;
         echo $this->curl_request($action, $args);
     }
 

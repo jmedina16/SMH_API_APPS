@@ -32,6 +32,9 @@ class channel {
             case "add_segment":
                 $this->add_segment();
                 break;
+            case "update_segment":
+                $this->update_segment();
+                break;
             default:
                 echo "Action not found!";
         }
@@ -104,6 +107,20 @@ class channel {
         $scheduled = urlencode($_POST['scheduled']);
         $action = "channel_config/add_segment?";
         $args = "ks=" . $ks . "&cid=" . $cid . "&eid=" . $eid . "&name=" . $name . "&desc=" . $desc . "&repeat=" . $repeat . "&scheduled=" . $scheduled;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function update_segment() {
+        $ks = urlencode($_POST['ks']);
+        $sid = urlencode($_POST['sid']);
+        $cid = urlencode($_POST['cid']);
+        $eid = urlencode($_POST['eid']);
+        $name = urlencode($_POST['name']);
+        $desc = urlencode($_POST['desc']);
+        $repeat = urlencode($_POST['repeat']);
+        $scheduled = urlencode($_POST['scheduled']);
+        $action = "channel_config/update_segment?";
+        $args = "ks=" . $ks . "&sid=" . $sid . "&cid=" . $cid . "&eid=" . $eid . "&name=" . $name . "&desc=" . $desc . "&repeat=" . $repeat . "&scheduled=" . $scheduled;
         echo $this->curl_request($action, $args);
     }
 

@@ -23,8 +23,8 @@ class channel {
             case "post_schedule":
                 $this->post_schedule();
                 break;
-            case "get_schedule":
-                $this->get_schedules();
+            case "get_channels":
+                $this->get_channels();
                 break;
             case "delete_channel":
                 $this->delete_channel();
@@ -82,10 +82,15 @@ class channel {
         echo $this->curl_request($action, $args);
     }
 
-    public function get_schedules() {
-        $ks = urlencode($_GET['ks']);
-        $action = "channel_config/get_schedules?";
-        $args = "ks=" . $ks;
+    public function get_channels() {
+        $ks = urlencode($_POST['ks']);
+        $start = urlencode($_POST['start']);
+        $length = urlencode($_POST['length']);
+        $draw = urlencode($_POST['draw']);
+        $tz = urlencode($_POST['tz']);
+        $search = urlencode($_POST['search']);
+        $action = "channel_config/get_channels?";
+        $args = "ks=" . $ks . "&start=" . $start . "&length=" . $length . "&draw=" . $draw . "&tz=" . $tz . "&search=" . $search;
         echo $this->curl_request($action, $args);
     }
 

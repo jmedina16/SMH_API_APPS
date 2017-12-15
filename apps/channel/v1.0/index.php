@@ -29,8 +29,8 @@ class channel {
             case "delete_channel":
                 $this->delete_channel();
                 break;
-            case "add_segment":
-                $this->add_segment();
+            case "add_channel":
+                $this->add_channel();
                 break;
             case "update_segment":
                 $this->update_segment();
@@ -102,16 +102,13 @@ class channel {
         echo $this->curl_request($action, $args);
     }
 
-    public function add_segment() {
+    public function add_channel() {
         $ks = urlencode($_POST['ks']);
-        $cid = urlencode($_POST['cid']);
-        $eid = urlencode($_POST['eid']);
+        $eids = urlencode($_POST['eids']);
         $name = urlencode($_POST['name']);
         $desc = urlencode($_POST['desc']);
-        $repeat = urlencode($_POST['repeat']);
-        $scheduled = urlencode($_POST['scheduled']);
-        $action = "channel_config/add_segment?";
-        $args = "ks=" . $ks . "&cid=" . $cid . "&eid=" . $eid . "&name=" . $name . "&desc=" . $desc . "&repeat=" . $repeat . "&scheduled=" . $scheduled;
+        $action = "channel_config/add_channel?";
+        $args = "ks=" . $ks . "&eids=" . $eids . "&name=" . $name . "&desc=" . $desc;
         echo $this->curl_request($action, $args);
     }
 

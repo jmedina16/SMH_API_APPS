@@ -83,6 +83,13 @@ class channel {
     }
 
     public function get_channels() {
+        $ks = urlencode($_GET['ks']);
+        $action = "channel_config/get_channels?";
+        $args = "ks=" . $ks;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function get_channelsX() {
         $ks = urlencode($_POST['ks']);
         $start = urlencode($_POST['start']);
         $length = urlencode($_POST['length']);

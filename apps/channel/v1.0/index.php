@@ -84,8 +84,10 @@ class channel {
 
     public function get_channels() {
         $ks = urlencode($_GET['ks']);
-        $action = "channel_config/get_channels.json?";
-        $args = "ks=" . $ks;
+        $category = urlencode($_GET['category']);
+        $ac = urlencode($_GET['ac']);
+        $action = "channel_config/get_channels?";
+        $args = "ks=" . $ks . "&category=" . $category . "&ac=" . $ac;
         $channels = $this->curl_request($action, $args);
         echo json_decode($channels, true);
     }

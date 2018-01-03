@@ -26,6 +26,9 @@ class channel {
             case "get_channels":
                 $this->get_channels();
                 break;
+            case "get_channelsX":
+                $this->get_channelsX();
+                break;            
             case "delete_channel":
                 $this->delete_channel();
                 break;
@@ -100,7 +103,7 @@ class channel {
         $draw = urlencode($_POST['draw']);
         $tz = urlencode($_POST['tz']);
         $search = urlencode($_POST['search']);
-        $action = "channel_config/get_channels?";
+        $action = "channel_config/get_channelsX?";
         $args = "ks=" . $ks . "&start=" . $start . "&length=" . $length . "&draw=" . $draw . "&tz=" . $tz . "&search=" . $search;
         echo $this->curl_request($action, $args);
     }

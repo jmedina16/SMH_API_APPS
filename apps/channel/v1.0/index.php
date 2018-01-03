@@ -26,9 +26,9 @@ class channel {
             case "get_channels":
                 $this->get_channels();
                 break;
-            case "get_channelsX":
-                $this->get_channelsX();
-                break;            
+            case "get_channel_entries":
+                $this->get_channel_entries();
+                break;
             case "delete_channel":
                 $this->delete_channel();
                 break;
@@ -96,15 +96,16 @@ class channel {
         echo json_decode($channels, true);
     }
 
-    public function get_channelsX() {
+    public function get_channel_entries() {
         $ks = urlencode($_POST['ks']);
         $start = urlencode($_POST['start']);
         $length = urlencode($_POST['length']);
         $draw = urlencode($_POST['draw']);
         $tz = urlencode($_POST['tz']);
+        $cid = urlencode($_POST['cid']);
         $search = urlencode($_POST['search']);
-        $action = "channel_config/get_channelsX?";
-        $args = "ks=" . $ks . "&start=" . $start . "&length=" . $length . "&draw=" . $draw . "&tz=" . $tz . "&search=" . $search;
+        $action = "channel_config/get_channel_entries?";
+        $args = "ks=" . $ks . "&start=" . $start . "&length=" . $length . "&draw=" . $draw . "&tz=" . $tz . "&cid=" . $cid . "&search=" . $search;
         echo $this->curl_request($action, $args);
     }
 

@@ -12,10 +12,16 @@ class push {
     public function push_notification() {
         $ks = $this->impersonate($this->post_data['partner_id']);
         $flavors_response = $this->get_flavors($ks, $this->post_data['entry_id']);
-        foreach($flavors_response['objects'] as $flavors){
-           syslog(LOG_NOTICE, "SMH DEBUG : push_notification: " . print_r($flavors['id'], true)); 
+        $flavor = array();
+        foreach ($flavors_response['objects'] as $flavors) {
+            array_push($flavor, array('id' => $flavors['id'], 'width' => $flavors['width'], 'height' => $flavors['height'], 'bitrate' => $flavors['bitrate'], 'isSource' => $flavors['isOriginal'], 'status' => $flavors['status'], 'size' => $flavors['size'], 'fileExt' => $flavors['fileExt']));
         }
-        
+
+        $flavors_array = array();
+        $flavors_array['flavors'] = $flavor;
+
+        syslog(LOG_NOTICE, "SMH DEBUG : push_notification: " . print_r($flavors_array, true));
+
         $url = '';
         $notification_url = 'http://clients.streamingmediahosting.com/medina/demos/listener/sync.php';
     }

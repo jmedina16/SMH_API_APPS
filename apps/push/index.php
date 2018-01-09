@@ -17,13 +17,18 @@ class push {
             array_push($flavor, array('id' => $flavors['id'], 'width' => $flavors['width'], 'height' => $flavors['height'], 'bitrate' => $flavors['bitrate'], 'isSource' => $flavors['isOriginal'], 'status' => $flavors['status'], 'size' => $flavors['size'], 'fileExt' => $flavors['fileExt']));
         }
 
-        $flavors_array = array();
-        $flavors_array['flavors'] = $flavor;
-
-        syslog(LOG_NOTICE, "SMH DEBUG : push_notification: " . print_r($flavors_array, true));
-
-        $url = '';
+        $final_push_data = array();
+        $final_push_data['partner_id'] = $this->post_data['partner_id'];
+        $final_push_data['entry_id'] = $this->post_data['entry_id'];
+        $final_push_data['name'] = $this->post_data['name'];
+        $final_push_data['tags'] = $this->post_data['tags'];
+        $final_push_data['thumbnail_url'] = $this->post_data['thumbnail_url'];
+        $final_push_data['partner_data'] = $this->post_data['partner_data'];
+        $final_push_data['status'] = $this->post_data['status'];
+        $final_push_data['flavors'] = $flavor;
+        
         $notification_url = 'http://clients.streamingmediahosting.com/medina/demos/listener/sync.php';
+        $response = $this->curlPost($notification_url, $final_push_data);
     }
 
     public function curlPost($url, $data) {

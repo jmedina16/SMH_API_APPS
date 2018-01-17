@@ -26,16 +26,28 @@ class push {
         $final_push_data['partner_data'] = $this->post_data['partner_data'];
         $final_push_data['status'] = $this->post_data['status'];
         $final_push_data['flavors'] = $flavor;
-        
+
+        $data_string = json_encode($final_push_data);
+
+        syslog(LOG_NOTICE, "SMH DEBUG : push_notification: " . print_r($data_string, true));
+
         $notification_url = 'http://clients.streamingmediahosting.com/medina/demos/listener/sync.php';
-        $response = $this->curlPost($notification_url, $final_push_data);
+        $response = $this->curlPost($notification_url, $data_string);
+        syslog(LOG_NOTICE, "SMH DEBUG : push_notification: " . print_r($response, true));
     }
 
     public function curlPost($url, $data) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($data_string)
+        ));
         $response = curl_exec($ch);
         curl_close($ch);
 

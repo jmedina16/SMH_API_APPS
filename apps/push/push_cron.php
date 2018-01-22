@@ -50,8 +50,6 @@ class push_cron {
             }
         }
 
-        syslog(LOG_NOTICE, "SMH DEBUG : push_notification " . print_r($entries, true));
-
         foreach ($entries as $entry) {
             if (!array_intersect($entry['flavor_status'], $flavors_not_ready)) {
                 $this->bsfPush($entry['partner_id'], $entry['entryId']);
@@ -108,7 +106,7 @@ class push_cron {
         $flavors_response = $this->get_flavors($ks, $eid);
         $flavor = array();
         foreach ($flavors_response['objects'] as $flavors) {
-            array_push($flavor, array('id' => $flavors['id'], 'width' => $flavors['width'], 'height' => $flavors['height'], 'bitrate' => $flavors['bitrate'], 'isSource' => $flavors['isOriginal'], 'isWeb' => $flavors['isWeb'], 'status' => $flavors['status'], 'size' => $flavors['size'], 'fileExt' => $flavors['fileExt'], 'version' => $flavors['version']));
+            array_push($flavor, array('id' => $flavors['id'], 'width' => $flavors['width'], 'height' => $flavors['height'], 'bitrate' => $flavors['bitrate'], 'isSource' => $flavors['isOriginal'], 'isWeb' => $flavors['isWeb'], 'status' => $flavors['status'], 'size' => $flavors['size'], 'fileExt' => $flavors['fileExt'], 'version' => $flavors['version'], 'description' => $flavors['description']));
         }
 
         $final_push_data = array();

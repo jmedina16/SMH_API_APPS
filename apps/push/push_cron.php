@@ -1,14 +1,14 @@
 <?php
 
-class push {
+class push_cron {
 
-    protected $post_data;
     protected $link = null;
     protected $login;
     protected $password;
     protected $database;
     protected $hostname;
     protected $port;
+    protected $queuedEntries;
 
     public function __construct() {
         $this->login = 'smh_mngmt';
@@ -19,17 +19,46 @@ class push {
     }
 
     public function run() {
-        $this->post_data = $_POST;
+        $this->get_queued_entries();
         $this->push_notification();
     }
 
-    public function push_notification() {
-        $bsfPush = array(13373);
-        if (in_array($this->post_data['partner_id'], $bsfPush)) {
-            $this->bsfPush();
-        } else {
-            $this->insert_push_notify();
+    public function get_queued_entries() {
+        $this->connect();
+        try {
+            $this->queuedEntries = $this->link->prepare("SELECT * FROM push_notifications WHERE sent = 0");
+            $this->queuedEntries->execute();
+        } catch (PDOException $e) {
+            $date = date('Y-m-d H:i:s');
+            print($date . " [smhGarbageCollection->get_queued_entries] ERROR: Could not execute query (get_queued_entries): " . $e->getMessage() . "\n");
         }
+    }
+
+    public function push_notification() {
+        $bsfPush = array(10012);
+        $flavors_not_ready = array(1, 9, 7, 0, 5, 8, 6);
+        $flavor_status = array();
+        $entries = array();
+        foreach ($this->queuedEntries->fetchAll(PDO::FETCH_OBJ) as $row) {
+            if (in_array($row->partner_id, $bsfPush)) {
+                $ks = $this->impersonate($row->partner_id);
+                $flavors_response = $this->get_flavors($ks, $row->entryId);
+                foreach ($flavors_response['objects'] as $flavors) {
+                    array_push($flavor_status, $flavors['status']);
+                }
+                $entries['partner_id'] = $row->partner_id;
+                $entries['entryId'] = $row->entryId;
+                $entries['flavor_status'] = $flavor_status;
+            }
+        }
+
+        syslog(LOG_NOTICE, "SMH DEBUG : push_notification " . print_r($entries, true));
+
+//        if (in_array($this->post_data['partner_id'], $bsfPush)) {
+//            $this->bsfPush();
+//        } else {
+//            $this->insert_push_notify();
+//        }
     }
 
     //connect to database
@@ -173,6 +202,6 @@ class push {
 
 }
 
-$push = new push();
-$push->run();
+$push_cron = new push_cron();
+$push_cron->run();
 ?>

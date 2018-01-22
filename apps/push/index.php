@@ -51,7 +51,7 @@ class push {
         $this->connect();
         $entry_exists = $this->entry_exists();
         if (!$entry_exists['success']) {
-            $data = array(':partner_id' => $this->post_data['partner_id'], ':entryId' => $this->post_data['entry_id'], ':sent' => 0, ':created_at' => date('Y-m-d H:i:s'), 'updated_at' => null);
+            $data = array(':partner_id' => $this->post_data['partner_id'], ':entryId' => $this->post_data['entry_id'], ':sent' => 0, ':created_at' => date('Y-m-d H:i:s'), ':updated_at' => null);
             try {
                 $query = $this->link->prepare("INSERT INTO push_notifications (partner_id,entryId,sent,created_at,updated_at) VALUES (:partner_id,:entryId,:sent,:created_at,:updated_at)");
                 $query->execute($data);

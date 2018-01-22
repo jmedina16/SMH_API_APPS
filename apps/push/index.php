@@ -35,13 +35,10 @@ class push {
         $final_push_data['flavors'] = $flavor;
 
         $json_str = "jsonStr='" . json_encode($final_push_data) . "'";
-        syslog(LOG_NOTICE, "SMH DEBUG : bsfPush: " . print_r($json_str, true));
-
-        $json_str_test = 'jsonStr=\'{"partner_id":"13373","entry_id":"0_qwu778pt","name":"SampleVideo_1280x720_1mb","tags":"","thumbnail_url":"https:\/\/mediaplatform.streamingmediahosting.com\/p\/10012\/sp\/1001200\/thumbnail\/entry_id\/0_2us0xt65\/version\/0\/acv\/122","partner_data":"","status":"2","flavors":[{"id":"0_vq7freli","width":1280,"height":720,"bitrate":1590,"isSource":true,"isWeb":true,"status":2,"size":1034,"fileExt":"mp4"},{"id":"0_joj5pyq6","width":640,"height":360,"bitrate":447,"isSource":false,"isWeb":true,"status":2,"size":292,"fileExt":"mp4"},{"id":"0_dusampos","width":848,"height":480,"bitrate":754,"isSource":false,"isWeb":true,"status":2,"size":492,"fileExt":"mp4"},{"id":"0_ogjbtgbr","width":1024,"height":576,"bitrate":1383,"isSource":false,"isWeb":true,"status":2,"size":897,"fileExt":"mp4"},{"id":"0_ltrk6itf","width":1280,"height":720,"bitrate":1415,"isSource":false,"isWeb":true,"status":2,"size":918,"fileExt":"mp4"},{"id":"0_aagdfxk9","width":0,"height":0,"bitrate":128,"isSource":false,"isWeb":true,"status":2,"size":84,"fileExt":"mp3"}]}\'';
 
         //$notification_url = 'http://clients.streamingmediahosting.com/medina/demos/listener/sync.php';
-        $notification_url = 'https://prodlr70.bsfinternational.org/api/jsonws/media.buildmediarecords/smh-processing-complete';
-        $response = $this->curlPostJson($notification_url, $json_str_test);
+        $notification_url = 'https://prodlr70.bsfinternational.org/api/jsonws/media.buildmediarecords/smh-processing-complete/';
+        $response = $this->curlPostJson($notification_url, $json_str);
     }
 
     public function curlPostJson($url, $data) {
@@ -56,10 +53,6 @@ class push {
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_USERPWD, "test@liferay.com:test");
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/json',
-            'Content-Length: ' . strlen($data)
-        ));
         $response = curl_exec($ch);
         $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $ch_error = curl_error($ch);

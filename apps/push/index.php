@@ -46,6 +46,7 @@ class push {
     }
 
     public function insert_push_notify() {
+        date_default_timezone_set("UTC");
         $this->connect();
         $entry_exists = $this->entry_exists();
         if (!$entry_exists['success']) {

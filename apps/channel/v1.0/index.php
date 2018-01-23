@@ -38,6 +38,9 @@ class channel {
             case "update_segment":
                 $this->update_segment();
                 break;
+            case "delete_program":
+                $this->delete_program();
+                break;
             default:
                 echo "Action not found!";
         }
@@ -142,6 +145,14 @@ class channel {
         $scheduled = urlencode($_POST['scheduled']);
         $action = "channel_config/update_segment?";
         $args = "ks=" . $ks . "&sid=" . $sid . "&cid=" . $cid . "&eid=" . $eid . "&name=" . $name . "&desc=" . $desc . "&repeat=" . $repeat . "&scheduled=" . $scheduled;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function delete_program() {
+        $ks = urlencode($_POST['ks']);
+        $sid = urlencode($_POST['sid']);
+        $action = "channel_config/delete_program?";
+        $args = "ks=" . $ks . "&sid=" . $sid;
         echo $this->curl_request($action, $args);
     }
 

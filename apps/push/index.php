@@ -24,7 +24,7 @@ class push {
     }
 
     public function push_notification() {
-        $bsfPush = array(10012);
+        $bsfPush = array(13373);
         if (in_array($this->post_data['partner_id'], $bsfPush)) {
             $this->insert_push_notify();
         }

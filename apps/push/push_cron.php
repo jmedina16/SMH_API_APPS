@@ -35,7 +35,7 @@ class push_cron {
     }
 
     public function push_notification() {
-        $bsfPush = array(10012);
+        $bsfPush = array(13373);
         $flavors_not_ready = array(1, 9, 7, 0, 5, 8, 6);
         $flavor_status = array();
         $entries = array();
@@ -120,9 +120,10 @@ class push_cron {
         $final_push_data['flavors'] = $flavor;
 
         $json_str = "jsonStr='" . json_encode($final_push_data) . "'";
+        //syslog(LOG_NOTICE, "SMH DEBUG : bsfPush: " . print_r($json_str, true));
 
-        $notification_url = 'http://clients.streamingmediahosting.com/medina/demos/listener/sync.php';
-        //$notification_url = 'https://prodlr70.bsfinternational.org/api/jsonws/media.buildmediarecords/smh-processing-complete/';
+        //$notification_url = 'http://clients.streamingmediahosting.com/medina/demos/listener/sync.php';
+        $notification_url = 'https://prodlr70.bsfinternational.org/api/jsonws/media.buildmediarecords/smh-processing-complete/';
         $response = $this->curlPostJson($notification_url, $json_str);
         if ($response === 200) {
             $this->update_push_notify($pid, $eid);

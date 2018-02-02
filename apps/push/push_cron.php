@@ -119,7 +119,7 @@ class push_cron {
         $final_push_data['status'] = $entry['status'];
         $final_push_data['flavors'] = $flavor;
 
-        $json_str = "jsonStr='" . json_encode($final_push_data) . "'";
+        $json_str = "jsonStr=" . json_encode($final_push_data);
         //syslog(LOG_NOTICE, "SMH DEBUG : bsfPush: " . print_r($json_str, true));
         $notification_url = 'http://clients.streamingmediahosting.com/medina/demos/listener/sync.php';
         //$notification_url = 'https://prodlr70.bsfinternational.org/api/jsonws/media.buildmediarecords/smh-processing-complete/';

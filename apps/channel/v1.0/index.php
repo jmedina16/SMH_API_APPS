@@ -35,6 +35,9 @@ class channel {
             case "add_program":
                 $this->add_program();
                 break;
+            case "update_program":
+                $this->update_program();
+                break;
             case "update_segment":
                 $this->update_segment();
                 break;
@@ -131,6 +134,22 @@ class channel {
         $event_length = urlencode($_POST['event_length']);
         $action = "channel_config/add_program?";
         $args = "ks=" . $ks . "&cid=" . $cid . "&eid=" . $eid . "&start_date=" . $start_date . "&end_date=" . $end_date . "&repeat=" . $repeat . "&rec_type=" . $rec_type . "&event_length=" . $event_length;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function update_program() {
+        $ks = urlencode($_POST['ks']);
+        $lsid = urlencode($_POST['lsid']);
+        $pcid = urlencode($_POST['pcid']);
+        $cid = urlencode($_POST['cid']);
+        $eid = urlencode($_POST['eid']);
+        $start_date = urlencode($_POST['start_date']);
+        $end_date = urlencode($_POST['end_date']);
+        $repeat = urlencode($_POST['repeat']);
+        $rec_type = urlencode($_POST['rec_type']);
+        $event_length = urlencode($_POST['event_length']);
+        $action = "channel_config/update_program?";
+        $args = "ks=" . $ks . "&lsid=" . $lsid . "&pcid=" . $pcid . "&cid=" . $cid . "&eid=" . $eid . "&start_date=" . $start_date . "&end_date=" . $end_date . "&repeat=" . $repeat . "&rec_type=" . $rec_type . "&event_length=" . $event_length;
         echo $this->curl_request($action, $args);
     }
 

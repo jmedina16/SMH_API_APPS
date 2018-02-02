@@ -106,7 +106,7 @@ class push_cron {
         $flavors_response = $this->get_flavors($ks, $eid);
         $flavor = array();
         foreach ($flavors_response['objects'] as $flavors) {
-            array_push($flavor, array('id' => $flavors['id'], 'width' => $flavors['width'], 'height' => $flavors['height'], 'bitrate' => $flavors['bitrate'], 'isSource' => $flavors['isOriginal'], 'isWeb' => $flavors['isWeb'], 'status' => $flavors['status'], 'size' => $flavors['size'], 'fileExt' => $flavors['fileExt'], 'version' => $flavors['version'], 'description' => $flavors['description']));
+            array_push($flavor, array('id' => $flavors['id'], 'width' => $flavors['width'], 'height' => $flavors['height'], 'bitrate' => $flavors['bitrate'], 'isSource' => $flavors['isOriginal'], 'isWeb' => $flavors['isWeb'], 'status' => $flavors['status'], 'size' => $flavors['size'], 'fileExt' => $flavors['fileExt'], 'version' => $flavors['version']));
         }
 
         $final_push_data = array();
@@ -121,7 +121,6 @@ class push_cron {
 
         $json_str = "jsonStr='" . json_encode($final_push_data) . "'";
         //syslog(LOG_NOTICE, "SMH DEBUG : bsfPush: " . print_r($json_str, true));
-
         //$notification_url = 'http://clients.streamingmediahosting.com/medina/demos/listener/sync.php';
         $notification_url = 'https://prodlr70.bsfinternational.org/api/jsonws/media.buildmediarecords/smh-processing-complete/';
         $response = $this->curlPostJson($notification_url, $json_str);

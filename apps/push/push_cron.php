@@ -121,8 +121,8 @@ class push_cron {
 
         $json_str = "jsonStr='" . json_encode($final_push_data) . "'";
         //syslog(LOG_NOTICE, "SMH DEBUG : bsfPush: " . print_r($json_str, true));
-        //$notification_url = 'http://clients.streamingmediahosting.com/medina/demos/listener/sync.php';
-        $notification_url = 'https://prodlr70.bsfinternational.org/api/jsonws/media.buildmediarecords/smh-processing-complete/';
+        $notification_url = 'http://clients.streamingmediahosting.com/medina/demos/listener/sync.php';
+        //$notification_url = 'https://prodlr70.bsfinternational.org/api/jsonws/media.buildmediarecords/smh-processing-complete/';
         $response = $this->curlPostJson($notification_url, $json_str);
         if ($response === 200) {
             $this->update_push_notify($pid, $eid);

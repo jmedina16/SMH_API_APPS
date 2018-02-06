@@ -95,7 +95,7 @@ class channel {
     }
 
     public function get_schedules() {
-        $action = "channel_config/get_schedule?";
+        $action = "channel_config/get_schedules?";
         echo $this->curl_request($action, $args);
     }
 

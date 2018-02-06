@@ -23,6 +23,9 @@ class channel {
             case "post_schedule":
                 $this->post_schedule();
                 break;
+            case "get_schedules":
+                $this->get_schedules();
+                break;
             case "get_channels":
                 $this->get_channels();
                 break;
@@ -88,6 +91,11 @@ class channel {
         $ks = urlencode($_POST['ks']);
         $action = "channel_config/post_schedule?";
         $args = "ks=" . $ks;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function get_schedules() {
+        $action = "channel_config/get_schedule?";
         echo $this->curl_request($action, $args);
     }
 

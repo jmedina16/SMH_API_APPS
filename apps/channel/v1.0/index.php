@@ -20,8 +20,11 @@ class channel {
     //run ppv api
     public function run() {
         switch ($this->action) {
-            case "post_schedule":
-                $this->post_schedule();
+            case "push_schedule":
+                $this->push_schedule();
+                break;
+            case "disable_schedule":
+                $this->disable_schedule();
                 break;
             case "get_schedules":
                 $this->get_schedules();
@@ -87,9 +90,16 @@ class channel {
         }
     }
 
-    public function post_schedule() {
+    public function push_schedule() {
         $ks = urlencode($_POST['ks']);
-        $action = "channel_config/post_schedule?";
+        $action = "channel_config/push_schedule?";
+        $args = "ks=" . $ks;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function disable_schedule() {
+        $ks = urlencode($_POST['ks']);
+        $action = "channel_config/disable_schedule?";
         $args = "ks=" . $ks;
         echo $this->curl_request($action, $args);
     }

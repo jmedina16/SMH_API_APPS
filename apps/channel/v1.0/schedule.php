@@ -44,6 +44,7 @@
             <script src="//code.jquery.com/ui/1.10.3/jquery-ui.js?v=1"></script>
             <script src="/js/bootstrap.min.js?v=1" type="text/javascript"></script>
             <script src="/js/dhtmlxscheduler.js?v=1.5" type = "text/javascript"></script>
+            <script src="/js/dhtmlxscheduler_limit.js?v=1.5" type="text/javascript"></script>
             <script src="/js/dhtmlxscheduler_timeline.js?v=1.5" type="text/javascript"></script>
             <script src="/js/dhtmlxscheduler_minical.js?v=1.5" type="text/javascript"></script>
             <script src="/js/dhtmlxscheduler_tooltip.js?v=1.5" type="text/javascript"></script>

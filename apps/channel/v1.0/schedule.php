@@ -9,7 +9,7 @@
         <link href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css?v=1" rel="stylesheet">
         <link href="/css/bootstrap.min.css?v=1" rel="stylesheet">
         <link href="/css/font-awesome.min.css?v=1" rel="stylesheet">
-        <link href="/css/dhtmlxscheduler_flat.css?v=1" rel="stylesheet">
+        <link href="/css/schedule_public/dhtmlxscheduler_flat.css?v=1" rel="stylesheet">
     </head>
     <body>
         <?php
@@ -17,7 +17,7 @@
         if (isset($pid)) {
             ?>
             <script type="text/javascript">
-                var sessInfo = {pid:'<?php echo $pid; ?>'};
+                var sessInfo = {pid: '<?php echo $pid; ?>'};
             </script>
             <div id="scheduler" class="dhx_cal_container" style='width:100%; height:100%;'>
                 <div class="dhx_cal_navline">
@@ -32,7 +32,15 @@
                 </div>
                 <div class="dhx_cal_data">
                 </div>		
-            </div>  
+            </div>
+            <div class="modal fade" id="smh-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog smh-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header"></div>
+                        <div class="modal-body"></div>
+                    </div>
+                </div>
+            </div>
             <script src="/js/jQuery-2.1.4.min.js?v=1" type="text/javascript"></script>
             <script src="//code.jquery.com/ui/1.10.3/jquery-ui.js?v=1"></script>
             <script src="/js/bootstrap.min.js?v=1" type="text/javascript"></script>

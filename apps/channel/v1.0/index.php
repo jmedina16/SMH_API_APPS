@@ -50,6 +50,9 @@ class channel {
             case "delete_program":
                 $this->delete_program();
                 break;
+            case "get_timezone":
+                $this->get_timezone();
+                break;
             default:
                 echo "Action not found!";
         }
@@ -190,6 +193,14 @@ class channel {
         $sid = urlencode($_POST['sid']);
         $action = "channel_config/delete_program?";
         $args = "ks=" . $ks . "&sid=" . $sid;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function get_timezone() {
+        $ks = urlencode($_GET['ks']);
+        $tz = urlencode($_GET['tz']);
+        $action = "channel_config/get_timezone?";
+        $args = "ks=" . $ks . "&tz=" . $tz;
         echo $this->curl_request($action, $args);
     }
 

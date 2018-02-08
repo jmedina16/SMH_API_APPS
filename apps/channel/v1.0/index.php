@@ -53,6 +53,9 @@ class channel {
             case "get_timezone":
                 $this->get_timezone();
                 break;
+            case "update_timezone":
+                $this->update_timezone();
+                break;
             default:
                 echo "Action not found!";
         }
@@ -117,8 +120,9 @@ class channel {
         $category = urlencode($_GET['category']);
         $ac = urlencode($_GET['ac']);
         $search = urlencode($_GET['search']);
+        $tz = urlencode($_GET['tz']);
         $action = "channel_config/get_channels?";
-        $args = "ks=" . $ks . "&category=" . $category . "&ac=" . $ac . "&search=" . $search;
+        $args = "ks=" . $ks . "&category=" . $category . "&ac=" . $ac . "&search=" . $search . "&tz=" . $tz;
         $channels = $this->curl_request($action, $args);
         echo json_decode($channels, true);
     }
@@ -200,6 +204,14 @@ class channel {
         $ks = urlencode($_GET['ks']);
         $tz = urlencode($_GET['tz']);
         $action = "channel_config/get_timezone?";
+        $args = "ks=" . $ks . "&tz=" . $tz;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function update_timezone() {
+        $ks = urlencode($_POST['ks']);
+        $tz = urlencode($_POST['tz']);
+        $action = "channel_config/update_timezone?";
         $args = "ks=" . $ks . "&tz=" . $tz;
         echo $this->curl_request($action, $args);
     }

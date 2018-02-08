@@ -53,6 +53,9 @@ class channel {
             case "update_timezone":
                 $this->update_timezone();
                 break;
+            case "get_public_channels":
+                $this->get_public_channels();
+                break;
             default:
                 echo "Action not found!";
         }
@@ -210,6 +213,12 @@ class channel {
         $tz = urlencode($_POST['tz']);
         $action = "channel_config/update_timezone?";
         $args = "ks=" . $ks . "&tz=" . $tz;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function get_public_channels() {
+        $action = "channel_config/get_public_channels?";
+        $args = '';
         echo $this->curl_request($action, $args);
     }
 

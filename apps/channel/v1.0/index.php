@@ -44,9 +44,6 @@ class channel {
             case "update_program":
                 $this->update_program();
                 break;
-            case "update_segment":
-                $this->update_segment();
-                break;
             case "delete_program":
                 $this->delete_program();
                 break;

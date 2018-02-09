@@ -21,14 +21,23 @@
             <script type="text/javascript">
                 var sessInfo = {pid: '<?php echo $pid; ?>', playerId: '<?php echo $playerId ?>'};
             </script>
-            <div style="border: 2px solid #000; width: 100%; height: 450px;">
-                <div style="border: 2px solid #000;width: 800px;height: 450px;overflow: hidden;float: left;">
-                    <div id="smh_player" style="width: 800px; height: 450px;"></div>
+            <div class="container-fluid">
+                <div class="row">
+                    <!--                <div style="border: 2px solid #000;width: 800px;height: 450px;overflow: hidden;float: left;padding: 10px;">-->
+                    <!--                    <div style="max-width: 800px;width: 100%;display: inline-block;position: relative;float: left;">-->
+                    <div class="col-xs-12 col-sm-7 col-md-5" style="margin-top: 10px;">
+                        <div style="margin-top: 56.25%;"></div>
+                        <div id="smh_player" style="position:absolute;top:0;left:0;left: 0;right: 0;bottom:0;"></div>
+                    </div>
+                    <!--                </div>-->
+                    <!--                    <div style="border: 2px solid #000;height: 450px;margin-left: 800px;">-->
+                    <div class="col-xs-12 col-sm-5 col-md-7" style="margin-top: 10px;">
+                        <div style="padding: 0px 10px 10px 0px;">
+                            Entry Details
+                        </div>                        
+                    </div>
+                    <div class="clear"></div>                
                 </div>
-                <div style="border: 2px solid #000;height: 450px;margin-left: 800px;">
-                    Entry Details
-                </div>
-                <div class="clear"></div>
             </div>
             <div id="scheduler" class="dhx_cal_container" style='width:100%; height:100%;'>
                 <div class="dhx_cal_navline">

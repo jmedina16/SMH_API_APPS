@@ -14,17 +14,19 @@
     <body>
         <?php
         $pid = $_GET['pid'];
+        $playerId = $_GET['playerId'];
         if (isset($pid)) {
             ?>
+            <script src="https://mediaplatform.streamingmediahosting.com/p/<?php echo $pid ?>/sp/<?php echo $pid ?>00/embedIframeJs/uiconf_id/<?php echo $playerId ?>/partner_id/<?php echo $pid ?>"></script>
             <script type="text/javascript">
-                var sessInfo = {pid: '<?php echo $pid; ?>'};
+                var sessInfo = {pid: '<?php echo $pid; ?>', playerId: '<?php echo $playerId ?>'};
             </script>
             <div style="border: 2px solid #000; width: 100%; height: 431px;">
-                <div style="border: 2px solid #000; height: 431px; float: right; margin-left: 10px;">
-                    Entry Details
+                <div style="border: 2px solid #000;width: 782px;height: 431px;overflow: hidden;float: left;">
+                    <div id="smh_player" style="width: 782px; height: 431px;"></div>
                 </div>
-                <div style="border: 2px solid #000; width: 782px; height: 431px; overflow: hidden;">
-                    Player
+                <div style="border: 2px solid #000;height: 431px;margin-left: 782px;">
+                    Entry Details
                 </div>
                 <div class="clear"></div>
             </div>

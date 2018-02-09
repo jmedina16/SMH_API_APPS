@@ -19,6 +19,15 @@
             <script type="text/javascript">
                 var sessInfo = {pid: '<?php echo $pid; ?>'};
             </script>
+            <div style="border: 2px solid #000; width: 100%; height: 431px;">
+                <div style="border: 2px solid #000; height: 431px; float: right; margin-left: 10px;">
+                    Entry Details
+                </div>
+                <div style="border: 2px solid #000; width: 782px; height: 431px; overflow: hidden;">
+                    Player
+                </div>
+                <div class="clear"></div>
+            </div>
             <div id="scheduler" class="dhx_cal_container" style='width:100%; height:100%;'>
                 <div class="dhx_cal_navline">
                     <div class="scheduler_zoom_out" onclick="smhS.zoomOut();"><i class="fa fa-search-minus" aria-hidden="true"></i></div>

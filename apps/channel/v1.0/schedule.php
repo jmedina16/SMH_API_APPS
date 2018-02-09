@@ -21,11 +21,11 @@
             <script type="text/javascript">
                 var sessInfo = {pid: '<?php echo $pid; ?>', playerId: '<?php echo $playerId ?>'};
             </script>
-            <div style="border: 2px solid #000; width: 100%; height: 431px;">
-                <div style="border: 2px solid #000;width: 782px;height: 431px;overflow: hidden;float: left;">
-                    <div id="smh_player" style="width: 782px; height: 431px;"></div>
+            <div style="border: 2px solid #000; width: 100%; height: 450px;">
+                <div style="border: 2px solid #000;width: 800px;height: 450px;overflow: hidden;float: left;">
+                    <div id="smh_player" style="width: 800px; height: 450px;"></div>
                 </div>
-                <div style="border: 2px solid #000;height: 431px;margin-left: 782px;">
+                <div style="border: 2px solid #000;height: 450px;margin-left: 800px;">
                     Entry Details
                 </div>
                 <div class="clear"></div>

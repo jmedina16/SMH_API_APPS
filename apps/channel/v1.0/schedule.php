@@ -68,11 +68,12 @@
             <script src="/js/bootstrap.min.js?v=1" type="text/javascript"></script>
             <script src="/js/jquery.mCustomScrollbar.min.js?v=1" type="text/javascript"></script>
             <script src="/js/dhtmlxscheduler.js?v=1.5" type = "text/javascript"></script>
+            <script src="/js/dhtmlxscheduler_expand.js?v=1.5" type="text/javascript"></script>
+            <script src="/js/dhtmlxscheduler_container_autoresize.js?v=1.5" type="text/javascript"></script>
             <script src="/js/dhtmlxscheduler_limit.js?v=1.5" type="text/javascript"></script>
             <script src="/js/dhtmlxscheduler_timeline.js?v=1.5" type="text/javascript"></script>
             <script src="/js/dhtmlxscheduler_minical.js?v=1.5" type="text/javascript"></script>
             <script src="/js/dhtmlxscheduler_tooltip.js?v=1.5" type="text/javascript"></script>
-            <script src="/js/dhtmlxscheduler_container_autoresize.js?v=1.5" type="text/javascript"></script>
             <script src="/js/dhtmlxscheduler_recurring.js?v=1.5" type="text/javascript"></script>
             <script src="/js/jquery.dotdotdot.js?v=1.5" type="text/javascript"></script>
             <script src="/js/schedule.js?v=1.5" type="text/javascript"></script>

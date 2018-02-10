@@ -9,6 +9,7 @@
         <link href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css?v=1" rel="stylesheet">
         <link href="/css/bootstrap.min.css?v=1" rel="stylesheet">
         <link href="/css/font-awesome.min.css?v=1" rel="stylesheet">
+        <link href="/css/jquery.mCustomScrollbar.css?v=1" rel="stylesheet"> 
         <link href="/css/schedule_public/dhtmlxscheduler_flat.css?v=1" rel="stylesheet">
     </head>
     <body>
@@ -31,13 +32,13 @@
                     </div>
                     <!--                </div>-->
                     <!--                    <div style="border: 2px solid #000;height: 450px;margin-left: 800px;">-->
-                    <div class="col-xs-12 col-sm-5 col-md-7" style="margin-top: 10px;">
-                        <div style="padding: 35px 10px 10px 0px;position: relative;top: 35px;overflow: hidden;" id="entry-details">
+                    <div class="col-xs-12 col-sm-5 col-md-7" style="margin-top: 10px; display: table-cell; height: auto; border: 1px solid black;position:relative;" id="entry-details-wrapper">
+                        <div style="padding: 10px 10px 10px 10px;height: 200px;width: 100%;position:absolute;left:0;bottom:0;" id="entry-details">
                             <div id="event-title" style="font-size: 24px;margin-bottom: 10px;"></div>   
                             <div id="channel-time" style="font-size: 14px; margin-bottom: 5px;">
                                 <span style="border-right: 1px solid #000;margin-right: 7px;padding-right: 7px;" id="channel-title"></span><span id="event-time-range"></span>
                             </div>
-                            <div id="event-desc" style="font-size: 14px;"></div>
+                            <div id="event-desc" style="font-size: 14px;height: 112px;overflow: hidden;"></div>
                         </div>                        
                     </div>
                     <div class="clear"></div>                
@@ -67,6 +68,7 @@
             <script src="/js/jQuery-2.1.4.min.js?v=1" type="text/javascript"></script>
             <script src="//code.jquery.com/ui/1.10.3/jquery-ui.js?v=1"></script>
             <script src="/js/bootstrap.min.js?v=1" type="text/javascript"></script>
+            <script src="/js/jquery.mCustomScrollbar.min.js?v=1" type="text/javascript"></script>
             <script src="/js/dhtmlxscheduler.js?v=1.5" type = "text/javascript"></script>
             <script src="/js/dhtmlxscheduler_limit.js?v=1.5" type="text/javascript"></script>
             <script src="/js/dhtmlxscheduler_timeline.js?v=1.5" type="text/javascript"></script>

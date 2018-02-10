@@ -27,13 +27,17 @@
                     <!--                    <div style="max-width: 800px;width: 100%;display: inline-block;position: relative;float: left;">-->
                     <div class="col-xs-12 col-sm-7 col-md-5" style="margin-top: 10px;">
                         <div style="margin-top: 56.25%;"></div>
-                        <div id="smh_player" style="position:absolute;top:0;left:0;left: 0;right: 0;bottom:0;"></div>
+                        <div id="smh_player" style="position:absolute;top:0;left:0;left: 0;right: 0;bottom:0;padding-left:5px;padding-right:5px;"></div>
                     </div>
                     <!--                </div>-->
                     <!--                    <div style="border: 2px solid #000;height: 450px;margin-left: 800px;">-->
                     <div class="col-xs-12 col-sm-5 col-md-7" style="margin-top: 10px;">
-                        <div style="padding: 0px 10px 10px 0px;">
-                            Entry Details
+                        <div style="padding: 35px 10px 10px 0px;position: relative;top: 35px;overflow: hidden;" id="entry-details">
+                            <div id="event-title" style="font-size: 24px;margin-bottom: 10px;"></div>   
+                            <div id="channel-time" style="font-size: 14px; margin-bottom: 5px;">
+                                <span style="border-right: 1px solid #000;margin-right: 7px;padding-right: 7px;" id="channel-title"></span><span id="event-time-range"></span>
+                            </div>
+                            <div id="event-desc" style="font-size: 14px;"></div>
                         </div>                        
                     </div>
                     <div class="clear"></div>                

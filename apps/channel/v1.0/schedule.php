@@ -32,13 +32,11 @@
                     </div>
                     <!--                </div>-->
                     <!--                    <div style="border: 2px solid #000;height: 450px;margin-left: 800px;">-->
-                    <div class="col-xs-12 col-sm-5 col-md-7" style="margin-top: 10px; display: table-cell; height: auto; border: 1px solid black;position:relative;" id="entry-details-wrapper">
-                        <div style="padding: 10px 10px 10px 10px;height: 200px;width: 100%;position:absolute;left:0;bottom:0;" id="entry-details">
-                            <div id="event-title" style="font-size: 24px;margin-bottom: 10px;"></div>   
-                            <div id="channel-time" style="font-size: 14px; margin-bottom: 5px;">
-                                <span style="border-right: 1px solid #000;margin-right: 7px;padding-right: 7px;" id="channel-title"></span><span id="event-time-range"></span>
-                            </div>
-                            <div id="event-desc" style="font-size: 14px;height: 112px;overflow: hidden;"></div>
+                    <div class="col-xs-12 col-sm-5 col-md-7" id="entry-details-wrapper">
+                        <div id="entry-details">
+                            <div id="event-title"></div>   
+                            <div id="channel-time"></div>
+                            <div id="event-desc"></div>
                         </div>                        
                     </div>
                     <div class="clear"></div>                

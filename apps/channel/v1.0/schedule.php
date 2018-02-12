@@ -22,7 +22,7 @@
             <script type="text/javascript">
                 var sessInfo = {pid: '<?php echo $pid; ?>', playerId: '<?php echo $playerId ?>'};
             </script>
-            <div class="container-fluid">
+            <div class="container-fluid" id="player-wrapper">
                 <div class="row">
                     <!--                <div style="border: 2px solid #000;width: 800px;height: 450px;overflow: hidden;float: left;padding: 10px;">-->
                     <!--                    <div style="max-width: 800px;width: 100%;display: inline-block;position: relative;float: left;">-->
@@ -43,18 +43,20 @@
                 </div>
             </div>
             <div id="scheduler" class="dhx_cal_container" style='width:100%; height:100%;'>
-                <div class="dhx_cal_navline">
-                    <div class="scheduler_zoom_out" onclick="smhS.zoomOut();"><i class="fa fa-search-minus" aria-hidden="true"></i></div>
-                    <div class="scheduler_zoom_in" onclick="smhS.zoomIn();"><i class="fa fa-search-plus" aria-hidden="true"></i></div>
-                    <div class="dhx_cal_prev_button">&nbsp;</div>
-                    <div class="dhx_cal_next_button">&nbsp;</div>
-                    <div class="dhx_cal_date"></div>
-                    <div class="dhx_minical_icon" id="dhx_minical_icon" onclick="smhS.show_minical()" style="left: 190px;">&nbsp;</div>
+                <div id="dhx_sticky_navline_wrapper">
+                    <div class="dhx_cal_navline">
+                        <div class="scheduler_zoom_out" onclick="smhS.zoomOut();"><i class="fa fa-search-minus" aria-hidden="true"></i></div>
+                        <div class="scheduler_zoom_in" onclick="smhS.zoomIn();"><i class="fa fa-search-plus" aria-hidden="true"></i></div>
+                        <div class="dhx_cal_prev_button">&nbsp;</div>
+                        <div class="dhx_cal_next_button">&nbsp;</div>
+                        <div class="dhx_cal_date"></div>
+                        <div class="dhx_minical_icon" id="dhx_minical_icon" onclick="smhS.show_minical()" style="left: 190px;">&nbsp;</div>
+                    </div>                 
                 </div>
-                <div class="dhx_cal_header">
-                </div>
-                <div class="dhx_cal_data">
-                </div>		
+                <div id="dhx_sticky_header_wrapper">
+                    <div class="dhx_cal_header"></div>   
+                </div>                
+                <div class="dhx_cal_data"></div>		
             </div>
             <div class="modal fade" id="smh-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog smh-dialog">

@@ -35,7 +35,7 @@ class push_cron {
     }
 
     public function push_notification() {
-        $bsfPush = array(13373);
+        $bsfPush = array(13373, 12773);
         $flavors_not_ready = array(1, 9, 7, 0, 5, 8, 6);
         $flavor_status = array();
         $entries = array();
@@ -121,15 +121,22 @@ class push_cron {
 
         $json_str = "jsonStr=" . json_encode($final_push_data);
         //syslog(LOG_NOTICE, "SMH DEBUG : bsfPush: " . print_r($json_str, true));
-        $notification_url = 'http://clients.streamingmediahosting.com/medina/demos/listener/sync.php';
+        $notification_url = '';
         //$notification_url = 'https://prodlr70.bsfinternational.org/api/jsonws/media.buildmediarecords/smh-processing-complete/';
-        $response = $this->curlPostJson($notification_url, $json_str);
+        if ($pid === 13373) {
+            $notification_url = 'https://prodlr70.bsfinternational.org/api/jsonws/media.buildmediarecords/smh-processing-complete/';
+            $response = $this->curlPostJsonBSF1($notification_url, $json_str);
+        } else if ($pid === 12773) {
+            $notification_url = 'https://wso2api.mybsf.org:8243/completeLectureProcess/1.0.0';
+            $response = $this->curlPostJsonBSF2($notification_url, $json_str);
+        }
+
         if ($response === 200) {
             $this->update_push_notify($pid, $eid);
         }
     }
 
-    public function curlPostJson($url, $data) {
+    public function curlPostJsonBSF1($url, $data) {
         syslog(LOG_NOTICE, "SMH DEBUG : curlPostJson1: " . print_r($data, true));
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -141,6 +148,34 @@ class push_cron {
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_USERPWD, "test@liferay.com:test");
+        $response = curl_exec($ch);
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $ch_error = curl_error($ch);
+        syslog(LOG_NOTICE, "SMH DEBUG : curlStatus: " . $status);
+        if ($ch_error) {
+            syslog(LOG_NOTICE, "SMH DEBUG : curlError: " . print_r($ch_error, true));
+        }
+        syslog(LOG_NOTICE, "SMH DEBUG : curlPostJson2: " . print_r($response, true));
+        curl_close($ch);
+
+        return $status;
+    }
+
+    public function curlPostJsonBSF2($url, $data) {
+        syslog(LOG_NOTICE, "SMH DEBUG : curlPostJson1: " . print_r($data, true));
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Authorization: Bearer 49be2a3b-5094-3540-931c-526d062d0bbd'
+        ));
         $response = curl_exec($ch);
         $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $ch_error = curl_error($ch);

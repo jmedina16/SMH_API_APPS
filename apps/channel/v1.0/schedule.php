@@ -76,7 +76,6 @@
             <script src="/js/dhtmlxscheduler_tooltip.js?v=1.5" type="text/javascript"></script>
             <script src="/js/dhtmlxscheduler_recurring.js?v=1.5" type="text/javascript"></script>
             <script src="/js/jquery.dotdotdot.js?v=1.5" type="text/javascript"></script>
-            <script src="/js/jquery.sticky.js?v=1.5" type="text/javascript"></script>
             <script src="/js/schedule.js?v=1.5" type="text/javascript"></script>
 
             <?php

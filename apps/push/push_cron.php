@@ -122,11 +122,13 @@ class push_cron {
         $json_str = "jsonStr=" . json_encode($final_push_data);
         //syslog(LOG_NOTICE, "SMH DEBUG : bsfPush: " . print_r($json_str, true));
         $notification_url = '';
+        $response = '';
         //$notification_url = 'https://prodlr70.bsfinternational.org/api/jsonws/media.buildmediarecords/smh-processing-complete/';
-        if ($pid === 13373) {
+        if ((int) $pid === 13373) {
             $notification_url = 'https://prodlr70.bsfinternational.org/api/jsonws/media.buildmediarecords/smh-processing-complete/';
             $response = $this->curlPostJsonBSF1($notification_url, $json_str);
-        } else if ($pid === 12773) {
+        } else if ((int) $pid === 12773) {
+//            syslog(LOG_NOTICE, "SMH DEBUG : bsfPush: " . print_r($pid, true));
             $notification_url = 'https://wso2api.mybsf.org:8243/completeLectureProcess/1.0.0';
             $response = $this->curlPostJsonBSF2($notification_url, $json_str);
         }

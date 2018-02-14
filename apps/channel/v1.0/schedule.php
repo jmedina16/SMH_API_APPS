@@ -17,6 +17,9 @@
         $pid = $_GET['pid'];
         $playerId = $_GET['playerId'];
         if (isset($pid)) {
+            if (!isset($playerId)) {
+                $playerId = 6717463;
+            }
             ?>
             <script src="https://mediaplatform.streamingmediahosting.com/p/<?php echo $pid ?>/sp/<?php echo $pid ?>00/embedIframeJs/uiconf_id/<?php echo $playerId ?>/partner_id/<?php echo $pid ?>"></script>
             <script type="text/javascript">

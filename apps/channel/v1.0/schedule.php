@@ -40,7 +40,7 @@ if (isset($pid)) {
             <link href="<?php echo $apps_url ?>/p/<?php echo $pid ?>/css/schedule_public/dhtmlxscheduler_flat.css?v=1" rel="stylesheet">
         </head>
         <body>
-            <script src="https://mediaplatform.streamingmediahosting.com/p/<?php echo $pid ?>/sp/<?php echo $pid ?>00/embedIframeJs/uiconf_id/<?php echo $playerId ?>/partner_id/<?php echo $pid ?>"></script>
+            <script src="http://devplatform.streamingmediahosting.com/p/<?php echo $pid ?>/sp/<?php echo $pid ?>00/embedIframeJs/uiconf_id/<?php echo $playerId ?>/partner_id/<?php echo $pid ?>"></script>
             <script type="text/javascript">
                 var sessInfo = {pid: '<?php echo $pid; ?>', playerId: '<?php echo $playerId ?>'};
             </script>

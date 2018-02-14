@@ -15,8 +15,15 @@ if (isset($pid)) {
         curl_close($ch);
         return $output;
     }
+
+    $apps_url = '';
+
     $cdn = json_decode(getCDN($pid), true);
-    print_r($cdn);
+    if ($cdn[0]['edgecast'] || $cdn[0]['custom']) {
+        $apps_url = 'https://ecapps.streamingmediahosting.com';
+    } else if ($cdn[0]['highwinds']) {
+        $apps_url = 'https://hwapps.streamingmediahosting.com';
+    }
     ?>
     <!DOCTYPE html>
     <html lang="en">
@@ -27,10 +34,10 @@ if (isset($pid)) {
 
             <!-- CSS -->
             <link href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css?v=1" rel="stylesheet">
-            <link href="/p/<?php echo $pid ?>/css/bootstrap.min.css?v=1" rel="stylesheet">
-            <link href="/p/<?php echo $pid ?>/css/font-awesome.min.css?v=1" rel="stylesheet">
-            <link href="/p/<?php echo $pid ?>/css/jquery.mCustomScrollbar.css?v=1" rel="stylesheet"> 
-            <link href="/p/<?php echo $pid ?>/css/schedule_public/dhtmlxscheduler_flat.css?v=1" rel="stylesheet">
+            <link href="<?php echo $apps_url ?>/p/<?php echo $pid ?>/css/bootstrap.min.css?v=1" rel="stylesheet">
+            <link href="<?php echo $apps_url ?>/p/<?php echo $pid ?>/css/font-awesome.min.css?v=1" rel="stylesheet">
+            <link href="<?php echo $apps_url ?>/p/<?php echo $pid ?>/css/jquery.mCustomScrollbar.css?v=1" rel="stylesheet"> 
+            <link href="<?php echo $apps_url ?>/p/<?php echo $pid ?>/css/schedule_public/dhtmlxscheduler_flat.css?v=1" rel="stylesheet">
         </head>
         <body>
             <script src="https://mediaplatform.streamingmediahosting.com/p/<?php echo $pid ?>/sp/<?php echo $pid ?>00/embedIframeJs/uiconf_id/<?php echo $playerId ?>/partner_id/<?php echo $pid ?>"></script>
@@ -81,19 +88,19 @@ if (isset($pid)) {
                 </div>
             </div>              
 
-            <script src="/js/jQuery-2.1.4.min.js?v=1" type="text/javascript"></script>
+            <script src="<?php echo $apps_url ?>/p/<?php echo $pid ?>/js/jQuery-2.1.4.min.js?v=1" type="text/javascript"></script>
             <script src="//code.jquery.com/ui/1.10.3/jquery-ui.js?v=1"></script>
-            <script src="/js/bootstrap.min.js?v=1" type="text/javascript"></script>
-            <script src="/js/jquery.mCustomScrollbar.min.js?v=1" type="text/javascript"></script>
-            <script src="/js/jquery.slimscroll.min.js?v=1" type="text/javascript"></script>
-            <script src="/js/dhtmlxscheduler.js?v=1.5" type = "text/javascript"></script>
-            <script src="/js/dhtmlxscheduler_limit.js?v=1.5" type="text/javascript"></script>
-            <script src="/js/dhtmlxscheduler_timeline.js?v=1.5" type="text/javascript"></script>
-            <script src="/js/dhtmlxscheduler_minical.js?v=1.5" type="text/javascript"></script>
-            <script src="/js/dhtmlxscheduler_tooltip.js?v=1.5" type="text/javascript"></script>
-            <script src="/js/dhtmlxscheduler_recurring.js?v=1.5" type="text/javascript"></script>
-            <script src="/js/jquery.dotdotdot.js?v=1.5" type="text/javascript"></script>
-            <script src="/js/schedule.js?v=1.5" type="text/javascript"></script>
+            <script src="<?php echo $apps_url ?>/p/<?php echo $pid ?>/js/bootstrap.min.js?v=1" type="text/javascript"></script>
+            <script src="<?php echo $apps_url ?>/p/<?php echo $pid ?>/js/jquery.mCustomScrollbar.min.js?v=1" type="text/javascript"></script>
+            <script src="<?php echo $apps_url ?>/p/<?php echo $pid ?>/js/jquery.slimscroll.min.js?v=1" type="text/javascript"></script>
+            <script src="<?php echo $apps_url ?>/p/<?php echo $pid ?>/js/dhtmlxscheduler.js?v=1.5" type = "text/javascript"></script>
+            <script src="<?php echo $apps_url ?>/p/<?php echo $pid ?>/js/dhtmlxscheduler_limit.js?v=1.5" type="text/javascript"></script>
+            <script src="<?php echo $apps_url ?>/p/<?php echo $pid ?>/js/dhtmlxscheduler_timeline.js?v=1.5" type="text/javascript"></script>
+            <script src="<?php echo $apps_url ?>/p/<?php echo $pid ?>/js/dhtmlxscheduler_minical.js?v=1.5" type="text/javascript"></script>
+            <script src="<?php echo $apps_url ?>/p/<?php echo $pid ?>/js/dhtmlxscheduler_tooltip.js?v=1.5" type="text/javascript"></script>
+            <script src="<?php echo $apps_url ?>/p/<?php echo $pid ?>/js/dhtmlxscheduler_recurring.js?v=1.5" type="text/javascript"></script>
+            <script src="<?php echo $apps_url ?>/p/<?php echo $pid ?>/js/jquery.dotdotdot.js?v=1.5" type="text/javascript"></script>
+            <script src="<?php echo $apps_url ?>/p/<?php echo $pid ?>/js/schedule.js?v=1.5" type="text/javascript"></script>
         </body>
     </html>
     <?php

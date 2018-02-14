@@ -1,26 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-        <title>TV Channel Guide</title>
+<?php
+$pid = $_GET['pid'];
+$playerId = $_GET['playerId'];
+if (isset($pid)) {
+    if (!isset($playerId)) {
+        $playerId = 6717463;
+    }
 
-        <!-- CSS -->
-        <link href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css?v=1" rel="stylesheet">
-        <link href="/css/bootstrap.min.css?v=1" rel="stylesheet">
-        <link href="/css/font-awesome.min.css?v=1" rel="stylesheet">
-        <link href="/css/jquery.mCustomScrollbar.css?v=1" rel="stylesheet"> 
-        <link href="/css/schedule_public/dhtmlxscheduler_flat.css?v=1" rel="stylesheet">
-    </head>
-    <body>
-        <?php
-        $pid = $_GET['pid'];
-        $playerId = $_GET['playerId'];
-        if (isset($pid)) {
-            if (!isset($playerId)) {
-                $playerId = 6717463;
-            }
-            ?>
+    function getCDN($pid) {
+        $url = 'http://ecapps.streamingmediahosting.com/apps/scripts/getCDN.php?action=get_cdn&pid=' . $pid;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec($ch);
+        curl_close($ch);
+        return $output;
+    }
+    $cdn = json_decode(getCDN($pid), true);
+    print_r($cdn);
+    ?>
+    <!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+            <title>TV Channel Guide</title>
+
+            <!-- CSS -->
+            <link href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css?v=1" rel="stylesheet">
+            <link href="/p/<?php echo $pid ?>/css/bootstrap.min.css?v=1" rel="stylesheet">
+            <link href="/p/<?php echo $pid ?>/css/font-awesome.min.css?v=1" rel="stylesheet">
+            <link href="/p/<?php echo $pid ?>/css/jquery.mCustomScrollbar.css?v=1" rel="stylesheet"> 
+            <link href="/p/<?php echo $pid ?>/css/schedule_public/dhtmlxscheduler_flat.css?v=1" rel="stylesheet">
+        </head>
+        <body>
             <script src="https://mediaplatform.streamingmediahosting.com/p/<?php echo $pid ?>/sp/<?php echo $pid ?>00/embedIframeJs/uiconf_id/<?php echo $playerId ?>/partner_id/<?php echo $pid ?>"></script>
             <script type="text/javascript">
                 var sessInfo = {pid: '<?php echo $pid; ?>', playerId: '<?php echo $playerId ?>'};
@@ -82,13 +94,11 @@
             <script src="/js/dhtmlxscheduler_recurring.js?v=1.5" type="text/javascript"></script>
             <script src="/js/jquery.dotdotdot.js?v=1.5" type="text/javascript"></script>
             <script src="/js/schedule.js?v=1.5" type="text/javascript"></script>
-
-            <?php
-        } else {
-            echo "Cannot find schedule";
-        }
-        ?>   
-    </body>
-
-</html>
+        </body>
+    </html>
+    <?php
+} else {
+    echo "Cannot find schedule";
+}
+?>   
 

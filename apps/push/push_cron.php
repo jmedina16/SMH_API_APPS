@@ -35,7 +35,7 @@ class push_cron {
     }
 
     public function push_notification() {
-        $bsfPush = array(13373, 12773);
+        $bsfPush = array(13373, 12773, 10012);
         $flavors_not_ready = array(1, 9, 7, 0, 5, 8, 6);
         $flavor_status = array();
         $entries = array();
@@ -100,13 +100,26 @@ class push_cron {
         return $success;
     }
 
+    public function getMimeType($filename) {
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime = finfo_file($finfo, $filename);
+        finfo_close($finfo);
+        return $mime;
+    }
+
     public function bsfPush($pid, $eid) {
         $ks = $this->impersonate($pid);
         $entry = $this->get_entry_details($ks, $eid);
         $flavors_response = $this->get_flavors($ks, $eid);
         $flavor = array();
         foreach ($flavors_response['objects'] as $flavors) {
-            array_push($flavor, array('id' => $flavors['id'], 'width' => $flavors['width'], 'height' => $flavors['height'], 'bitrate' => $flavors['bitrate'], 'isSource' => $flavors['isOriginal'], 'isWeb' => $flavors['isWeb'], 'status' => $flavors['status'], 'size' => $flavors['size'], 'fileExt' => $flavors['fileExt'], 'version' => $flavors['version']));
+            if ($flavors['status'] === 2) {
+                $fileType = $this->getMimeType('/opt/kaltura/web/content/entry/data/' . $pid . '/' . $eid . '_' . $flavors['id'] . '_' . $flavors['version'] . '.' . $flavors['fileExt']);
+            } else {
+                $fileType = null;
+            }
+
+            array_push($flavor, array('id' => $flavors['id'], 'width' => $flavors['width'], 'height' => $flavors['height'], 'bitrate' => $flavors['bitrate'], 'isSource' => $flavors['isOriginal'], 'isWeb' => $flavors['isWeb'], 'status' => $flavors['status'], 'size' => $flavors['size'], 'fileExt' => $flavors['fileExt'], 'fileType' => $fileType, 'version' => $flavors['version']));
         }
 
         $final_push_data = array();
@@ -119,21 +132,25 @@ class push_cron {
         $final_push_data['status'] = $entry['status'];
         $final_push_data['flavors'] = $flavor;
 
-        $json_str = "jsonStr=" . json_encode($final_push_data);
         //syslog(LOG_NOTICE, "SMH DEBUG : bsfPush: " . print_r($json_str, true));
         $notification_url = '';
         $response = '';
         //$notification_url = 'https://prodlr70.bsfinternational.org/api/jsonws/media.buildmediarecords/smh-processing-complete/';
         if ((int) $pid === 13373) {
+            $json_str = "jsonStr=" . json_encode($final_push_data);
             $notification_url = 'https://prodlr70.bsfinternational.org/api/jsonws/media.buildmediarecords/smh-processing-complete/';
             $response = $this->curlPostJsonBSF1($notification_url, $json_str);
         } else if ((int) $pid === 12773) {
+            $json_str = json_encode($final_push_data);
 //            syslog(LOG_NOTICE, "SMH DEBUG : bsfPush: " . print_r($pid, true));
             $notification_url = 'https://wso2api.mybsf.org:8243/completeLectureProcess/1.0.0';
             $response = $this->curlPostJsonBSF2($notification_url, $json_str);
+        } else if ((int) $pid === 10012) {
+            $json_str = json_encode($final_push_data);
+            syslog(LOG_NOTICE, "SMH DEBUG : bsfPush: " . print_r($final_push_data, true));
         }
 
-        if ($response === 200) {
+        if ($response === 200 || $response === 202) {
             $this->update_push_notify($pid, $eid);
         }
     }

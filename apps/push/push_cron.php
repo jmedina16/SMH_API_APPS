@@ -115,11 +115,15 @@ class push_cron {
         foreach ($flavors_response['objects'] as $flavors) {
             if ($flavors['status'] === 2) {
                 $fileType = $this->getMimeType('/opt/kaltura/web/content/entry/data/' . $pid . '/' . $eid . '_' . $flavors['id'] . '_' . $flavors['version'] . '.' . $flavors['fileExt']);
+                $hlsPlayback = 'https://secure.streamingmediahosting.com/8019BC0/nginxtransmux/' . $pid . '/' . $eid . '_' . $flavors['id'] . '_' . $flavors['version'] . '.' . $flavors['fileExt'] . '/index.m3u8';
+                $httpPlayback = 'https://secure.streamingmediahosting.com/8019BC0/content/ec/' . $pid . '/' . $eid . '_' . $flavors['id'] . '_' . $flavors['version'] . '.' . $flavors['fileExt'];
             } else {
                 $fileType = null;
+                $hlsPlayback = null;
+                $httpPlayback = null;
             }
 
-            array_push($flavor, array('id' => $flavors['id'], 'width' => $flavors['width'], 'height' => $flavors['height'], 'bitrate' => $flavors['bitrate'], 'isSource' => $flavors['isOriginal'], 'isWeb' => $flavors['isWeb'], 'status' => $flavors['status'], 'size' => $flavors['size'], 'fileExt' => $flavors['fileExt'], 'fileType' => $fileType, 'version' => $flavors['version']));
+            array_push($flavor, array('id' => $flavors['id'], 'width' => $flavors['width'], 'height' => $flavors['height'], 'bitrate' => $flavors['bitrate'], 'isSource' => $flavors['isOriginal'], 'isWeb' => $flavors['isWeb'], 'status' => $flavors['status'], 'size' => $flavors['size'], 'fileExt' => $flavors['fileExt'], 'fileType' => $fileType, 'hlsPlayback' => $hlsPlayback, 'httpPlayback' => $httpPlayback, 'version' => $flavors['version']));
         }
 
         $final_push_data = array();
@@ -127,7 +131,7 @@ class push_cron {
         $final_push_data['entry_id'] = $eid;
         $final_push_data['name'] = $entry['name'];
         $final_push_data['tags'] = $entry['tags'];
-        $final_push_data['thumbnail_url'] = $entry['thumbnailUrl'];
+        $final_push_data['thumbnail_url'] = str_replace("mediaplatform", "ecimages", $entry['thumbnailUrl']);
         $final_push_data['partner_data'] = $entry['partnerData'];
         $final_push_data['status'] = $entry['status'];
         $final_push_data['flavors'] = $flavor;

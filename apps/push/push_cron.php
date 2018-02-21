@@ -114,7 +114,12 @@ class push_cron {
         $flavor = array();
         foreach ($flavors_response['objects'] as $flavors) {
             if ($flavors['status'] === 2) {
-                $fileType = $this->getMimeType('/opt/kaltura/web/content/entry/data/' . $pid . '/' . $eid . '_' . $flavors['id'] . '_' . $flavors['version'] . '.' . $flavors['fileExt']);
+                $fileType_pre = $this->getMimeType('/opt/kaltura/web/content/entry/data/' . $pid . '/' . $eid . '_' . $flavors['id'] . '_' . $flavors['version'] . '.' . $flavors['fileExt']);
+                if (strpos($fileType_pre, 'video') !== false) {
+                    $fileType = 'video';
+                } else if (strpos($fileType_pre, 'audio') !== false) {
+                    $fileType = 'audio';
+                }
                 $hlsPlayback = 'https://secure.streamingmediahosting.com/8019BC0/nginxtransmux/' . $pid . '/' . $eid . '_' . $flavors['id'] . '_' . $flavors['version'] . '.' . $flavors['fileExt'] . '/index.m3u8';
                 $httpPlayback = 'https://secure.streamingmediahosting.com/8019BC0/content/ec/' . $pid . '/' . $eid . '_' . $flavors['id'] . '_' . $flavors['version'] . '.' . $flavors['fileExt'];
             } else {

@@ -35,7 +35,7 @@ class push_cron {
     }
 
     public function push_notification() {
-        $bsfPush = array(13373, 12773, 10012);
+        $bsfPush = array(13373, 13438, 12773, 10012);
         $flavors_not_ready = array(1, 9, 7, 0, 5, 8, 6);
         $flavor_status = array();
         $entries = array();
@@ -112,6 +112,8 @@ class push_cron {
         $entry = $this->get_entry_details($ks, $eid);
         $flavors_response = $this->get_flavors($ks, $eid);
         $flavor = array();
+        $root_fileType = '';
+        $fileType = '';
         foreach ($flavors_response['objects'] as $flavors) {
             if ($flavors['status'] === 2) {
                 $fileType_pre = $this->getMimeType('/opt/kaltura/web/content/entry/data/' . $pid . '/' . $eid . '_' . $flavors['id'] . '_' . $flavors['version'] . '.' . $flavors['fileExt']);
@@ -121,6 +123,9 @@ class push_cron {
                     $fileType = 'audio';
                 } else if (strpos($fileType_pre, 'image') !== false) {
                     $fileType = 'image';
+                }
+                if ($flavors['isOriginal']) {
+                    $root_fileType = $fileType;
                 }
                 $hlsPlayback = 'https://secure.streamingmediahosting.com/8019BC0/nginxtransmux/' . $pid . '/' . $eid . '_' . $flavors['id'] . '_' . $flavors['version'] . '.' . $flavors['fileExt'] . '/index.m3u8';
                 $httpPlayback = 'https://secure.streamingmediahosting.com/8019BC0/content/ec/' . $pid . '/' . $eid . '_' . $flavors['id'] . '_' . $flavors['version'] . '.' . $flavors['fileExt'];
@@ -141,6 +146,7 @@ class push_cron {
         $final_push_data['thumbnail_url'] = str_replace("mediaplatform", "ecimages", $entry['thumbnailUrl']);
         $final_push_data['partner_data'] = $entry['partnerData'];
         $final_push_data['status'] = $entry['status'];
+        $final_push_data['fileType'] = $root_fileType;
         $final_push_data['flavors'] = $flavor;
 
         //syslog(LOG_NOTICE, "SMH DEBUG : bsfPush: " . print_r($json_str, true));
@@ -151,12 +157,11 @@ class push_cron {
             $json_str = "jsonStr=" . json_encode($final_push_data);
             $notification_url = 'https://prodlr70.bsfinternational.org/api/jsonws/media.buildmediarecords/smh-processing-complete/';
             $response = $this->curlPostJsonBSF1($notification_url, $json_str);
-        } else if ((int) $pid === 12773) {
+        } else if ((int) $pid === 13438) {
             $json_str = json_encode($final_push_data);
-//            syslog(LOG_NOTICE, "SMH DEBUG : bsfPush: " . print_r($pid, true));
             $notification_url = 'https://wso2api.mybsf.org:8243/completeLectureProcess/1.0.0';
             $response = $this->curlPostJsonBSF2($notification_url, $json_str);
-        } else if ((int) $pid === 10012) {
+        } else if ((int) $pid === 10012 || (int) $pid === 12773) {
             $json_str = json_encode($final_push_data);
             syslog(LOG_NOTICE, "SMH DEBUG : bsfPush: " . print_r($final_push_data, true));
         }

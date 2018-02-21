@@ -119,6 +119,8 @@ class push_cron {
                     $fileType = 'video';
                 } else if (strpos($fileType_pre, 'audio') !== false) {
                     $fileType = 'audio';
+                } else if (strpos($fileType_pre, 'image') !== false) {
+                    $fileType = 'image';
                 }
                 $hlsPlayback = 'https://secure.streamingmediahosting.com/8019BC0/nginxtransmux/' . $pid . '/' . $eid . '_' . $flavors['id'] . '_' . $flavors['version'] . '.' . $flavors['fileExt'] . '/index.m3u8';
                 $httpPlayback = 'https://secure.streamingmediahosting.com/8019BC0/content/ec/' . $pid . '/' . $eid . '_' . $flavors['id'] . '_' . $flavors['version'] . '.' . $flavors['fileExt'];

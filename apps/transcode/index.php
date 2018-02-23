@@ -24,17 +24,18 @@ class transcode {
     public function run() {
         $this->connect();
         $this->get_accounts();
-        $this->get_file_sync_data();
+        $this->get_file_sync_conv();
         syslog(LOG_NOTICE, "SMH DEBUG : file_sync_entries_found: " . print_r($this->file_sync_entries_found, true));
     }
 
     public function get_accounts() {
         try {
-            $this->accounts = $this->link->prepare("SELECT * FROM partner WHERE status = 1 AND id = 10012 AND id NOT IN (0,99,-2,-1,-3, -4, -5)");
+            $this->accounts = $this->link->prepare("SELECT * FROM partner WHERE status = 1 AND id IN (10012,101) AND id NOT IN (0,99,-2,-1,-3, -4, -5)");
             $this->accounts->execute();
             if ($this->accounts->rowCount() > 0) {
                 foreach ($this->accounts->fetchAll(PDO::FETCH_OBJ) as $row) {
                     array_push($this->partner_ids, $row->id);
+                    array_push($this->file_sync_entries_found, array('partner_id' => $row->id, 'flavors' => array()));
                 }
             }
         } catch (PDOException $e) {
@@ -43,16 +44,23 @@ class transcode {
         }
     }
 
-    public function get_file_sync_data() {
+    public function get_file_sync_conv() {
         $partner_ids = implode(",", $this->partner_ids);
         syslog(LOG_NOTICE, "SMH DEBUG : get_file_sync_data: " . $partner_ids);
         $data = array(':partner_ids' => $partner_ids);
         try {
-            $this->file_sync_entries = $this->link->prepare("SELECT * FROM file_sync WHERE partner_id IN (" . $partner_ids . ") AND status = 2 AND object_type = 4 AND file_size != -1 AND version = 0");
+            $date = new DateTime('now');
+            $date->setTimezone(new DateTimeZone('UTC'));
+            $month = $date->format('Y-m');
+            $this->file_sync_entries = $this->link->prepare("SELECT * FROM file_sync WHERE partner_id IN (" . $partner_ids . ") AND status = 2 AND object_type = 4 AND file_size != -1 AND version = 0 AND created_at LIKE '%" . $month . "%'");
             $this->file_sync_entries->execute();
             if ($this->file_sync_entries->rowCount() > 0) {
                 foreach ($this->file_sync_entries->fetchAll(PDO::FETCH_OBJ) as $row) {
-                    array_push($this->file_sync_entries_found, $row->object_id);
+                    foreach ($this->file_sync_entries_found as &$account) {
+                        if ($account['partner_id'] === $row->partner_id) {
+                            array_push($account['flavors'], $row->object_id);
+                        }
+                    }
                 }
             }
         } catch (PDOException $e) {

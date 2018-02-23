@@ -51,7 +51,6 @@ class transcode {
     public function get_file_sync_conv() {
         $partner_ids = implode(",", $this->partner_ids);
         syslog(LOG_NOTICE, "SMH DEBUG : get_file_sync_data: " . $partner_ids);
-        $data = array(':partner_ids' => $partner_ids);
         try {
             $date = new DateTime('now');
             $date->setTimezone(new DateTimeZone('UTC'));
@@ -63,11 +62,11 @@ class transcode {
                     if ($this->multi_array_search($row->partner_id, $this->file_sync_entries_found)) {
                         foreach ($this->file_sync_entries_found as &$account) {
                             if ($account['partner_id'] === $row->partner_id) {
-                                array_push($account['flavors'], $row->object_id);
+                                array_push($account['flavors'], '\'' . $row->object_id . '\'');
                             }
                         }
                     } else {
-                        array_push($this->file_sync_entries_found, array('partner_id' => $row->partner_id, 'flavors' => array($row->object_id)));
+                        array_push($this->file_sync_entries_found, array('partner_id' => $row->partner_id, 'flavors' => array('\'' . $row->object_id . '\'')));
                     }
                 }
             }
@@ -80,13 +79,13 @@ class transcode {
     public function get_file_sync_fie_sizes() {
         $partner_ids = implode(",", $this->partner_ids);
         syslog(LOG_NOTICE, "SMH DEBUG : get_file_sync_data: " . $partner_ids);
-        $data = array(':partner_ids' => $partner_ids);
         try {
             $date = new DateTime('now');
             $date->setTimezone(new DateTimeZone('UTC'));
             $month = $date->format('Y-m');
             foreach ($this->file_sync_entries_found as $file_sync_entries) {
                 $flavors = implode(",", $file_sync_entries['flavors']);
+                syslog(LOG_NOTICE, "SMH DEBUG : get_file_sync_fie_sizes: flavors: " . print_r($flavors, true));
                 $this->file_sync_entries = $this->link->prepare("SELECT * FROM file_sync WHERE partner_id = " . $file_sync_entries['partner_id'] . " AND status IN (2,3) AND object_type = 4 AND object_id IN (" . $flavors . ") AND file_size != -1 AND version > 0 AND ready_at LIKE '%" . $month . "%'");
                 $this->file_sync_entries->execute();
                 if ($this->file_sync_entries->rowCount() > 0) {

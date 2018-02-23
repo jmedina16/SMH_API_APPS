@@ -35,7 +35,7 @@ class push_cron {
     }
 
     public function push_notification() {
-        $bsfPush = array(13373, 13438, 12773, 10012);
+        $bsfPush = array(13373, 13438, 12773, 10012, 13453);
         $flavors_not_ready = array(1, 9, 7, 0, 5, 8, 6);
         $flavor_status = array();
         $entries = array();
@@ -124,9 +124,6 @@ class push_cron {
                 } else if (strpos($fileType_pre, 'image') !== false) {
                     $fileType = 'image';
                 }
-                if ($flavors['isOriginal']) {
-                    $root_fileType = $fileType;
-                }
                 $hlsPlayback = 'https://secure.streamingmediahosting.com/8019BC0/nginxtransmux/' . $pid . '/' . $eid . '_' . $flavors['id'] . '_' . $flavors['version'] . '.' . $flavors['fileExt'] . '/index.m3u8';
                 $httpPlayback = 'https://secure.streamingmediahosting.com/8019BC0/content/ec/' . $pid . '/' . $eid . '_' . $flavors['id'] . '_' . $flavors['version'] . '.' . $flavors['fileExt'];
             } else {
@@ -136,6 +133,14 @@ class push_cron {
             }
 
             array_push($flavor, array('id' => $flavors['id'], 'width' => $flavors['width'], 'height' => $flavors['height'], 'bitrate' => $flavors['bitrate'], 'isSource' => $flavors['isOriginal'], 'isWeb' => $flavors['isWeb'], 'status' => $flavors['status'], 'size' => $flavors['size'], 'fileExt' => $flavors['fileExt'], 'fileType' => $fileType, 'hlsPlayback' => $hlsPlayback, 'httpPlayback' => $httpPlayback, 'version' => $flavors['version']));
+        }
+
+        if ($entry['mediaType'] === 1) {
+            $root_fileType = 'video';
+        } else if ($entry['mediaType'] === 5) {
+            $root_fileType = 'audio';
+        } else if ($entry['mediaType'] === 2) {
+            $root_fileType = 'image';
         }
 
         $final_push_data = array();
@@ -149,21 +154,25 @@ class push_cron {
         $final_push_data['fileType'] = $root_fileType;
         $final_push_data['flavors'] = $flavor;
 
-        //syslog(LOG_NOTICE, "SMH DEBUG : bsfPush: " . print_r($json_str, true));
         $notification_url = '';
         $response = '';
-        //$notification_url = 'https://prodlr70.bsfinternational.org/api/jsonws/media.buildmediarecords/smh-processing-complete/';
+
         if ((int) $pid === 13373) {
             $json_str = "jsonStr=" . json_encode($final_push_data);
             $notification_url = 'https://prodlr70.bsfinternational.org/api/jsonws/media.buildmediarecords/smh-processing-complete/';
             $response = $this->curlPostJsonBSF1($notification_url, $json_str);
+        } else if ((int) $pid === 13453) {
+            $json_str = json_encode($final_push_data);
+            $notification_url = 'https://prodlr70.bsfinternational.org/api/jsonws/media.buildmediarecords/smh-processing-complete/';
+            $response = $this->curlPostJsonBSF1($notification_url, $json_str);
         } else if ((int) $pid === 13438) {
             $json_str = json_encode($final_push_data);
-            $notification_url = 'https://wso2api.mybsf.org:8243/completeLectureProcess/1.0.0';
-            $response = $this->curlPostJsonBSF2($notification_url, $json_str);
+            $notification_url = 'https://uatapi.mybsf.org:8243/completeLectureProcess/1.0.0';
+            $response = $this->curlPostJsonBSF3($notification_url, $json_str);
         } else if ((int) $pid === 10012 || (int) $pid === 12773) {
             $json_str = json_encode($final_push_data);
             syslog(LOG_NOTICE, "SMH DEBUG : bsfPush: " . print_r($final_push_data, true));
+            $response = 200;
         }
 
         if ($response === 200 || $response === 202) {
@@ -224,6 +233,38 @@ class push_cron {
         return $status;
     }
 
+    public function curlPostJsonBSF3($url, $data) {
+        syslog(LOG_NOTICE, "SMH DEBUG : curlPostJson1: " . print_r($data, true));
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_VERBOSE, true);
+        curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Authorization: Bearer 64ad83f3-3e3c-3a2d-9f9d-3ef42a7ea7c3'
+        ));
+        $response = curl_exec($ch);
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $info = curl_getinfo($ch);
+        $ch_error = curl_error($ch);
+        syslog(LOG_NOTICE, "SMH DEBUG : curlInfo: " . print_r($info, true));
+        syslog(LOG_NOTICE, "SMH DEBUG : curlStatus: " . $status);
+        if ($ch_error) {
+            syslog(LOG_NOTICE, "SMH DEBUG : curlError: " . print_r($ch_error, true));
+        }
+        syslog(LOG_NOTICE, "SMH DEBUG : curlPostJson2: " . print_r($response, true));
+        curl_close($ch);
+
+        return $status;
+    }
+
     public function curlPost($url, $data) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -253,7 +294,7 @@ class push_cron {
     public function get_entry_details($ks, $eid) {
         $url = "https://mediaplatform.streamingmediahosting.com/api_v3/";
         $data = array(
-            "service" => "baseEntry",
+            "service" => "media",
             "action" => "get",
             "ks" => $ks,
             "entryId" => $eid,

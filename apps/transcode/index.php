@@ -11,6 +11,7 @@ class transcode {
     protected $file_sync_entries;
     protected $accounts;
     protected $partner_ids = array();
+    protected $file_sync_entries_found = array();
 
     public function __construct() {
         $this->login = 'kaltura';
@@ -24,11 +25,12 @@ class transcode {
         $this->connect();
         $this->get_accounts();
         $this->get_file_sync_data();
+        syslog(LOG_NOTICE, "SMH DEBUG : file_sync_entries_found: " . print_r($this->file_sync_entries_found, true));
     }
 
     public function get_accounts() {
         try {
-            $this->accounts = $this->link->prepare("SELECT * FROM partner WHERE status = 1 AND id NOT IN (0,99,-2,-1,-3, -4, -5)");
+            $this->accounts = $this->link->prepare("SELECT * FROM partner WHERE status = 1 AND id = 10012 AND id NOT IN (0,99,-2,-1,-3, -4, -5)");
             $this->accounts->execute();
             if ($this->accounts->rowCount() > 0) {
                 foreach ($this->accounts->fetchAll(PDO::FETCH_OBJ) as $row) {
@@ -50,7 +52,7 @@ class transcode {
             $this->file_sync_entries->execute();
             if ($this->file_sync_entries->rowCount() > 0) {
                 foreach ($this->file_sync_entries->fetchAll(PDO::FETCH_OBJ) as $row) {
-                    syslog(LOG_NOTICE, "SMH DEBUG : get_file_sync_data: " . $row->object_id);
+                    array_push($this->file_sync_entries_found, $row->object_id);
                 }
             }
         } catch (PDOException $e) {

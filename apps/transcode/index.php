@@ -33,21 +33,17 @@ class transcode {
         $this->connect();
         $this->get_accounts();
         $this->get_file_sync_conv();
-        syslog(LOG_NOTICE, "SMH DEBUG : file_sync_entries_found: " . print_r($this->file_sync_entries_found, true));
-        $this->get_file_sync_fie_sizes();
-        syslog(LOG_NOTICE, "SMH DEBUG : file_sync_entries_file_sizes: " . print_r($this->file_sync_entries_file_sizes, true));
+        $this->get_file_sync_sizes();
         $this->insert_transcoded_flavors();
     }
 
     public function get_accounts() {
         try {
-            $this->accounts = $this->link->prepare("SELECT * FROM partner WHERE status = 1 AND id IN (10012,101) AND id NOT IN (0,99,-2,-1,-3, -4, -5)");
+            $this->accounts = $this->link->prepare("SELECT * FROM partner WHERE status = 1 AND id NOT IN (0,99,-2,-1,-3, -4, -5)");
             $this->accounts->execute();
             if ($this->accounts->rowCount() > 0) {
                 foreach ($this->accounts->fetchAll(PDO::FETCH_OBJ) as $row) {
                     array_push($this->partner_ids, $row->id);
-                    //array_push($this->file_sync_entries_found, array('partner_id' => $row->id, 'flavors' => array()));
-                    //array_push($this->file_sync_entries_file_sizes, array('partner_id' => $row->id, 'flavors' => array()));
                 }
             }
         } catch (PDOException $e) {
@@ -58,7 +54,6 @@ class transcode {
 
     public function get_file_sync_conv() {
         $partner_ids = implode(",", $this->partner_ids);
-        syslog(LOG_NOTICE, "SMH DEBUG : get_file_sync_data: " . $partner_ids);
         try {
             $date = new DateTime('now');
             $date->setTimezone(new DateTimeZone('UTC'));
@@ -84,16 +79,13 @@ class transcode {
         }
     }
 
-    public function get_file_sync_fie_sizes() {
-        $partner_ids = implode(",", $this->partner_ids);
-        syslog(LOG_NOTICE, "SMH DEBUG : get_file_sync_data: " . $partner_ids);
+    public function get_file_sync_sizes() {
         try {
             $date = new DateTime('now');
             $date->setTimezone(new DateTimeZone('UTC'));
             $month = $date->format('Y-m');
             foreach ($this->file_sync_entries_found as $file_sync_entries) {
                 $flavors = implode(",", $file_sync_entries['flavors']);
-                syslog(LOG_NOTICE, "SMH DEBUG : get_file_sync_fie_sizes: flavors: " . print_r($flavors, true));
                 $this->file_sync_entries = $this->link->prepare("SELECT fs.partner_id, fa.entry_id, fs.object_id, fs.file_size, e.length_in_msecs, fs.version, fs.ready_at FROM file_sync fs, flavor_asset fa, entry e WHERE fs.partner_id = " . $file_sync_entries['partner_id'] . " AND fs.status IN (2,3) AND fs.object_type = 4 AND fs.object_id IN (" . $flavors . ") AND fs.file_size != -1 AND fs.version > 0 AND fs.ready_at LIKE '%" . $month . "%' AND fs.object_id = fa.id AND fa.entry_id = e.id");
                 $this->file_sync_entries->execute();
                 if ($this->file_sync_entries->rowCount() > 0) {
@@ -104,7 +96,7 @@ class transcode {
             }
         } catch (PDOException $e) {
             $date = date('Y-m-d H:i:s');
-            print($date . " [transcode->get_file_sync_fie_sizes] ERROR: Could not execute query (get_file_sync_fie_sizes): " . $e->getMessage() . "\n");
+            print($date . " [transcode->get_file_sync_sizes] ERROR: Could not execute query (get_file_sync_sizes): " . $e->getMessage() . "\n");
         }
     }
 

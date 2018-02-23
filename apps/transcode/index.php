@@ -6,6 +6,10 @@ class transcode {
     protected $login;
     protected $password;
     protected $database;
+    protected $link2 = null;
+    protected $login2;
+    protected $password2;
+    protected $database2;
     protected $hostname;
     protected $port;
     protected $file_sync_entries;
@@ -18,6 +22,9 @@ class transcode {
         $this->login = 'kaltura';
         $this->password = 'nUKFRl7bE9hShpV';
         $this->database = 'kaltura';
+        $this->login2 = 'smhstats';
+        $this->password2 = 'tVuasxXqy33Z3WkTbXHRruSC34dbVLnLNgq';
+        $this->database2 = 'smh_statistics';
         $this->hostname = '127.0.0.1';
         $this->port = '3306';
     }
@@ -29,6 +36,7 @@ class transcode {
         syslog(LOG_NOTICE, "SMH DEBUG : file_sync_entries_found: " . print_r($this->file_sync_entries_found, true));
         $this->get_file_sync_fie_sizes();
         syslog(LOG_NOTICE, "SMH DEBUG : file_sync_entries_file_sizes: " . print_r($this->file_sync_entries_file_sizes, true));
+        $this->insert_transcoded_flavors();
     }
 
     public function get_accounts() {
@@ -86,17 +94,30 @@ class transcode {
             foreach ($this->file_sync_entries_found as $file_sync_entries) {
                 $flavors = implode(",", $file_sync_entries['flavors']);
                 syslog(LOG_NOTICE, "SMH DEBUG : get_file_sync_fie_sizes: flavors: " . print_r($flavors, true));
-                $this->file_sync_entries = $this->link->prepare("SELECT * FROM file_sync WHERE partner_id = " . $file_sync_entries['partner_id'] . " AND status IN (2,3) AND object_type = 4 AND object_id IN (" . $flavors . ") AND file_size != -1 AND version > 0 AND ready_at LIKE '%" . $month . "%'");
+                $this->file_sync_entries = $this->link->prepare("SELECT fs.partner_id, fa.entry_id, fs.object_id, fs.file_size, e.length_in_msecs, fs.version, fs.ready_at FROM file_sync fs, flavor_asset fa, entry e WHERE fs.partner_id = " . $file_sync_entries['partner_id'] . " AND fs.status IN (2,3) AND fs.object_type = 4 AND fs.object_id IN (" . $flavors . ") AND fs.file_size != -1 AND fs.version > 0 AND fs.ready_at LIKE '%" . $month . "%' AND fs.object_id = fa.id AND fa.entry_id = e.id");
                 $this->file_sync_entries->execute();
                 if ($this->file_sync_entries->rowCount() > 0) {
                     foreach ($this->file_sync_entries->fetchAll(PDO::FETCH_OBJ) as $row) {
-                        array_push($this->file_sync_entries_file_sizes, array('partner_id' => $row->partner_id, 'flavor' => $row->object_id, 'version' => $row->version, 'file_size' => $row->file_size, 'ready_at' => $row->ready_at));
+                        array_push($this->file_sync_entries_file_sizes, array('partner_id' => $row->partner_id, 'entry_id' => $row->entry_id, 'flavor' => $row->object_id, 'version' => $row->version, 'file_size' => $row->file_size, 'length_in_msecs' => $row->length_in_msecs, 'ready_at' => $row->ready_at));
                     }
                 }
             }
         } catch (PDOException $e) {
             $date = date('Y-m-d H:i:s');
             print($date . " [transcode->get_file_sync_fie_sizes] ERROR: Could not execute query (get_file_sync_fie_sizes): " . $e->getMessage() . "\n");
+        }
+    }
+
+    public function insert_transcoded_flavors() {
+        $this->connect2();
+        foreach ($this->file_sync_entries_file_sizes as $flavors) {
+            try {
+                $query = $this->link2->prepare("INSERT INTO transcoding (partner_id, entry_id, flavor, version, file_size, length_in_msecs, ready_at) SELECT * FROM (SELECT " . $flavors['partner_id'] . ", '" . $flavors['entry_id'] . "', '" . $flavors['flavor'] . "', " . $flavors['version'] . ", " . $flavors['file_size'] . ", " . $flavors['length_in_msecs'] . ", '" . $flavors['ready_at'] . "') AS tmp WHERE NOT EXISTS (SELECT flavor, version FROM transcoding WHERE flavor = '" . $flavors['flavor'] . "' AND version = " . $flavors['version'] . ") LIMIT 1;");
+                $query->execute();
+            } catch (PDOException $e) {
+                $date = date('Y-m-d H:i:s');
+                print($date . " [transcode->insert_transcoded_flavors] ERROR: Could not execute query (insert_transcoded_flavors): " . $e->getMessage() . "\n");
+            }
         }
     }
 
@@ -122,6 +143,20 @@ class transcode {
         try {
             $this->link = new PDO("mysql:host=$this->hostname;port=3306;dbname=$this->database", $this->login, $this->password);
             $this->link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            $date = date('Y-m-d H:i:s');
+            syslog(LOG_NOTICE, $date . " [Channel->connect] ERROR: Cannot connect to database: " . print_r($e->getMessage(), true));
+        }
+    }
+
+    public function connect2() {
+        if (!is_null($this->link2)) {
+            return;
+        }
+
+        try {
+            $this->link2 = new PDO("mysql:host=$this->hostname;port=3306;dbname=$this->database2", $this->login2, $this->password2);
+            $this->link2->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
             $date = date('Y-m-d H:i:s');
             syslog(LOG_NOTICE, $date . " [Channel->connect] ERROR: Cannot connect to database: " . print_r($e->getMessage(), true));

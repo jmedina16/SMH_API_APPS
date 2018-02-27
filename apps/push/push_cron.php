@@ -129,10 +129,16 @@ class push_cron {
                         $fileType = 'image';
                     }
                 }
-                $hlsPlayback = 'https://secure.streamingmediahosting.com/8019BC0/nginxtransmux/' . $pid . '/' . $eid . '_' . $flavors['id'] . '_' . $flavors['version'] . '.' . $flavors['fileExt'] . '/index.m3u8';
+                
+                if ($flavors['fileExt'] === 'mp3') {
+                    $hlsPlayback = null;
+                } else {
+                    $hlsPlayback = 'https://secure.streamingmediahosting.com/8019BC0/nginxtransmux/' . $pid . '/' . $eid . '_' . $flavors['id'] . '_' . $flavors['version'] . '.' . $flavors['fileExt'] . '/index.m3u8';
+                }
+
                 $httpPlayback = 'https://secure.streamingmediahosting.com/8019BC0/content/ec/' . $pid . '/' . $eid . '_' . $flavors['id'] . '_' . $flavors['version'] . '.' . $flavors['fileExt'];
             } else {
-                //$fileType = null;
+                $fileType = null;
                 $hlsPlayback = null;
                 $httpPlayback = null;
             }

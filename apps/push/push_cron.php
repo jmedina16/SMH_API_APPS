@@ -116,14 +116,19 @@ class push_cron {
         //$fileType = '';
         foreach ($flavors_response['objects'] as $flavors) {
             if ($flavors['status'] === 2) {
-//                $fileType_pre = $this->getMimeType('/opt/kaltura/web/content/entry/data/' . $pid . '/' . $eid . '_' . $flavors['id'] . '_' . $flavors['version'] . '.' . $flavors['fileExt']);
-//                if (strpos($fileType_pre, 'video') !== false) {
-//                    $fileType = 'video';
-//                } else if (strpos($fileType_pre, 'audio') !== false) {
-//                    $fileType = 'audio';
-//                } else if (strpos($fileType_pre, 'image') !== false) {
-//                    $fileType = 'image';
-//                }
+                $flavors_tags = explode(',', $flavors['tags']);
+                if (in_array('audio', $flavors_tags)) {
+                    $fileType = 'audio';
+                } else {
+                    $fileType_pre = $this->getMimeType('/opt/kaltura/web/content/entry/data/' . $pid . '/' . $eid . '_' . $flavors['id'] . '_' . $flavors['version'] . '.' . $flavors['fileExt']);
+                    if (strpos($fileType_pre, 'video') !== false) {
+                        $fileType = 'video';
+                    } else if (strpos($fileType_pre, 'audio') !== false) {
+                        $fileType = 'audio';
+                    } else if (strpos($fileType_pre, 'image') !== false) {
+                        $fileType = 'image';
+                    }
+                }
                 $hlsPlayback = 'https://secure.streamingmediahosting.com/8019BC0/nginxtransmux/' . $pid . '/' . $eid . '_' . $flavors['id'] . '_' . $flavors['version'] . '.' . $flavors['fileExt'] . '/index.m3u8';
                 $httpPlayback = 'https://secure.streamingmediahosting.com/8019BC0/content/ec/' . $pid . '/' . $eid . '_' . $flavors['id'] . '_' . $flavors['version'] . '.' . $flavors['fileExt'];
             } else {
@@ -132,7 +137,7 @@ class push_cron {
                 $httpPlayback = null;
             }
 
-            array_push($flavor, array('id' => $flavors['id'], 'width' => $flavors['width'], 'height' => $flavors['height'], 'bitrate' => $flavors['bitrate'], 'isSource' => $flavors['isOriginal'], 'isWeb' => $flavors['isWeb'], 'status' => $flavors['status'], 'size' => $flavors['size'], 'fileExt' => $flavors['fileExt'], 'hlsPlayback' => $hlsPlayback, 'httpPlayback' => $httpPlayback, 'version' => $flavors['version']));
+            array_push($flavor, array('id' => $flavors['id'], 'width' => $flavors['width'], 'height' => $flavors['height'], 'bitrate' => $flavors['bitrate'], 'isSource' => $flavors['isOriginal'], 'isWeb' => $flavors['isWeb'], 'status' => $flavors['status'], 'size' => $flavors['size'], 'fileExt' => $flavors['fileExt'], 'fileType' => $fileType, 'hlsPlayback' => $hlsPlayback, 'httpPlayback' => $httpPlayback, 'version' => $flavors['version']));
         }
 
         if ($entry['mediaType'] === 1) {

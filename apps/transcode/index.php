@@ -58,6 +58,7 @@ class transcode {
             $date = new DateTime('now');
             $date->setTimezone(new DateTimeZone('UTC'));
             $month = $date->format('Y-m');
+            $month = '2018-02';
             $this->file_sync_entries = $this->link->prepare("SELECT * FROM file_sync WHERE partner_id IN (" . $partner_ids . ") AND status IN (2,3) AND object_type = 4 AND file_size != -1 AND version = 0 AND ready_at LIKE '%" . $month . "%'");
             $this->file_sync_entries->execute();
             if ($this->file_sync_entries->rowCount() > 0) {
@@ -84,6 +85,7 @@ class transcode {
             $date = new DateTime('now');
             $date->setTimezone(new DateTimeZone('UTC'));
             $month = $date->format('Y-m');
+            $month = '2018-02';
             foreach ($this->file_sync_entries_found as $file_sync_entries) {
                 $flavors = implode(",", $file_sync_entries['flavors']);
                 $this->file_sync_entries = $this->link->prepare("SELECT fs.partner_id, fa.entry_id, fs.object_id, fs.file_size, e.length_in_msecs, fs.version, fs.ready_at FROM file_sync fs, flavor_asset fa, entry e WHERE fs.partner_id = " . $file_sync_entries['partner_id'] . " AND fs.status IN (2,3) AND fs.object_type = 4 AND fs.object_id IN (" . $flavors . ") AND fs.file_size != -1 AND fs.version > 0 AND fs.ready_at LIKE '%" . $month . "%' AND fs.object_id = fa.id AND fa.entry_id = e.id");

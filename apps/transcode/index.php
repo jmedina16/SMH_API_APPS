@@ -106,7 +106,9 @@ class transcode {
         $this->connect2();
         foreach ($this->file_sync_entries_file_sizes as $flavors) {
             try {
-                $query = $this->link2->prepare("INSERT INTO transcoding (partner_id, entry_id, flavor, version, file_size, length_in_msecs, ready_at) SELECT * FROM (SELECT " . $flavors['partner_id'] . ", '" . $flavors['entry_id'] . "', '" . $flavors['flavor'] . "', " . $flavors['version'] . ", " . $flavors['file_size'] . ", " . $flavors['length_in_msecs'] . ", '" . $flavors['ready_at'] . "') AS tmp WHERE NOT EXISTS (SELECT flavor, version FROM transcoding WHERE flavor = '" . $flavors['flavor'] . "' AND version = " . $flavors['version'] . ") LIMIT 1;");
+                $date_dt = new DateTime($flavors['ready_at'], new DateTimeZone('UTC'));
+                $ready_at = $date_dt->format('Y-m-d H:i:s');
+                $query = $this->link2->prepare("INSERT INTO transcoding (partner_id, entry_id, flavor, version, file_size, length_in_msecs, ready_at) SELECT * FROM (SELECT " . $flavors['partner_id'] . ", '" . $flavors['entry_id'] . "', '" . $flavors['flavor'] . "', " . $flavors['version'] . ", " . $flavors['file_size'] . ", " . $flavors['length_in_msecs'] . ", '" . $ready_at . "') AS tmp WHERE NOT EXISTS (SELECT flavor, version FROM transcoding WHERE flavor = '" . $flavors['flavor'] . "' AND version = " . $flavors['version'] . ") LIMIT 1;");
                 $query->execute();
             } catch (PDOException $e) {
                 $date = date('Y-m-d H:i:s');

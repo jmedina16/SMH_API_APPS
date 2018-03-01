@@ -32,9 +32,17 @@ class transcode {
     public function run() {
         $this->connect();
         $this->get_accounts();
-        $this->get_file_sync_conv();
-        $this->get_file_sync_sizes();
-        $this->insert_transcoded_flavors();
+        $now_date = new DateTime('now');
+        $now_date->setTimezone(new DateTimeZone('UTC'));
+        $month1 = $now_date->format('Y-m');
+        $now_date->modify('-1 day');
+        $yest_date = $now_date->format('Y-m');
+        $dates = array($month1, $yest_date);
+        foreach ($dates as $date) {
+            $this->get_file_sync_conv($date);
+            $this->get_file_sync_sizes($date);
+            $this->insert_transcoded_flavors();
+        }
     }
 
     public function get_accounts() {
@@ -52,13 +60,9 @@ class transcode {
         }
     }
 
-    public function get_file_sync_conv() {
+    public function get_file_sync_conv($month) {
         $partner_ids = implode(",", $this->partner_ids);
         try {
-            $date = new DateTime('now');
-            $date->setTimezone(new DateTimeZone('UTC'));
-            $month = $date->format('Y-m');
-            $month = '2018-02';
             $this->file_sync_entries = $this->link->prepare("SELECT * FROM file_sync WHERE partner_id IN (" . $partner_ids . ") AND status IN (2,3) AND object_type = 4 AND file_size != -1 AND version = 0 AND ready_at LIKE '%" . $month . "%'");
             $this->file_sync_entries->execute();
             if ($this->file_sync_entries->rowCount() > 0) {
@@ -80,12 +84,8 @@ class transcode {
         }
     }
 
-    public function get_file_sync_sizes() {
+    public function get_file_sync_sizes($month) {
         try {
-            $date = new DateTime('now');
-            $date->setTimezone(new DateTimeZone('UTC'));
-            $month = $date->format('Y-m');
-            $month = '2018-02';
             foreach ($this->file_sync_entries_found as $file_sync_entries) {
                 $flavors = implode(",", $file_sync_entries['flavors']);
                 $this->file_sync_entries = $this->link->prepare("SELECT fs.partner_id, fa.entry_id, fs.object_id, fs.file_size, e.length_in_msecs, fs.version, fs.ready_at FROM file_sync fs, flavor_asset fa, entry e WHERE fs.partner_id = " . $file_sync_entries['partner_id'] . " AND fs.status IN (2,3) AND fs.object_type = 4 AND fs.object_id IN (" . $flavors . ") AND fs.file_size != -1 AND fs.version > 0 AND fs.ready_at LIKE '%" . $month . "%' AND fs.object_id = fa.id AND fa.entry_id = e.id");

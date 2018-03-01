@@ -88,7 +88,7 @@ class transcode {
         try {
             foreach ($this->file_sync_entries_found as $file_sync_entries) {
                 $flavors = implode(",", $file_sync_entries['flavors']);
-                $this->file_sync_entries = $this->link->prepare("SELECT fs.partner_id, fa.entry_id, fs.object_id, fs.file_size, e.length_in_msecs, fs.version, fs.ready_at FROM file_sync fs, flavor_asset fa, entry e WHERE fs.partner_id = " . $file_sync_entries['partner_id'] . " AND fs.status IN (2,3) AND fs.object_type = 4 AND fs.object_id IN (" . $flavors . ") AND fs.file_size != -1 AND fs.version > 0 AND fs.ready_at LIKE '%" . $month . "%' AND fs.object_id = fa.id AND fa.entry_id = e.id");
+                $this->file_sync_entries = $this->link->prepare("SELECT fs.partner_id, fa.entry_id, fs.object_id, fs.file_size, e.length_in_msecs, fs.version, fs.ready_at FROM file_sync fs, flavor_asset fa, entry e WHERE fs.partner_id = " . $file_sync_entries['partner_id'] . " AND fs.status IN (2,3) AND fa.status IN (2,3) AND fs.object_type = 4 AND fs.object_id IN (" . $flavors . ") AND fs.file_size != -1 AND fs.version > 0 AND fs.ready_at LIKE '%" . $month . "%' AND fs.object_id = fa.id AND fa.entry_id = e.id");
                 $this->file_sync_entries->execute();
                 if ($this->file_sync_entries->rowCount() > 0) {
                     foreach ($this->file_sync_entries->fetchAll(PDO::FETCH_OBJ) as $row) {
@@ -106,7 +106,8 @@ class transcode {
         $this->connect2();
         foreach ($this->file_sync_entries_file_sizes as $flavors) {
             try {
-                $date_dt = new DateTime($flavors['ready_at'], new DateTimeZone('UTC'));
+                $date_dt = new DateTime($flavors['ready_at'], new DateTimeZone('America/Los_Angeles'));
+                $date_dt->setTimeZone(new DateTimeZone('UTC'));
                 $ready_at = $date_dt->format('Y-m-d H:i:s');
                 $query = $this->link2->prepare("INSERT INTO transcoding (partner_id, entry_id, flavor, version, file_size, length_in_msecs, ready_at) SELECT * FROM (SELECT " . $flavors['partner_id'] . ", '" . $flavors['entry_id'] . "', '" . $flavors['flavor'] . "', " . $flavors['version'] . ", " . $flavors['file_size'] . ", " . $flavors['length_in_msecs'] . ", '" . $ready_at . "') AS tmp WHERE NOT EXISTS (SELECT flavor, version FROM transcoding WHERE flavor = '" . $flavors['flavor'] . "' AND version = " . $flavors['version'] . ") LIMIT 1;");
                 $query->execute();

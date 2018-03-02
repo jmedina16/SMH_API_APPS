@@ -14,7 +14,7 @@ class transcode {
     protected $port;
     protected $file_sync_entries;
     protected $accounts;
-    protected $partner_id;
+    protected $partner_ids = array();
     protected $file_sync_entries_found = array();
     protected $file_sync_entries_file_sizes = array();
 
@@ -27,13 +27,11 @@ class transcode {
         $this->database2 = 'smh_statistics';
         $this->hostname = '127.0.0.1';
         $this->port = '3306';
-        $options = getopt("p:");
-        $this->partner_id = $options['p'];
     }
 
     public function run() {
         $this->connect();
-        //$this->get_accounts();
+        $this->get_accounts();
         $now_date = new DateTime('now');
         $now_date->setTimezone(new DateTimeZone('UTC'));
         $month1 = $now_date->format('Y-m');
@@ -63,9 +61,9 @@ class transcode {
     }
 
     public function get_file_sync_conv($month) {
-        //$partner_ids = implode(",", $this->partner_ids);
+        $partner_ids = implode(",", $this->partner_ids);
         try {
-            $this->file_sync_entries = $this->link->prepare("SELECT * FROM file_sync WHERE partner_id IN (" . $this->partner_id . ") AND status IN (2,3) AND object_type = 4 AND file_size != -1 AND version = 0 AND ready_at LIKE '%" . $month . "%'");
+            $this->file_sync_entries = $this->link->prepare("SELECT * FROM file_sync WHERE partner_id IN (" . $partner_ids . ") AND status IN (2,3) AND object_type = 4 AND file_size != -1 AND version = 0 AND ready_at LIKE '%" . $month . "%'");
             $this->file_sync_entries->execute();
             if ($this->file_sync_entries->rowCount() > 0) {
                 foreach ($this->file_sync_entries->fetchAll(PDO::FETCH_OBJ) as $row) {
@@ -90,7 +88,7 @@ class transcode {
         try {
             foreach ($this->file_sync_entries_found as $file_sync_entries) {
                 $flavors = implode(",", $file_sync_entries['flavors']);
-                $this->file_sync_entries = $this->link->prepare("SELECT fs.partner_id, fa.entry_id, fs.object_id, fs.file_size, e.length_in_msecs, fs.version, fs.ready_at FROM file_sync fs, flavor_asset fa, entry e WHERE fs.partner_id = " . $file_sync_entries['partner_id'] . " AND fs.status IN (2,3) AND fa.status IN (2) AND fs.object_type = 4 AND fs.object_id IN (" . $flavors . ") AND fs.file_size != -1 AND fs.version > 0 AND fs.ready_at LIKE '%" . $month . "%' AND fs.object_id = fa.id AND fa.entry_id = e.id");
+                $this->file_sync_entries = $this->link->prepare("SELECT fs.partner_id, fa.entry_id, fs.object_id, fs.file_size, e.length_in_msecs, fs.version, fs.ready_at FROM file_sync fs, flavor_asset fa, entry e WHERE fs.partner_id = " . $file_sync_entries['partner_id'] . " AND fs.status IN (2,3) AND fa.status IN (2,3) AND fs.object_type = 4 AND fs.object_id IN (" . $flavors . ") AND fs.file_size != -1 AND fs.version > 0 AND fs.ready_at LIKE '%" . $month . "%' AND fs.object_id = fa.id AND fa.entry_id = e.id");
                 $this->file_sync_entries->execute();
                 if ($this->file_sync_entries->rowCount() > 0) {
                     foreach ($this->file_sync_entries->fetchAll(PDO::FETCH_OBJ) as $row) {

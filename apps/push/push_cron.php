@@ -123,7 +123,7 @@ class push_cron {
                     $fileType_pre = $this->getMimeType('/opt/kaltura/web/content/entry/data/' . $pid . '/' . $eid . '_' . $flavors['id'] . '_' . $flavors['version'] . '.' . $flavors['fileExt']);
                     if (strpos($fileType_pre, 'video') !== false) {
                         $fileType = 'video';
-                    } else if (strpos($fileType_pre, 'audio') !== false) {
+                    } else if (strpos($fileType_pre, 'audio') !== false || $flavors['fileExt'] === 'mp3') {
                         $fileType = 'audio';
                     } else if (strpos($fileType_pre, 'image') !== false) {
                         $fileType = 'image';

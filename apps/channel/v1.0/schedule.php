@@ -20,7 +20,8 @@ if (isset($pid)) {
 
     $cdn = json_decode(getCDN($pid), true);
     if ($cdn[0]['edgecast'] || $cdn[0]['custom']) {
-        $apps_url = 'https://ecapps.streamingmediahosting.com';
+        //$apps_url = 'https://ecapps.streamingmediahosting.com';
+        $apps_url = 'http://devplatform.streamingmediahosting.com';
     } else if ($cdn[0]['highwinds']) {
         $apps_url = 'https://hwapps.streamingmediahosting.com';
     }

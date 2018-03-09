@@ -5,7 +5,7 @@ class ppv_mem_users_cron {
     
     //run cron api
     public function run() {
-        $this->curl_request($action, $args);
+        $this->curl_request();
     }
 
     public function curl_request() {

@@ -56,6 +56,9 @@ class channel {
             case "get_public_channels":
                 $this->get_public_channels();
                 break;
+            case "update_channel_status":
+                $this->update_channel_status();
+                break;
             default:
                 echo "Action not found!";
         }
@@ -219,6 +222,15 @@ class channel {
     public function get_public_channels() {
         $action = "channel_config/get_public_channels?";
         $args = '';
+        echo $this->curl_request($action, $args);
+    }
+
+    public function update_channel_status() {
+        $ks = urlencode($_POST['ks']);
+        $cid = urlencode($_POST['cid']);
+        $status = urlencode($_POST['status']);
+        $action = "channel_config/update_channel_status?";
+        $args = "ks=" . $ks . "&cid=" . $cid . "&status=" . $status;
         echo $this->curl_request($action, $args);
     }
 

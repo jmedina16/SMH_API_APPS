@@ -36,7 +36,7 @@ function store_weibo_authorization($pid, $ks, $projection, $code) {
             if ($response['success']) {
                 echo '<div style="width: 675px; margin-left: auto; margin-right: auto; margin-top: 150px; font-size: 17px;" id="loading">
                         <div style="margin: 30px auto 50px; width: 675px; margin-left: auto; margin-right: auto; text-align: center; height: 125px;">
-                            <h3><img src="/img/weibo_logo.png" width="150px"></h3>
+                            <h3><img src="/img/weibo_logo.jpg" width="150px"></h3>
                             <h3>You have successfully connected your Weibo account!</h3>
                             You may now close this window. 
                         </div>
@@ -64,7 +64,7 @@ function store_weibo_authorization($pid, $ks, $projection, $code) {
         } else if ((isset($_GET['state']) && !empty($_GET['state'])) && (isset($_GET['error']) && !empty($_GET['error']))) {
             echo '<div style="width: 500px; margin-left: auto; margin-right: auto; margin-top: 200px; font-size: 17px;" id="loading">
             <div style="margin-top: 30px; width: 450px; margin-left: auto; margin-right: auto; text-align: center; height: 125px;">
-                <h3><img src="/img/weibo_logo.png" width="150px"></h3>
+                <h3><img src="/img/weibo_logo.jpg" width="150px"></h3>
                 Access has been denied to your Weibo account. 
             </div>            
         </div>';

@@ -32,6 +32,9 @@ class sn {
             case "store_twitch_authorization":
                 $this->store_twitch_authorization();
                 break;
+            case "store_weibo_authorization":
+                $this->store_weibo_authorization();
+                break;
             case "remove_youtube_authorization":
                 $this->remove_youtube_authorization();
                 break;
@@ -145,6 +148,15 @@ class sn {
         $code = $_GET['code'];
         $projection = urlencode($_GET['projection']);
         $action = "sn_config/store_youtube_authorization?";
+        $args = "ks=" . $ks . "&code=" . $code . "&projection=" . $projection;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function store_weibo_authorization() {
+        $ks = urlencode($_GET['ks']);
+        $code = $_GET['code'];
+        $projection = urlencode($_GET['projection']);
+        $action = "sn_config/store_weibo_authorization?";
         $args = "ks=" . $ks . "&code=" . $code . "&projection=" . $projection;
         echo $this->curl_request($action, $args);
     }

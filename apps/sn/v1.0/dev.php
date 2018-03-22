@@ -35,6 +35,9 @@ class sn {
             case "store_weibo_authorization":
                 $this->store_weibo_authorization();
                 break;
+            case "remove_weibo_authorization":
+                $this->remove_weibo_authorization();
+                break;
             case "remove_youtube_authorization":
                 $this->remove_youtube_authorization();
                 break;
@@ -166,6 +169,13 @@ class sn {
         $code = $_GET['code'];
         $action = "sn_config/store_twitch_authorization?";
         $args = "ks=" . $ks . "&code=" . $code;
+        echo $this->curl_request($action, $args);
+    }
+
+    public function remove_weibo_authorization() {
+        $ks = urlencode($_POST['ks']);
+        $action = "sn_config/remove_weibo_authorization?";
+        $args = "ks=" . $ks;
         echo $this->curl_request($action, $args);
     }
 

@@ -220,8 +220,9 @@ class channel {
     }
 
     public function get_public_channels() {
+        $tz = urlencode($_GET['tz']);
         $action = "channel_config/get_public_channels?";
-        $args = '';
+        $args = "tz=" . $tz;
         echo $this->curl_request($action, $args);
     }
 

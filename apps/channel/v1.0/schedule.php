@@ -1,6 +1,7 @@
 <?php
 $pid = $_GET['pid'];
 $playerId = $_GET['playerId'];
+$ks = $_GET['ks'];
 if (isset($pid)) {
     if (!isset($playerId)) {
         $playerId = 6717463;
@@ -43,7 +44,7 @@ if (isset($pid)) {
         <body>
             <script src="http://devplatform.streamingmediahosting.com/p/<?php echo $pid ?>/sp/<?php echo $pid ?>00/embedIframeJs/uiconf_id/<?php echo $playerId ?>/partner_id/<?php echo $pid ?>"></script>
             <script type="text/javascript">
-                var sessInfo = {pid: '<?php echo $pid; ?>', playerId: '<?php echo $playerId ?>'};
+                var sessInfo = {pid: '<?php echo $pid; ?>', playerId: '<?php echo $playerId ?>', ks: '<?php echo ($ks)? $ks : null; ?>'};
             </script>
             <div class="container-fluid" id="player-wrapper">
                 <div class="row">

@@ -41,8 +41,20 @@ class playlist {
 
     public function is_playlist_rb() {
         $eid = urlencode($_GET['eid']);
-        $args = "entryId=" . $eid;
+        $ks = $this->impersonate($_GET["pid"]);
+        $args = "entryId=" . $eid . "&ks=" . $ks;
         echo $this->curl_request($args);
+    }
+
+    public function impersonate($pid) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://mediaplatform.streamingmediahosting.com/api_v3/index.php?service=baseEntry&action=get&service=session&action=impersonate&secret=68b329da9893e34099c7d8ad5cb9c940&type=2&partnerId=-2&expiry=60&impersonatedPartnerId=" . $pid);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec($ch);
+        curl_close($ch);
+        $xml = new SimpleXmlElement($output);
+        $smh_ks = (string) $xml->result[0];
+        return $smh_ks;
     }
 
 }

@@ -35,7 +35,6 @@ class playlist {
         $output = curl_exec($ch);
         $result = json_decode($output, true);
         curl_close($ch);
-        syslog(LOG_NOTICE, "SMH DEBUG : curl_request: " . print_r($result, true));
         $bool = ($result['playlistType'] === 10) ? 'true' : 'false';
         return $bool;
     }

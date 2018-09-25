@@ -14,9 +14,9 @@ class transcode {
     protected $port;
     protected $file_sync_entries;
     protected $accounts;
-    protected $partner_ids = array();
     protected $file_sync_entries_found = array();
     protected $file_sync_entries_file_sizes = array();
+    protected $partner_ids = array();
 
     public function __construct() {
         $this->login = 'kaltura';
@@ -30,40 +30,70 @@ class transcode {
     }
 
     public function run() {
-        $this->connect();
+        $this->connect2();
         $this->get_accounts();
-        $now_date = new DateTime('now');
-        $now_date->setTimezone(new DateTimeZone('UTC'));
-        $month1 = $now_date->format('Y-m');
-        $now_date->modify('-1 day');
-        $yest_date = $now_date->format('Y-m');
-        $dates = array($month1, $yest_date);
-        foreach ($dates as $date) {
-            $this->get_file_sync_conv($date);
-            $this->get_file_sync_sizes($date);
-            $this->insert_transcoded_flavors();
+        if (count($this->partner_ids) > 0) {
+            $this->connect();
+            $now_date = new DateTime('now');
+            $now_date->setTimezone(new DateTimeZone('UTC'));
+            $month1 = $now_date->format('Y-m-d');
+            $now_date->modify('-1 day');
+            $yest_date = $now_date->format('Y-m-d');
+            $dates = array($month1, $yest_date);
+
+            foreach ($this->partner_ids as $partner_id) {
+                $this->file_sync_entries_found = array();
+                $this->file_sync_entries_file_sizes = array();
+                $this->update_account_status($partner_id);
+                foreach ($dates as $date) {
+                    $this->get_file_sync_conv($partner_id, $date);
+                    $this->get_file_sync_sizes($date);
+                    $this->insert_transcoded_flavors();
+                }
+                $this->remove_account($partner_id);
+            }
         }
     }
 
     public function get_accounts() {
         try {
-            $this->accounts = $this->link->prepare("SELECT * FROM partner WHERE status = 1 AND id NOT IN (0,99,-2,-1,-3, -4, -5)");
+            $this->accounts = $this->link2->prepare("SELECT * FROM transcoding_queue");
             $this->accounts->execute();
             if ($this->accounts->rowCount() > 0) {
                 foreach ($this->accounts->fetchAll(PDO::FETCH_OBJ) as $row) {
-                    array_push($this->partner_ids, $row->id);
+                    array_push($this->partner_ids, $row->partner_id);
                 }
             }
         } catch (PDOException $e) {
             $date = date('Y-m-d H:i:s');
-            print($date . " [transcode->get_file_sync_data] ERROR: Could not execute query (get_file_sync_data): " . $e->getMessage() . "\n");
+            print($date . " [transcode->get_accounts] ERROR: Could not execute query (get_accounts): " . $e->getMessage() . "\n");
         }
     }
 
-    public function get_file_sync_conv($month) {
-        $partner_ids = implode(",", $this->partner_ids);
+    public function update_account_status($partner_id) {
         try {
-            $this->file_sync_entries = $this->link->prepare("SELECT * FROM file_sync WHERE partner_id IN (" . $partner_ids . ") AND status IN (2,3) AND object_type = 4 AND file_size != -1 AND version = 0 AND ready_at LIKE '%" . $month . "%'");
+            $date = date('Y-m-d H:i:s');
+            $this->accounts = $this->link2->prepare("UPDATE transcoding_queue SET executing = 1, updated_at = '$date' WHERE partner_id =  $partner_id");
+            $this->accounts->execute();
+        } catch (PDOException $e) {
+            $date = date('Y-m-d H:i:s');
+            print($date . " [transcode->update_account_status] ERROR: Could not execute query (update_account_status): " . $e->getMessage() . "\n");
+        }
+    }
+
+    public function remove_account($partner_id) {
+        try {
+            $this->accounts = $this->link2->prepare("DELETE FROM transcoding_queue WHERE partner_id =  $partner_id");
+            $this->accounts->execute();
+        } catch (PDOException $e) {
+            $date = date('Y-m-d H:i:s');
+            print($date . " [transcode->remove_account] ERROR: Could not execute query (remove_account): " . $e->getMessage() . "\n");
+        }
+    }
+
+    public function get_file_sync_conv($partner_id, $month) {
+        try {
+            $this->file_sync_entries = $this->link->prepare("SELECT * FROM file_sync WHERE partner_id IN (" . $partner_id . ") AND status IN (2,3) AND object_type = 4 AND file_size != -1 AND version = 0 AND ready_at LIKE '%" . $month . "%'");
             $this->file_sync_entries->execute();
             if ($this->file_sync_entries->rowCount() > 0) {
                 foreach ($this->file_sync_entries->fetchAll(PDO::FETCH_OBJ) as $row) {
@@ -88,7 +118,7 @@ class transcode {
         try {
             foreach ($this->file_sync_entries_found as $file_sync_entries) {
                 $flavors = implode(",", $file_sync_entries['flavors']);
-                $this->file_sync_entries = $this->link->prepare("SELECT fs.partner_id, fa.entry_id, fs.object_id, fs.file_size, e.length_in_msecs, fs.version, fs.ready_at FROM file_sync fs, flavor_asset fa, entry e WHERE fs.partner_id = " . $file_sync_entries['partner_id'] . " AND fs.status IN (2,3) AND fa.status IN (2,3) AND fs.object_type = 4 AND fs.object_id IN (" . $flavors . ") AND fs.file_size != -1 AND fs.version > 0 AND fs.ready_at LIKE '%" . $month . "%' AND fs.object_id = fa.id AND fa.entry_id = e.id");
+                $this->file_sync_entries = $this->link->prepare("SELECT fs.partner_id, fa.entry_id, fs.object_id, fs.file_size, e.length_in_msecs, fs.version, fs.ready_at FROM file_sync fs, flavor_asset fa, entry e WHERE fs.partner_id = " . $file_sync_entries['partner_id'] . " AND fs.status IN (2,3) AND fa.status IN (2) AND fs.object_type = 4 AND fs.object_id IN (" . $flavors . ") AND fs.file_size != -1 AND fs.version > 0 AND fs.ready_at LIKE '%" . $month . "%' AND fs.object_id = fa.id AND fa.entry_id = e.id");
                 $this->file_sync_entries->execute();
                 if ($this->file_sync_entries->rowCount() > 0) {
                     foreach ($this->file_sync_entries->fetchAll(PDO::FETCH_OBJ) as $row) {

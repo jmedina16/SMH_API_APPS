@@ -36,9 +36,9 @@ class transcode {
         //$this->get_accounts();
         $now_date = new DateTime('now');
         $now_date->setTimezone(new DateTimeZone('UTC'));
-        $month1 = $now_date->format('Y-m');
+        $month1 = $now_date->format('Y-m-d');
         $now_date->modify('-1 day');
-        $yest_date = $now_date->format('Y-m');
+        $yest_date = $now_date->format('Y-m-d');
         $dates = array($month1, $yest_date);
         foreach ($dates as $date) {
             $this->get_file_sync_conv($date);

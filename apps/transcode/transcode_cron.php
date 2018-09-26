@@ -57,7 +57,7 @@ class transcode {
 
     public function get_accounts() {
         try {
-            $this->accounts = $this->link2->prepare("SELECT * FROM transcoding_queue");
+            $this->accounts = $this->link2->prepare("SELECT * FROM transcoding_queue WHERE executing = 0");
             $this->accounts->execute();
             if ($this->accounts->rowCount() > 0) {
                 foreach ($this->accounts->fetchAll(PDO::FETCH_OBJ) as $row) {

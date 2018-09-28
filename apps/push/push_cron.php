@@ -159,7 +159,7 @@ class push_cron {
         $final_push_data['entry_id'] = $eid;
         $final_push_data['name'] = $entry['name'];
         $final_push_data['tags'] = $entry['tags'];
-        $final_push_data['thumbnail_url'] = str_replace("mediaplatform", "ecimages", $entry['thumbnailUrl']);
+        $final_push_data['thumbnail_url'] = str_replace("mediaplatform", "hwimages", $entry['thumbnailUrl']);
         $final_push_data['partner_data'] = $entry['partnerData'];
         $final_push_data['status'] = $entry['status'];
         $final_push_data['fileType'] = $root_fileType;

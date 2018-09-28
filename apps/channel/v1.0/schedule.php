@@ -8,7 +8,7 @@ if (isset($pid)) {
     }
 
     function getCDN($pid) {
-        $url = 'http://ecapps.streamingmediahosting.com/apps/scripts/getCDN.php?action=get_cdn&pid=' . $pid;
+        $url = 'http://hwapps.streamingmediahosting.com/apps/scripts/getCDN.php?action=get_cdn&pid=' . $pid;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

@@ -40,8 +40,8 @@ class transcode {
 //            $now_date->modify('-1 day');
 //            $yest_date = $now_date->format('Y-m-d');
 //            $dates = array($month1, $yest_date);
-            
-            $dates = array('2018-07');
+
+            $dates = array('2018-09');
 
             foreach ($this->partner_ids as $partner_id) {
                 $this->file_sync_entries_found = array();
@@ -66,7 +66,7 @@ class transcode {
 //                    array_push($this->partner_ids, $row->partner_id);
 //                }
 //            }
-            array_push($this->partner_ids, 11853);
+            array_push($this->partner_ids, 13373);
         } catch (PDOException $e) {
             $date = date('Y-m-d H:i:s');
             print($date . " [transcode->get_accounts] ERROR: Could not execute query (get_accounts): " . $e->getMessage() . "\n");

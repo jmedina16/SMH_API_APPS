@@ -34,12 +34,14 @@ class transcode {
         $this->get_accounts();
         if (count($this->partner_ids) > 0) {
             $this->connect();
-            $now_date = new DateTime('now');
-            $now_date->setTimezone(new DateTimeZone('UTC'));
-            $month1 = $now_date->format('Y-m-d');
-            $now_date->modify('-1 day');
-            $yest_date = $now_date->format('Y-m-d');
-            $dates = array($month1, $yest_date);
+//            $now_date = new DateTime('now');
+//            $now_date->setTimezone(new DateTimeZone('UTC'));
+//            $month1 = $now_date->format('Y-m-d');
+//            $now_date->modify('-1 day');
+//            $yest_date = $now_date->format('Y-m-d');
+//            $dates = array($month1, $yest_date);
+            
+            $dates = array('2018-09');
 
             foreach ($this->partner_ids as $partner_id) {
                 $this->file_sync_entries_found = array();
@@ -48,22 +50,23 @@ class transcode {
                 foreach ($dates as $date) {
                     $this->get_file_sync_conv($partner_id, $date);
                     $this->get_file_sync_sizes($date);
-                    $this->insert_transcoded_flavors();
+                    $this->update_transcoded_flavors();
                 }
-                $this->remove_account($partner_id);
+                //$this->remove_account($partner_id);
             }
         }
     }
 
     public function get_accounts() {
         try {
-            $this->accounts = $this->link2->prepare("SELECT * FROM transcoding_queue WHERE executing = 0");
-            $this->accounts->execute();
-            if ($this->accounts->rowCount() > 0) {
-                foreach ($this->accounts->fetchAll(PDO::FETCH_OBJ) as $row) {
-                    array_push($this->partner_ids, $row->partner_id);
-                }
-            }
+//            $this->accounts = $this->link2->prepare("SELECT * FROM transcoding_queue WHERE executing = 0");
+//            $this->accounts->execute();
+//            if ($this->accounts->rowCount() > 0) {
+//                foreach ($this->accounts->fetchAll(PDO::FETCH_OBJ) as $row) {
+//                    array_push($this->partner_ids, $row->partner_id);
+//                }
+//            }
+            array_push($this->partner_ids, 10012);
         } catch (PDOException $e) {
             $date = date('Y-m-d H:i:s');
             print($date . " [transcode->get_accounts] ERROR: Could not execute query (get_accounts): " . $e->getMessage() . "\n");
@@ -132,18 +135,19 @@ class transcode {
         }
     }
 
-    public function insert_transcoded_flavors() {
+    public function update_transcoded_flavors() {
         $this->connect2();
         foreach ($this->file_sync_entries_file_sizes as $flavors) {
             try {
-                $date_dt = new DateTime($flavors['ready_at'], new DateTimeZone('America/Los_Angeles'));
-                $date_dt->setTimeZone(new DateTimeZone('UTC'));
-                $ready_at = $date_dt->format('Y-m-d H:i:s');
-                $query = $this->link2->prepare("INSERT INTO transcoding (partner_id, entry_id, media_type, flavor, width, height, bitrate, frame_rate, version, file_size, length_in_msecs, ready_at) SELECT * FROM (SELECT " . $flavors['partner_id'] . " as partner_id, '" . $flavors['entry_id'] . "' as entry_id, " . $flavors['media_type'] . " as media_type, '" . $flavors['flavor'] . "' as flavor, '" . $flavors['width'] . "' as width, '" . $flavors['height'] . "' as height, '" . $flavors['bitrate'] . "' as bitrate, '" . $flavors['frame_rate'] . "' as frame_rate, " . $flavors['version'] . " as version, " . $flavors['file_size'] . " as file_size, " . $flavors['length_in_msecs'] . " as length_in_msecs, '" . $ready_at . "' as ready_at) AS tmp WHERE NOT EXISTS (SELECT flavor, version FROM transcoding WHERE flavor = '" . $flavors['flavor'] . "' AND version = " . $flavors['version'] . ") LIMIT 1;");
+//                $date_dt = new DateTime($flavors['ready_at'], new DateTimeZone('America/Los_Angeles'));
+//                $date_dt->setTimeZone(new DateTimeZone('UTC'));
+//                $ready_at = $date_dt->format('Y-m-d H:i:s');
+//                $query = $this->link2->prepare("INSERT INTO transcoding (partner_id, entry_id, media_type, flavor, width, height, bitrate, frame_rate, version, file_size, length_in_msecs, ready_at) SELECT * FROM (SELECT " . $flavors['partner_id'] . " as partner_id, '" . $flavors['entry_id'] . "' as entry_id, " . $flavors['media_type'] . " as media_type, '" . $flavors['flavor'] . "' as flavor, '" . $flavors['width'] . "' as width, '" . $flavors['height'] . "' as height, '" . $flavors['bitrate'] . "' as bitrate, '" . $flavors['frame_rate'] . "' as frame_rate, " . $flavors['version'] . " as version, " . $flavors['file_size'] . " as file_size, " . $flavors['length_in_msecs'] . " as length_in_msecs, '" . $ready_at . "' as ready_at) AS tmp WHERE NOT EXISTS (SELECT flavor, version FROM transcoding WHERE flavor = '" . $flavors['flavor'] . "' AND version = " . $flavors['version'] . ") LIMIT 1;");
+                $query = $this->link2->prepare("UPDATE transcoding SET media_type =  " . $flavors['media_type'] . ", width = " . $flavors['width'] . ", height = " . $flavors['height'] . ", bitrate = " . $flavors['bitrate'] . ", frame_rate = " . $flavors['frame_rate'] . " WHERE partner_id = " . $flavors['partner_id'] . " AND entry_id = '" . $flavors['entry_id'] . "' AND flavor = '" . $flavors['flavor'] . "' AND version = " . $flavors['version']);
                 $query->execute();
             } catch (PDOException $e) {
                 $date = date('Y-m-d H:i:s');
-                print($date . " [transcode->insert_transcoded_flavors] ERROR: Could not execute query (insert_transcoded_flavors): " . $e->getMessage() . "\n");
+                print($date . " [transcode->update_transcoded_flavors] ERROR: Could not execute query (update_transcoded_flavors): " . $e->getMessage() . "\n");
             }
         }
     }

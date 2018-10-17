@@ -50,7 +50,7 @@ class transcode {
                 foreach ($dates as $date) {
                     $this->get_file_sync_conv($partner_id, $date);
                     $this->get_file_sync_sizes($date);
-                    //$this->update_transcoded_flavors();
+                    $this->update_transcoded_flavors();
                 }
                 //$this->remove_account($partner_id);
             }
@@ -121,17 +121,12 @@ class transcode {
         try {
             foreach ($this->file_sync_entries_found as $file_sync_entries) {
                 $flavors = implode(",", $file_sync_entries['flavors']);
-                $this->file_sync_entries = $this->link->prepare("SELECT fs.partner_id, fa.entry_id, e.media_type, fs.object_id, fa.width, fa.height, fa.bitrate, fa.frame_rate, fs.file_size, e.length_in_msecs, fs.version, fs.ready_at FROM file_sync fs, flavor_asset fa, entry e WHERE fs.partner_id = " . $file_sync_entries['partner_id'] . " AND fs.status IN (2,3) AND fa.status IN (2,3) AND fs.object_type = 4 AND fs.object_id IN (" . $flavors . ") AND fs.file_size != -1 AND fs.version = 0 AND fs.ready_at LIKE '%" . $month . "%' AND fs.object_id = fa.id AND fa.entry_id = e.id");
+                $this->file_sync_entries = $this->link->prepare("SELECT fs.partner_id, fa.entry_id, e.media_type, fs.object_id, fa.width, fa.height, fa.bitrate, fa.frame_rate, fs.file_size, e.length_in_msecs, fs.version, fs.ready_at FROM file_sync fs, flavor_asset fa, entry e WHERE fs.partner_id = " . $file_sync_entries['partner_id'] . " AND fs.status IN (2,3) AND fa.status IN (2,3) AND fs.object_type = 4 AND fs.object_id IN (" . $flavors . ") AND fs.file_size != -1 AND fs.version >= 0 AND fs.ready_at LIKE '%" . $month . "%' AND fs.object_id = fa.id AND fa.entry_id = e.id");
                 $this->file_sync_entries->execute();
                 if ($this->file_sync_entries->rowCount() > 0) {
                     foreach ($this->file_sync_entries->fetchAll(PDO::FETCH_OBJ) as $row) {
                         array_push($this->file_sync_entries_file_sizes, array('partner_id' => $row->partner_id, 'entry_id' => $row->entry_id, 'media_type' => $row->media_type, 'flavor' => $row->object_id, 'width' => $row->width, 'height' => $row->height, 'bitrate' => $row->bitrate, 'frame_rate' => $row->frame_rate, 'version' => $row->version, 'file_size' => $row->file_size, 'length_in_msecs' => $row->length_in_msecs, 'ready_at' => $row->ready_at));
                     }
-                }
-            }
-            foreach ($this->file_sync_entries_file_sizes as $flavors) {
-                if ($flavors['entry_id'] == '0_rys7oi7a') {
-                    print_r($flavors);
                 }
             }
         } catch (PDOException $e) {

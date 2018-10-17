@@ -41,7 +41,7 @@ class transcode {
 //            $yest_date = $now_date->format('Y-m-d');
 //            $dates = array($month1, $yest_date);
 
-            $dates = array('2018-09');
+            $dates = array('2018-10');
 
             foreach ($this->partner_ids as $partner_id) {
                 $this->file_sync_entries_found = array();

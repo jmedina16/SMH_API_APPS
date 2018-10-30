@@ -1,7 +1,7 @@
 <?php
 
 //header('Access-Control-Allow-Origin: *');
-class playlist {
+class ac {
 
     protected $pid;
     protected $action;
@@ -28,7 +28,7 @@ class playlist {
         }
     }
 
-    public function curl_request($args) {
+    public function curl_request1($args) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, "https://mediaplatform.streamingmediahosting.com/api_v3/index.php?service=accessControlProfile&action=list&format=1&" . $args);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -36,10 +36,26 @@ class playlist {
         $result = json_decode($output, true);
         curl_close($ch);
         $bool = false;
+        $ac_ids = array();
         foreach ($result['objects'] as $object) {
-            if ($object['isDefault']) {
-                $bool = (count($object['rules']) > 0) ? 'true' : 'false';
+            $hasRules = (count($object['rules']) > 0) ? true : false;
+            if ($hasRules) {
+                array_push($ac_ids, $object['id']);
             }
+        }
+        return $ac_ids;
+    }
+
+    public function curl_request2($ac_rules, $args) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://mediaplatform.streamingmediahosting.com/api_v3/index.php?service=baseEntry&action=get&format=1&" . $args);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec($ch);
+        $result = json_decode($output, true);
+        curl_close($ch);
+        $bool = 'false';
+        if (in_array($result['accessControlId'], $ac_rules)) {
+            $bool = 'true';
         }
         return $bool;
     }
@@ -48,7 +64,8 @@ class playlist {
         $eid = urlencode($_GET['eid']);
         $ks = $this->impersonate($_GET["pid"]);
         $args = "entryId=" . $eid . "&ks=" . $ks;
-        echo $this->curl_request($args);
+        $ac_rules = $this->curl_request1($args);
+        echo $this->curl_request2($ac_rules, $args);
     }
 
     public function impersonate($pid) {
@@ -64,6 +81,6 @@ class playlist {
 
 }
 
-$playlist = new playlist();
+$playlist = new ac();
 $playlist->run();
 ?>

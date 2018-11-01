@@ -24,7 +24,8 @@ if (isset($pid)) {
         //$apps_url = 'https://ecapps.streamingmediahosting.com';
         $apps_url = 'http://devplatform.streamingmediahosting.com';
     } else if ($cdn[0]['highwinds'] || $cdn[0]['custom']) {
-        $apps_url = 'https://hwapps.streamingmediahosting.com';
+        //$apps_url = 'https://hwapps.streamingmediahosting.com';
+        $apps_url = 'http://devplatform.streamingmediahosting.com';
     }
     ?>
     <!DOCTYPE html>

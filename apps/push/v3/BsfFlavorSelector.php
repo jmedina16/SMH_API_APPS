@@ -34,25 +34,9 @@ class BsfFlavorSelector {
                 }
             }
             syslog(LOG_NOTICE, "SMH DEBUG : convertFlavors: convert_flavor_resp: " . print_r($convert_flavor_resp, true));
-
-            $flavors_na = array(3, -1, 4);
-            $flavors_response = $this->getFlavors($this->ks, $this->payload['entry_id']);
-            foreach ($flavors_response['objects'] as $flavor) {
-                $entry_exists = $this->entryExists($flavor['entryId'], $flavor['id']);
-                if (!$entry_exists['success']) {
-                    if (!in_array((int) $flavor['status'], $flavors_na)) {
-                        if (!$flavor['isOriginal']) {
-                            $data = array(':partner_id' => $this->payload['partner_id'], ':entryId' => $this->payload['entry_id'], ':assetId' => $flavor['id'], ':isSource' => $flavor['isOriginal'], ':status' => $flavor['status'], ':sent' => 0, ':created_at' => date('Y-m-d H:i:s'), ':updated_at' => null);
-                            try {
-                                $query = $this->db_link->prepare("INSERT INTO push_notifications_v2 (partner_id,entryId,assetId,isSource,status,sent,created_at,updated_at) VALUES (:partner_id,:entryId,:assetId,:isSource,:status,:sent,:created_at,:updated_at)");
-                                $query->execute($data);
-                            } catch (PDOException $e) {
-                                error_log("[push->update_push_notify] ERROR: Could not execute query: " . json_encode($e->getMessage()));
-                            }
-                        }
-                    }
-                }
-            }
+            if(count($convert_flavor_resp) == 0){
+               $this->insertFlavorNotify(); 
+            }            
         }
     }
 
@@ -147,13 +131,24 @@ class BsfFlavorSelector {
         return $flavors_to_convert;
     }
 
-    private function insertFlavorNotify($assetId, $status) {
-        $data = array(':partner_id' => $this->payload['partner_id'], ':entryId' => $this->payload['entry_id'], ':assetId' => $assetId, ':isSource' => 0, ':status' => $status, ':sent' => 0, ':created_at' => date('Y-m-d H:i:s'), ':updated_at' => null);
-        try {
-            $query = $this->db_link->prepare("INSERT INTO push_notifications_v2 (partner_id,entryId,assetId,isSource,status,sent,created_at,updated_at) VALUES (:partner_id,:entryId,:assetId,:isSource,:status,:sent,:created_at,:updated_at)");
-            $query->execute($data);
-        } catch (PDOException $e) {
-            error_log("[push->insertFlavorNotify] ERROR: Could not execute query: " . json_encode($e->getMessage()));
+    private function insertFlavorNotify() {
+        $flavors_na = array(3, -1, 4);
+        $flavors_response = $this->getFlavors($this->ks, $this->payload['entry_id']);
+        foreach ($flavors_response['objects'] as $flavor) {
+            $entry_exists = $this->entryExists($flavor['entryId'], $flavor['id']);
+            if (!$entry_exists['success']) {
+                if (!in_array((int) $flavor['status'], $flavors_na)) {
+                    if (!$flavor['isOriginal']) {
+                        $data = array(':partner_id' => $this->payload['partner_id'], ':entryId' => $this->payload['entry_id'], ':assetId' => $flavor['id'], ':isSource' => $flavor['isOriginal'], ':status' => $flavor['status'], ':sent' => 0, ':created_at' => date('Y-m-d H:i:s'), ':updated_at' => null);
+                        try {
+                            $query = $this->db_link->prepare("INSERT INTO push_notifications_v2 (partner_id,entryId,assetId,isSource,status,sent,created_at,updated_at) VALUES (:partner_id,:entryId,:assetId,:isSource,:status,:sent,:created_at,:updated_at)");
+                            $query->execute($data);
+                        } catch (PDOException $e) {
+                            error_log("[push->update_push_notify] ERROR: Could not execute query: " . json_encode($e->getMessage()));
+                        }
+                    }
+                }
+            }
         }
     }
 

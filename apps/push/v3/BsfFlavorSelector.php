@@ -17,21 +17,19 @@ class BsfFlavorSelector {
         $flavors = array();
         if ($this->payload['status'] == 2) {
             if ($this->payload['flavor']['fileType'] == 'video') {
-                $flavors = $this->getVideoFlavors($this->payload['flavor']['id'], $this->payload['flavor']['height'], $this->payload['flavor']['bitrate'], $this->payload['flavor']['fileExt']);
+                $flavors = $this->getVideoFlavors($this->payload['partner_id'], $this->payload['flavor']['id'], $this->payload['flavor']['height'], $this->payload['flavor']['bitrate'], $this->payload['flavor']['fileExt']);
             } else if ($this->payload['flavor']['fileType'] == 'audio') {
-                $flavors = $this->getAudioFlavors($this->payload['flavor']['id'], $this->payload['flavor']['bitrate'], $this->payload['flavor']['fileExt']);
+                $flavors = $this->getAudioFlavors($this->payload['partner_id'], $this->payload['flavor']['id'], $this->payload['flavor']['bitrate'], $this->payload['flavor']['fileExt']);
             }
             $flavors_count = count($flavors);
             if ($flavors_count) {
                 if ($flavors_count > 1) {
-                    $convert_flavor_resp = $this->convertMultiFlavors($this->ks, $this->payload['entry_id'], $flavors);
+                    $this->convertMultiFlavors($this->ks, $this->payload['entry_id'], $flavors);
                 } else {
-                    $convert_flavor_resp = $this->convertSingleFlavor($this->ks, $this->payload['entry_id'], $flavors[0]);
+                    $this->convertSingleFlavor($this->ks, $this->payload['entry_id'], $flavors[0]);
                 }
             }
-            if(count($convert_flavor_resp) == 0){
-               $this->insertFlavorNotify(); 
-            }            
+            $this->insertFlavorNotify();
         }
     }
 
@@ -64,10 +62,22 @@ class BsfFlavorSelector {
         return $success;
     }
 
-    private function getVideoFlavors($assetId, $height, $bitrate, $fileExt) {
+    private function getVideoFlavors($pid, $assetId, $height, $bitrate, $fileExt) {
         $flavors_to_convert = array();
+        $audio_flavor = 0;
+        if ($pid == 10012) {
+            $audio_flavor = 10408;
+        } else if ($pid == 13373) {
+            $audio_flavor = 10463;
+        } else if ($pid == 13438) {
+            $audio_flavor = 10498;
+        } else if ($pid == 12773) {
+            $audio_flavor = 10598;
+        } else if ($pid == 13453) {
+            $audio_flavor = 10538;
+        }
         //convert audio flavor first
-        array_push($flavors_to_convert, 10408);
+        array_push($flavors_to_convert, $audio_flavor);
         if ($fileExt == 'mp4') {
             if ($bitrate >= 1000) {
                 switch ($height) {
@@ -117,10 +127,22 @@ class BsfFlavorSelector {
         return $flavors_to_convert;
     }
 
-    private function getAudioFlavors($assetId, $bitrate, $fileExt) {
+    private function getAudioFlavors($pid, $assetId, $bitrate, $fileExt) {
         $flavors_to_convert = array();
         if ($fileExt != 'mp3') {
-            array_push($flavors_to_convert, 10408);
+            $audio_flavor = 0;
+            if ($pid == 10012) {
+                $audio_flavor = 10408;
+            } else if ($pid == 13373) {
+                $audio_flavor = 10463;
+            } else if ($pid == 13438) {
+                $audio_flavor = 10498;
+            } else if ($pid == 12773) {
+                $audio_flavor = 10598;
+            } else if ($pid == 13453) {
+                $audio_flavor = 10538;
+            }
+            array_push($flavors_to_convert, $audio_flavor);
         }
         return $flavors_to_convert;
     }

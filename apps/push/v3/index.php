@@ -7,7 +7,7 @@ include(dirname(__FILE__) . '/BsfFlavorSelector.php');
 
 class push {
 
-    protected $post_data;
+    protected $post_data = array();
     protected $link = null;
     protected $login;
     protected $password;
@@ -31,9 +31,11 @@ class push {
     }
 
     public function pushNotification() {
+      if(count($this->post_data)){
         if (in_array($this->post_data['partner_id'], $this->bsfPush)) {
             $this->insertPushNotify();
         }
+      }
     }
 
     //connect to database

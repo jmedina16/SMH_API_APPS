@@ -1,0 +1,79 @@
+[30-Jan-2019 00:10:45 UTC] [push->bsfPush] (10012) JSON: {"partner_id":10012,"entry_id":"0_o11qjuyi","status":1,"fileType":"audio","isSource":true,"flavor":{"id":"0_vuosvkx8","width":0,"height":0,"bitrate":0,"isWeb":false,"status":0,"size":0,"fileExt":"mp3","fileType":null,"version":"2"}}
+[30-Jan-2019 00:12:55 UTC] [push->bsfPush] (10012) JSON: {"partner_id":10012,"entry_id":"0_dnn0bfjj","status":1,"fileType":"video","isSource":true,"flavor":{"id":"0_1k91r799","width":0,"height":0,"bitrate":0,"isWeb":false,"status":0,"size":0,"fileExt":"mp4","fileType":null,"version":"2"}}
+[30-Jan-2019 00:16:06 UTC] [push->bsfPush] (10012) JSON: {"partner_id":10012,"entry_id":"0_qtuzxevg","status":2,"fileType":"video","isSource":true,"flavor":{"id":"0_ddiwdzpr","width":640,"height":360,"bitrate":833,"isWeb":true,"status":2,"size":10444,"fileExt":"mp4","fileType":"video","version":"2"}}
+[30-Jan-2019 00:22:29 UTC] [push->bsfPush] (10012) JSON: {"partner_id":10012,"entry_id":"0_i6ir4oxi","status":2,"fileType":"video","isSource":true,"flavor":{"id":"0_3ywf255q","width":640,"height":360,"bitrate":833,"isWeb":true,"status":2,"size":10444,"fileExt":"mp4","fileType":"video","version":"2"}}
+[30-Jan-2019 00:24:53 UTC] [push->bsfPush] (10012) JSON: {"partner_id":10012,"entry_id":"0_98723v02","status":2,"fileType":"video","isSource":true,"flavor":{"id":"0_okj4mbm4","width":640,"height":360,"bitrate":833,"isWeb":true,"status":2,"size":10444,"fileExt":"mp4","fileType":"video","version":"2"}}
+[30-Jan-2019 00:30:46 UTC] [push->bsfPush] (10012) JSON: {"partner_id":10012,"entry_id":"0_06ybrlp6","status":2,"fileType":"video","isSource":true,"flavor":{"id":"0_9nxrl8mu","width":640,"height":360,"bitrate":833,"isWeb":true,"status":2,"size":10444,"fileExt":"mp4","fileType":"video","version":"2"}}
+[30-Jan-2019 00:36:21 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 23
+[30-Jan-2019 00:36:21 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 25
+[30-Jan-2019 00:36:21 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 23
+[30-Jan-2019 00:36:21 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 25
+[30-Jan-2019 00:36:21 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 23
+[30-Jan-2019 00:36:21 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 25
+[30-Jan-2019 00:36:21 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 23
+[30-Jan-2019 00:36:21 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 25
+[30-Jan-2019 00:36:21 UTC] [push->bsfPush] (10012) JSON: {"partner_id":10012,"entry_id":"0_yz77uclr","status":2,"fileType":"video","isSource":true,"flavor":{"id":"0_ltwda3mg","width":640,"height":360,"bitrate":833,"isWeb":true,"status":2,"size":10444,"fileExt":"mp4","fileType":"video","version":"2"}}
+[30-Jan-2019 00:40:21 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 24
+[30-Jan-2019 00:40:21 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 26
+[30-Jan-2019 00:40:21 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 24
+[30-Jan-2019 00:40:21 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 26
+[30-Jan-2019 00:40:21 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 24
+[30-Jan-2019 00:40:21 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 26
+[30-Jan-2019 00:40:21 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 24
+[30-Jan-2019 00:40:21 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 26
+[30-Jan-2019 00:40:21 UTC] [push->bsfPush] (10012) JSON: {"partner_id":10012,"entry_id":"0_1jbpm1qp","status":2,"fileType":"video","isSource":true,"flavor":{"id":"0_0b9oagef","width":640,"height":360,"bitrate":833,"isWeb":true,"status":2,"size":10444,"fileExt":"mp4","fileType":"video","version":"2"}}
+[30-Jan-2019 00:44:06 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 25
+[30-Jan-2019 00:44:06 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 27
+[30-Jan-2019 00:44:06 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 25
+[30-Jan-2019 00:44:06 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 27
+[30-Jan-2019 00:44:06 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 25
+[30-Jan-2019 00:44:06 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 27
+[30-Jan-2019 00:44:06 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 25
+[30-Jan-2019 00:44:06 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 27
+[30-Jan-2019 00:44:06 UTC] [push->bsfPush] (10012) JSON: {"partner_id":10012,"entry_id":"0_47a6n3wv","status":2,"fileType":"video","isSource":true,"flavor":{"id":"0_mdkmnuz0","width":640,"height":360,"bitrate":833,"isWeb":true,"status":2,"size":10444,"fileExt":"mp4","fileType":"video","version":"2"}}
+[30-Jan-2019 00:47:01 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 24
+[30-Jan-2019 00:47:01 UTC] PHP Notice:  Undefined variable: 0 in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 24
+[30-Jan-2019 00:47:01 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 25
+[30-Jan-2019 00:47:01 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 27
+[30-Jan-2019 00:47:01 UTC] PHP Notice:  Undefined variable:  in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 24
+[30-Jan-2019 00:47:01 UTC] PHP Notice:  Undefined variable:  in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 24
+[30-Jan-2019 00:47:01 UTC] PHP Notice:  Undefined variable:  in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 24
+[30-Jan-2019 00:47:01 UTC] PHP Notice:  Undefined variable:  in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 24
+[30-Jan-2019 00:47:01 UTC] PHP Notice:  Undefined variable:  in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 24
+[30-Jan-2019 00:47:01 UTC] PHP Notice:  Undefined variable:  in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 24
+[30-Jan-2019 00:47:01 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 24
+[30-Jan-2019 00:47:01 UTC] PHP Notice:  Undefined variable: m in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 24
+[30-Jan-2019 00:47:01 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 25
+[30-Jan-2019 00:47:01 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 27
+[30-Jan-2019 00:47:01 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 24
+[30-Jan-2019 00:47:01 UTC] PHP Notice:  Undefined variable: v in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 24
+[30-Jan-2019 00:47:01 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 25
+[30-Jan-2019 00:47:01 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 27
+[30-Jan-2019 00:47:01 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 24
+[30-Jan-2019 00:47:01 UTC] PHP Notice:  Undefined variable: 2 in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 24
+[30-Jan-2019 00:47:01 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 25
+[30-Jan-2019 00:47:01 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 27
+[30-Jan-2019 00:47:01 UTC] [push->bsfPush] (10012) JSON: {"partner_id":10012,"entry_id":"0_rgvpka2d","status":2,"fileType":"video","isSource":true,"flavor":{"id":"0_55ch6f30","width":640,"height":360,"bitrate":833,"isWeb":true,"status":2,"size":10444,"fileExt":"mp4","fileType":"video","version":"2"}}
+[30-Jan-2019 00:49:26 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 25
+[30-Jan-2019 00:49:26 UTC] PHP Notice:  Undefined variable: 0 in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 25
+[30-Jan-2019 00:49:26 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 26
+[30-Jan-2019 00:49:26 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 28
+[30-Jan-2019 00:49:26 UTC] PHP Notice:  Undefined variable:  in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 25
+[30-Jan-2019 00:49:26 UTC] PHP Notice:  Undefined variable:  in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 25
+[30-Jan-2019 00:49:26 UTC] PHP Notice:  Undefined variable:  in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 25
+[30-Jan-2019 00:49:26 UTC] PHP Notice:  Undefined variable:  in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 25
+[30-Jan-2019 00:49:26 UTC] PHP Notice:  Undefined variable:  in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 25
+[30-Jan-2019 00:49:26 UTC] PHP Notice:  Undefined variable:  in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 25
+[30-Jan-2019 00:49:26 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 25
+[30-Jan-2019 00:49:26 UTC] PHP Notice:  Undefined variable: m in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 25
+[30-Jan-2019 00:49:26 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 26
+[30-Jan-2019 00:49:26 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 28
+[30-Jan-2019 00:49:26 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 25
+[30-Jan-2019 00:49:26 UTC] PHP Notice:  Undefined variable: v in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 25
+[30-Jan-2019 00:49:26 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 26
+[30-Jan-2019 00:49:26 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 28
+[30-Jan-2019 00:49:26 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 25
+[30-Jan-2019 00:49:26 UTC] PHP Notice:  Undefined variable: 2 in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 25
+[30-Jan-2019 00:49:26 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 26
+[30-Jan-2019 00:49:26 UTC] PHP Warning:  Illegal string offset 'fileType' in /opt/kaltura/apps/push/v3/BsfFlavorSelector.php on line 28
+[30-Jan-2019 00:49:26 UTC] [push->bsfPush] (10012) JSON: {"partner_id":10012,"entry_id":"0_14efymlz","status":2,"fileType":"video","isSource":true,"flavor":{"id":"0_arzyacee","width":640,"height":360,"bitrate":833,"isWeb":true,"status":2,"size":10444,"fileExt":"mp4","fileType":"video","version":"2"}}

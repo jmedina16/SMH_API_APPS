@@ -129,7 +129,7 @@ class BsfFlavorSelector {
 
     private function getAudioFlavors($pid, $assetId, $bitrate, $fileExt) {
         $flavors_to_convert = array();
-        if ($fileExt != 'mp3') {
+        if ($fileExt != 'mp3' || $bitrate == 0) {
             $audio_flavor = 0;
             if ($pid == 10012) {
                 $audio_flavor = 10408;

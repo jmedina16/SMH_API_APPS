@@ -1,8 +1,5 @@
 <?php
 
-ini_set('log_errors', true);
-ini_set('error_log', dirname(__FILE__) . '/flavor_push.log');
-
 class BsfFlavorSelector {
 
     private $ks;
@@ -24,7 +21,6 @@ class BsfFlavorSelector {
             } else if ($this->payload['flavor']['fileType'] == 'audio') {
                 $flavors = $this->getAudioFlavors($this->payload['flavor']['id'], $this->payload['flavor']['bitrate'], $this->payload['flavor']['fileExt']);
             }
-            syslog(LOG_NOTICE, "SMH DEBUG : convertFlavors: flavors: " . print_r($flavors, true));
             $flavors_count = count($flavors);
             if ($flavors_count) {
                 if ($flavors_count > 1) {
@@ -33,7 +29,6 @@ class BsfFlavorSelector {
                     $convert_flavor_resp = $this->convertSingleFlavor($this->ks, $this->payload['entry_id'], $flavors[0]);
                 }
             }
-            syslog(LOG_NOTICE, "SMH DEBUG : convertFlavors: convert_flavor_resp: " . print_r($convert_flavor_resp, true));
             if(count($convert_flavor_resp) == 0){
                $this->insertFlavorNotify(); 
             }            
@@ -41,7 +36,6 @@ class BsfFlavorSelector {
     }
 
     private function getFlavors($ks, $eid) {
-        $url = "https://mediaplatform.streamingmediahosting.com/api_v3/";
         $data = array(
             "service" => "flavorAsset",
             "action" => "list",
@@ -51,7 +45,7 @@ class BsfFlavorSelector {
             "format" => 1
         );
 
-        $response = $this->curlPost($url, $data);
+        $response = $this->curlPost($this->service_url, $data);
         return $response;
     }
 

@@ -7,14 +7,15 @@ include(dirname(__FILE__) . '/BsfFlavorSelector.php');
 
 class push {
 
-    protected $post_data = array();
-    protected $link = null;
-    protected $login;
-    protected $password;
-    protected $database;
-    protected $hostname;
-    protected $port;
-    protected $bsfPush;
+    private $post_data = array();
+    private $link = null;
+    private $login;
+    private $password;
+    private $database;
+    private $hostname;
+    private $port;
+    private $bsfPush;
+    private $service_url = 'https://mediaplatform.streamingmediahosting.com/api_v3/';
 
     public function __construct() {
         $this->login = 'smh_mngmt';
@@ -27,11 +28,10 @@ class push {
 
     public function run() {
         $this->post_data = $_POST;
-        syslog(LOG_NOTICE, "SMH DEBUG : push: " . print_r($this->post_data, true));
         $this->pushNotification();
     }
 
-    public function pushNotification() {
+    private function pushNotification() {
         if (count($this->post_data)) {
             if (in_array($this->post_data['partner_id'], $this->bsfPush)) {
                 $this->insertPushNotify();
@@ -40,7 +40,7 @@ class push {
     }
 
     //connect to database
-    public function connect() {
+    private function connect() {
         if (!is_null($this->link)) {
             return;
         }
@@ -53,7 +53,7 @@ class push {
         }
     }
 
-    public function insertPushNotify() {
+    private function insertPushNotify() {
         date_default_timezone_set("UTC");
         $this->connect();
         $flavors_na = array(3, -1, 4);
@@ -69,22 +69,19 @@ class push {
                         $bsfFlavorSelector->convertFlavors();
                         $this->bsfPush($flavor['partnerId'], $payload);
                         $data = array(':partner_id' => $this->post_data['partner_id'], ':entryId' => $this->post_data['entry_id'], ':assetId' => $flavor['id'], ':isSource' => $flavor['isOriginal'], ':status' => $flavor['status'], ':sent' => 1, ':created_at' => date('Y-m-d H:i:s'), ':updated_at' => null);
-                    } else {
-                        $data = array(':partner_id' => $this->post_data['partner_id'], ':entryId' => $this->post_data['entry_id'], ':assetId' => $flavor['id'], ':isSource' => $flavor['isOriginal'], ':status' => $flavor['status'], ':sent' => 0, ':created_at' => date('Y-m-d H:i:s'), ':updated_at' => null);
-                    }
-
-                    try {
-                        $query = $this->link->prepare("INSERT INTO push_notifications_v2 (partner_id,entryId,assetId,isSource,status,sent,created_at,updated_at) VALUES (:partner_id,:entryId,:assetId,:isSource,:status,:sent,:created_at,:updated_at)");
-                        $query->execute($data);
-                    } catch (PDOException $e) {
-                        error_log("[push->update_push_notify] ERROR: Could not execute query: " . json_encode($e->getMessage()));
+                        try {
+                            $query = $this->link->prepare("INSERT INTO push_notifications_v2 (partner_id,entryId,assetId,isSource,status,sent,created_at,updated_at) VALUES (:partner_id,:entryId,:assetId,:isSource,:status,:sent,:created_at,:updated_at)");
+                            $query->execute($data);
+                        } catch (PDOException $e) {
+                            error_log("[push->update_push_notify] ERROR: Could not execute query: " . json_encode($e->getMessage()));
+                        }
                     }
                 }
             }
         }
     }
 
-    public function entryExists($eid, $fid) {
+    private function entryExists($eid, $fid) {
         $success = array('success' => false);
         $data = array(':partner_id' => $this->post_data['partner_id'], ':entryId' => $eid, ':assetId' => $fid);
         try {
@@ -99,8 +96,7 @@ class push {
         return $success;
     }
 
-    public function getFlavors($ks, $eid) {
-        $url = "https://mediaplatform.streamingmediahosting.com/api_v3/";
+    private function getFlavors($ks, $eid) {
         $data = array(
             "service" => "flavorAsset",
             "action" => "list",
@@ -110,12 +106,11 @@ class push {
             "format" => 1
         );
 
-        $response = $this->curlPost($url, $data);
+        $response = $this->curlPost($this->service_url, $data);
         return $response;
     }
 
-    public function getEntryDetails($ks, $eid) {
-        $url = "https://mediaplatform.streamingmediahosting.com/api_v3/";
+    private function getEntryDetails($ks, $eid) {
         $data = array(
             "service" => "media",
             "action" => "get",
@@ -124,12 +119,11 @@ class push {
             "format" => 1
         );
 
-        $response = $this->curlPost($url, $data);
+        $response = $this->curlPost($this->service_url, $data);
         return $response;
     }
 
-    public function impersonate($pid) {
-        $url = "https://mediaplatform.streamingmediahosting.com/api_v3/";
+    private function impersonate($pid) {
         $data = array(
             "service" => "session",
             "action" => "impersonate",
@@ -141,18 +135,18 @@ class push {
             "format" => 1
         );
 
-        $response = $this->curlPost($url, $data);
+        $response = $this->curlPost($this->service_url, $data);
         return $response;
     }
 
-    public function getMimeType($filename) {
+    private function getMimeType($filename) {
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mime = finfo_file($finfo, $filename);
         finfo_close($finfo);
         return $mime;
     }
 
-    public function buildPayload($pid, $eid, $ks, $flavor) {
+    private function buildPayload($pid, $eid, $ks, $flavor) {
         $final_push_data = array();
         $root_fileType = '';
         $entry = $this->getEntryDetails($ks, $eid);
@@ -190,7 +184,7 @@ class push {
         return $final_push_data;
     }
 
-    public function bsfPush($pid, $payload) {
+    private function bsfPush($pid, $payload) {
         $success = array('success' => false);
         $notification_url = '';
         $response = '';
@@ -223,7 +217,7 @@ class push {
         return $success = array('success' => false);
     }
 
-    public function curlPostJsonBSF1($url, $data) {
+    private function curlPostJsonBSF1($url, $data) {
         error_log("[push->curlPostJsonBSF1] (13453) URL: " . json_encode($url));
         error_log("[push->curlPostJsonBSF1] (13453) JSON: " . json_encode($data));
         $ch = curl_init();
@@ -249,7 +243,7 @@ class push {
         return $status;
     }
 
-    public function curlPostJsonBSF2($url, $data) {
+    private function curlPostJsonBSF2($url, $data) {
         error_log("[push->curlPostJsonBSF2] (12773) URL: " . json_encode($url));
         error_log("[push->curlPostJsonBSF2] (12773) JSON: " . json_encode($data));
         $ch = curl_init();
@@ -282,7 +276,7 @@ class push {
         return $status;
     }
 
-    public function curlPostJsonBSF3($url, $data) {
+    private function curlPostJsonBSF3($url, $data) {
         error_log("[push->curlPostJsonBSF3] (13438) URL: " . json_encode($url));
         error_log("[push->curlPostJsonBSF3] (13438) JSON: " . json_encode($data));
         $ch = curl_init();
@@ -315,7 +309,7 @@ class push {
         return $status;
     }
 
-    public function curlPostJsonBSF4($url, $data) {
+    private function curlPostJsonBSF4($url, $data) {
         error_log("[push->curlPostJsonBSF4] (13373) URL: " . json_encode($url));
         error_log("[push->curlPostJsonBSF4] (13373) JSON: " . json_encode($data));
         $ch = curl_init();
@@ -348,7 +342,7 @@ class push {
         return $status;
     }
 
-    public function curlPost($url, $data) {
+    private function curlPost($url, $data) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

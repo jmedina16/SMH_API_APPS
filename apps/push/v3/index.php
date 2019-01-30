@@ -27,15 +27,16 @@ class push {
 
     public function run() {
         $this->post_data = $_POST;
+        syslog(LOG_NOTICE, "SMH DEBUG : push: " . print_r($this->post_data, true));
         $this->pushNotification();
     }
 
     public function pushNotification() {
-      if(count($this->post_data)){
-        if (in_array($this->post_data['partner_id'], $this->bsfPush)) {
-            $this->insertPushNotify();
+        if (count($this->post_data)) {
+            if (in_array($this->post_data['partner_id'], $this->bsfPush)) {
+                $this->insertPushNotify();
+            }
         }
-      }
     }
 
     //connect to database
@@ -64,7 +65,7 @@ class push {
                 if (!in_array((int) $flavor['status'], $flavors_na)) {
                     if ($flavor['isOriginal']) {
                         $payload = $this->buildPayload($flavor['partnerId'], $flavor['entryId'], $ks, $flavor);
-                        $bsfFlavorSelector = new BsfFlavorSelector($this->link,$ks,$payload);
+                        $bsfFlavorSelector = new BsfFlavorSelector($this->link, $ks, $payload);
                         $bsfFlavorSelector->convertFlavors();
                         $this->bsfPush($flavor['partnerId'], $payload);
                         $data = array(':partner_id' => $this->post_data['partner_id'], ':entryId' => $this->post_data['entry_id'], ':assetId' => $flavor['id'], ':isSource' => $flavor['isOriginal'], ':status' => $flavor['status'], ':sent' => 1, ':created_at' => date('Y-m-d H:i:s'), ':updated_at' => null);
@@ -152,41 +153,41 @@ class push {
     }
 
     public function buildPayload($pid, $eid, $ks, $flavor) {
-      $final_push_data = array();
-      $root_fileType = '';
-      $entry = $this->getEntryDetails($ks, $eid);
-      if ($entry['mediaType'] === 1) {
-          $root_fileType = 'video';
-      } elseif ($entry['mediaType'] === 5) {
-          $root_fileType = 'audio';
-      } elseif ($entry['mediaType'] === 2) {
-          $root_fileType = 'image';
-      }
+        $final_push_data = array();
+        $root_fileType = '';
+        $entry = $this->getEntryDetails($ks, $eid);
+        if ($entry['mediaType'] === 1) {
+            $root_fileType = 'video';
+        } elseif ($entry['mediaType'] === 5) {
+            $root_fileType = 'audio';
+        } elseif ($entry['mediaType'] === 2) {
+            $root_fileType = 'image';
+        }
 
-      $final_push_data['partner_id'] = $pid;
-      $final_push_data['entry_id'] = $eid;
-      $final_push_data['status'] = $entry['status'];
-      $final_push_data['fileType'] = $root_fileType;
-      $final_push_data['isSource'] = $flavor['isOriginal'];
-      if ($flavor['status'] === 2) {
-          $flavors_tags = explode(',', $flavor['tags']);
-          if (in_array('audio', $flavors_tags)) {
-              $fileType = 'audio';
-          } else {
-              $fileType_pre = $this->getMimeType('/opt/kaltura/web/content/entry/data/' . $pid . '/' . $eid . '_' . $flavor['id'] . '_' . $flavor['version'] . '.' . $flavor['fileExt']);
-              if (strpos($fileType_pre, 'video') !== false) {
-                  $fileType = 'video';
-              } elseif (strpos($fileType_pre, 'audio') !== false || $flavor['fileExt'] === 'mp3') {
-                  $fileType = 'audio';
-              } elseif (strpos($fileType_pre, 'image') !== false) {
-                  $fileType = 'image';
-              }
-          }
-      } else {
-          $fileType = null;
-      }
-      $final_push_data['flavor'] = array('id' => $flavor['id'], 'width' => $flavor['width'], 'height' => $flavor['height'], 'bitrate' => $flavor['bitrate'], 'isWeb' => $flavor['isWeb'], 'status' => $flavor['status'], 'size' => $flavor['size'], 'fileExt' => $flavor['fileExt'], 'fileType' => $fileType, 'version' => $flavor['version']);
-      return $final_push_data;
+        $final_push_data['partner_id'] = $pid;
+        $final_push_data['entry_id'] = $eid;
+        $final_push_data['status'] = $entry['status'];
+        $final_push_data['fileType'] = $root_fileType;
+        $final_push_data['isSource'] = $flavor['isOriginal'];
+        if ($flavor['status'] === 2) {
+            $flavors_tags = explode(',', $flavor['tags']);
+            if (in_array('audio', $flavors_tags)) {
+                $fileType = 'audio';
+            } else {
+                $fileType_pre = $this->getMimeType('/opt/kaltura/web/content/entry/data/' . $pid . '/' . $eid . '_' . $flavor['id'] . '_' . $flavor['version'] . '.' . $flavor['fileExt']);
+                if (strpos($fileType_pre, 'video') !== false) {
+                    $fileType = 'video';
+                } elseif (strpos($fileType_pre, 'audio') !== false || $flavor['fileExt'] === 'mp3') {
+                    $fileType = 'audio';
+                } elseif (strpos($fileType_pre, 'image') !== false) {
+                    $fileType = 'image';
+                }
+            }
+        } else {
+            $fileType = null;
+        }
+        $final_push_data['flavor'] = array('id' => $flavor['id'], 'width' => $flavor['width'], 'height' => $flavor['height'], 'bitrate' => $flavor['bitrate'], 'isWeb' => $flavor['isWeb'], 'status' => $flavor['status'], 'size' => $flavor['size'], 'fileExt' => $flavor['fileExt'], 'fileType' => $fileType, 'version' => $flavor['version']);
+        return $final_push_data;
     }
 
     public function bsfPush($pid, $payload) {
@@ -263,8 +264,8 @@ class push {
         curl_setopt($ch, CURLOPT_VERBOSE, true);
         curl_setopt($ch, CURLINFO_HEADER_OUT, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-          'Content-Type: application/json',
-          'Authorization: Bearer c9deb2ff-552e-35fa-a2d8-a0680ec505ba'
+            'Content-Type: application/json',
+            'Authorization: Bearer c9deb2ff-552e-35fa-a2d8-a0680ec505ba'
         ));
         $response = curl_exec($ch);
         $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);

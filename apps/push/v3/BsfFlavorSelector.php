@@ -25,29 +25,78 @@ class BsfFlavorSelector {
                 $flavors = $this->getAudioFlavors($this->payload['flavor']['id'], $this->payload['flavor']['bitrate'], $this->payload['flavor']['fileExt']);
             }
             syslog(LOG_NOTICE, "SMH DEBUG : convertFlavors: flavors: " . print_r($flavors, true));
-//            $flavors_count = count($flavors);
-//            if ($flavors_count) {
-//                if ($flavors_count > 1) {
-//                    $this->convertMultiFlavors($this->ks, $this->payload['entry_id'], $flavors);
-//                } else {
-//                    $this->convertSingleFlavor($this->ks, $this->payload['entry_id'], $flavors[0]);
-//                }
-//            }
+            $flavors_count = count($flavors);
+            if ($flavors_count) {
+                if ($flavors_count > 1) {
+                    $convert_flavor_resp = $this->convertMultiFlavors($this->ks, $this->payload['entry_id'], $flavors);
+                } else {
+                    $convert_flavor_resp = $this->convertSingleFlavor($this->ks, $this->payload['entry_id'], $flavors[0]);
+                }
+            }
+            syslog(LOG_NOTICE, "SMH DEBUG : convertFlavors: convert_flavor_resp: " . print_r($convert_flavor_resp, true));
+
+            $flavors_na = array(3, -1, 4);
+            $flavors_response = $this->getFlavors($this->ks, $this->payload['entry_id']);
+            foreach ($flavors_response['objects'] as $flavor) {
+                $entry_exists = $this->entryExists($flavor['entryId'], $flavor['id']);
+                if (!$entry_exists['success']) {
+                    if (!in_array((int) $flavor['status'], $flavors_na)) {
+                        if (!$flavor['isOriginal']) {
+                            $data = array(':partner_id' => $this->payload['partner_id'], ':entryId' => $this->payload['entry_id'], ':assetId' => $flavor['id'], ':isSource' => $flavor['isOriginal'], ':status' => $flavor['status'], ':sent' => 0, ':created_at' => date('Y-m-d H:i:s'), ':updated_at' => null);
+                            try {
+                                $query = $this->db_link->prepare("INSERT INTO push_notifications_v2 (partner_id,entryId,assetId,isSource,status,sent,created_at,updated_at) VALUES (:partner_id,:entryId,:assetId,:isSource,:status,:sent,:created_at,:updated_at)");
+                                $query->execute($data);
+                            } catch (PDOException $e) {
+                                error_log("[push->update_push_notify] ERROR: Could not execute query: " . json_encode($e->getMessage()));
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
+    private function getFlavors($ks, $eid) {
+        $url = "https://mediaplatform.streamingmediahosting.com/api_v3/";
+        $data = array(
+            "service" => "flavorAsset",
+            "action" => "list",
+            "ks" => $ks,
+            "filter:objectType" => "KalturaAssetFilter",
+            "filter:entryIdEqual" => $eid,
+            "format" => 1
+        );
+
+        $response = $this->curlPost($url, $data);
+        return $response;
+    }
+
+    private function entryExists($eid, $fid) {
+        $success = array('success' => false);
+        $data = array(':partner_id' => $this->payload['partner_id'], ':entryId' => $eid, ':assetId' => $fid);
+        try {
+            $query = $this->db_link->prepare("SELECT * FROM push_notifications_v2 WHERE partner_id = :partner_id AND entryId = :entryId AND assetId = :assetId");
+            $query->execute($data);
+            if ($query->rowCount() > 0) {
+                $success = array('success' => true);
+            }
+        } catch (PDOException $e) {
+            error_log("[push->entry_exists] ERROR: Could not execute query: " . json_encode($e->getMessage()));
+        }
+        return $success;
+    }
+
     private function getVideoFlavors($assetId, $height, $bitrate, $fileExt) {
-        syslog(LOG_NOTICE, "SMH DEBUG : getVideoFlavors: $assetId, $height, $bitrate, $fileExt");
         $flavors_to_convert = array();
         //convert audio flavor first
         array_push($flavors_to_convert, 10408);
         if ($fileExt == 'mp4') {
             if ($bitrate >= 1000) {
                 switch ($height) {
-                    case $height >= 480:
+                    case ($height >= 480):
                         array_push($flavors_to_convert, 10003);
                         break;
-                    case $height >= 352:
+                    case ($height >= 352):
                         array_push($flavors_to_convert, 9);
                         break;
                     default:
@@ -57,18 +106,18 @@ class BsfFlavorSelector {
         } else {
             if ($bitrate >= 1000) {
                 switch ($height) {
-                    case $height >= 720:
+                    case ($height >= 720):
                         array_push($flavors_to_convert, 10);
                         array_push($flavors_to_convert, 10003);
                         break;
-                    case $height >= 576:
+                    case ($height >= 576):
                         array_push($flavors_to_convert, 10004);
                         array_push($flavors_to_convert, 10003);
                         break;
-                    case $height >= 480:
+                    case ($height >= 480):
                         array_push($flavors_to_convert, 10003);
                         break;
-                    case $height >= 352:
+                    case ($height >= 352):
                         array_push($flavors_to_convert, 9);
                         break;
                     default:
@@ -76,10 +125,10 @@ class BsfFlavorSelector {
                 }
             } else {
                 switch ($height) {
-                    case $height >= 480:
+                    case ($height >= 480):
                         array_push($flavors_to_convert, 10003);
                         break;
-                    case $height >= 352:
+                    case ($height >= 352):
                         array_push($flavors_to_convert, 9);
                         break;
                     default:

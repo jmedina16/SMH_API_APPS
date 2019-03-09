@@ -169,7 +169,9 @@ class push {
             if (in_array('audio', $flavors_tags)) {
                 $fileType = 'audio';
             } else {
+                syslog(LOG_NOTICE, "SMH DEBUG : buildPayload: " . '/opt/kaltura/web/content/entry/data/' . $pid . '/' . $eid . '_' . $flavor['id'] . '_' . $flavor['version'] . '.' . $flavor['fileExt']);
                 $fileType_pre = $this->getMimeType('/opt/kaltura/web/content/entry/data/' . $pid . '/' . $eid . '_' . $flavor['id'] . '_' . $flavor['version'] . '.' . $flavor['fileExt']);
+                syslog(LOG_NOTICE, "SMH DEBUG : fileType_pre " . $fileType_pre);
                 if (strpos($fileType_pre, 'video') !== false) {
                     $fileType = 'video';
                 } elseif (strpos($fileType_pre, 'audio') !== false || $flavor['fileExt'] === 'mp3') {

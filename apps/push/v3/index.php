@@ -163,6 +163,7 @@ class push {
         $final_push_data['status'] = $entry['status'];
         $final_push_data['fileType'] = $root_fileType;
         $final_push_data['isSource'] = $flavor['isOriginal'];
+        $fileType = null;
         if ($flavor['status'] === 2) {
             $flavors_tags = explode(',', $flavor['tags']);
             if (in_array('audio', $flavors_tags)) {
@@ -177,8 +178,6 @@ class push {
                     $fileType = 'image';
                 }
             }
-        } else {
-            $fileType = null;
         }
         $final_push_data['flavor'] = array('id' => $flavor['id'], 'width' => $flavor['width'], 'height' => $flavor['height'], 'bitrate' => $flavor['bitrate'], 'isWeb' => $flavor['isWeb'], 'status' => $flavor['status'], 'size' => $flavor['size'], 'fileExt' => $flavor['fileExt'], 'fileType' => $fileType, 'version' => $flavor['version']);
         return $final_push_data;

@@ -137,14 +137,7 @@ class push {
 
         $response = $this->curlPost($this->service_url, $data);
         return $response;
-    }
-
-    private function getMimeType($filename) {
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mime = finfo_file($finfo, $filename);
-        finfo_close($finfo);
-        return $mime;
-    }
+    }    
 
     private function buildPayload($pid, $eid, $ks, $flavor) {
         $final_push_data = array();
@@ -163,25 +156,8 @@ class push {
         $final_push_data['status'] = $entry['status'];
         $final_push_data['fileType'] = $root_fileType;
         $final_push_data['isSource'] = $flavor['isOriginal'];
-        $fileType = null;
-        if ($flavor['status'] === 2) {
-            $flavors_tags = explode(',', $flavor['tags']);
-            if (in_array('audio', $flavors_tags)) {
-                $fileType = 'audio';
-            } else {
-                syslog(LOG_NOTICE, "SMH DEBUG : buildPayload: " . '/opt/kaltura/web/content/entry/data/' . $pid . '/' . $eid . '_' . $flavor['id'] . '_' . $flavor['version'] . '.' . $flavor['fileExt']);
-                $fileType_pre = $this->getMimeType('/opt/kaltura/web/content/entry/data/' . $pid . '/' . $eid . '_' . $flavor['id'] . '_' . $flavor['version'] . '.' . $flavor['fileExt']);
-                syslog(LOG_NOTICE, "SMH DEBUG : fileType_pre " . $fileType_pre);
-                if (strpos($fileType_pre, 'video') !== false) {
-                    $fileType = 'video';
-                } elseif (strpos($fileType_pre, 'audio') !== false || $flavor['fileExt'] === 'mp3') {
-                    $fileType = 'audio';
-                } elseif (strpos($fileType_pre, 'image') !== false) {
-                    $fileType = 'image';
-                }
-            }
-        }
-        $final_push_data['flavor'] = array('id' => $flavor['id'], 'width' => $flavor['width'], 'height' => $flavor['height'], 'bitrate' => $flavor['bitrate'], 'isWeb' => $flavor['isWeb'], 'status' => $flavor['status'], 'size' => $flavor['size'], 'fileExt' => $flavor['fileExt'], 'fileType' => $fileType, 'version' => $flavor['version']);
+
+        $final_push_data['flavor'] = array('id' => $flavor['id'], 'width' => $flavor['width'], 'height' => $flavor['height'], 'bitrate' => $flavor['bitrate'], 'isWeb' => $flavor['isWeb'], 'status' => $flavor['status'], 'size' => $flavor['size'], 'fileExt' => $flavor['fileExt'], 'fileType' => $root_fileType, 'version' => $flavor['version']);
         return $final_push_data;
     }
 

@@ -63,13 +63,6 @@ class BsfFlavorSelector {
     }
 
     private function getVideoFlavors($pid, $assetId, $height, $bitrate, $fileExt) {
-        syslog(LOG_NOTICE, "SMH DEBUG : getVideoFlavors " . $pid);
-        syslog(LOG_NOTICE, "SMH DEBUG : getVideoFlavors " . $assetId);
-        syslog(LOG_NOTICE, "SMH DEBUG : getVideoFlavors " . $height);
-        syslog(LOG_NOTICE, "SMH DEBUG : getVideoFlavors " . $bitrate);
-        syslog(LOG_NOTICE, "SMH DEBUG : getVideoFlavors " . $fileExt);
-        
-        
         $flavors_to_convert = array();
         $audio_flavor = 0;
         if ($pid == 10012) {
@@ -131,8 +124,6 @@ class BsfFlavorSelector {
                 }
             }
         }
-        
-        syslog(LOG_NOTICE, "SMH DEBUG : flavors_to_convert " . print_r($flavors_to_convert,true));
         return $flavors_to_convert;
     }
 

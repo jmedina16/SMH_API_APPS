@@ -19,7 +19,7 @@ class BsfFlavorSelector
         $flavors = array();
         if ($this->payload['status'] == 2) {
             if ($this->payload['flavor']['fileType'] == 'video') {
-                $flavors = $this->getVideoFlavors($this->payload['partner_id'], $this->payload['flavor']['id'], $this->payload['flavor']['height'], $this->payload['flavor']['bitrate'], $this->payload['flavor']['fileExt'], $this->payload['flavor']['videoCodec']);
+                $flavors = $this->getVideoFlavors($this->payload['partner_id'], $this->payload['entry_id'], $this->payload['flavor']['id'], $this->payload['flavor']['version'], $this->payload['flavor']['height'], $this->payload['flavor']['bitrate'], $this->payload['flavor']['fileExt'], $this->payload['flavor']['videoCodec']);
             } elseif ($this->payload['flavor']['fileType'] == 'audio') {
                 $flavors = $this->getAudioFlavors($this->payload['partner_id'], $this->payload['entry_id'], $this->payload['flavor']['id'], $this->payload['flavor']['version'], $this->payload['flavor']['bitrate'], $this->payload['flavor']['fileExt']);
             }
@@ -66,7 +66,7 @@ class BsfFlavorSelector
         return $success;
     }
 
-    private function getVideoFlavors($pid, $assetId, $height, $bitrate, $fileExt, $videoCodec)
+    private function getVideoFlavors($pid, $eid, $assetId, $version, $height, $bitrate, $fileExt, $videoCodec)
     {
         $flavors_to_convert = array();
         $audio_flavor = 0;
@@ -86,7 +86,7 @@ class BsfFlavorSelector
         //convert audio flavor first
         array_push($flavors_to_convert, $audio_flavor);
         if ($fileExt == 'mp4') {
-            if (in_array($videoCodec, $acceptableVideoCodecs)) {
+            if (in_array($videoCodec, $acceptableVideoCodecs) && $this->isCBR($pid, $eid, $assetId, $version, $fileExt)) {
                 if ($bitrate >= 1000) {
                     switch ($height) {
                       case ($height >= 480):

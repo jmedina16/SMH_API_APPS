@@ -21,7 +21,7 @@ class BsfFlavorSelector
             if ($this->payload['flavor']['fileType'] == 'video') {
                 $flavors = $this->getVideoFlavors($this->payload['partner_id'], $this->payload['flavor']['id'], $this->payload['flavor']['height'], $this->payload['flavor']['bitrate'], $this->payload['flavor']['fileExt'], $this->payload['flavor']['videoCodec']);
             } elseif ($this->payload['flavor']['fileType'] == 'audio') {
-                $flavors = $this->getAudioFlavors($this->payload['partner_id'], $this->payload['flavor']['id'], $this->payload['flavor']['bitrate'], $this->payload['flavor']['fileExt']);
+                $flavors = $this->getAudioFlavors($this->payload['partner_id'], $this->payload['entry_id'], $this->payload['flavor']['id'], $this->payload['flavor']['version'], $this->payload['flavor']['bitrate'], $this->payload['flavor']['fileExt']);
             }
             $flavors_count = count($flavors);
             if ($flavors_count) {
@@ -155,10 +155,10 @@ class BsfFlavorSelector
         return $flavors_to_convert;
     }
 
-    private function getAudioFlavors($pid, $assetId, $bitrate, $fileExt)
+    private function getAudioFlavors($pid, $eid, $assetId, $version, $bitrate, $fileExt)
     {
         $flavors_to_convert = array();
-        if ($fileExt != 'mp3' || $bitrate == 0) {
+        if ($fileExt != 'mp3' || $bitrate == 0 || !$this->isCBR($pid, $eid, $assetId, $version, $fileExt)) {
             $audio_flavor = 0;
             if ($pid == 10012) {
                 $audio_flavor = 10408;
@@ -174,6 +174,15 @@ class BsfFlavorSelector
             array_push($flavors_to_convert, $audio_flavor);
         }
         return $flavors_to_convert;
+    }
+
+    private function isCBR($pid, $eid, $assetId, $version, $fileExt)
+    {
+      $mediainfo_audio_output = exec('mediainfo --Inform="Audio;%BitRate_Mode%" /opt/kaltura/web/content/entry/data/'.$pid.'/'.$eid.'_'.$assetId.'_'.$version.'.'.$fileExt);
+      if($mediainfo_audio_output !== 'CBR'){
+        return false;
+      }
+      return true;
     }
 
     private function insertFlavorNotify()

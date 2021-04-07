@@ -61,11 +61,15 @@ class ac {
     }
 
     public function has_ac_rules() {
-        $eid = urlencode($_GET['eid']);
-        $ks = $this->impersonate($_GET["pid"]);
-        $args = "entryId=" . $eid . "&ks=" . $ks;
-        $ac_rules = $this->curl_request1($args);
-        echo $this->curl_request2($ac_rules, $args);
+        if (isset($_GET['eid']) && isset($_GET["pid"])) {
+            $eid = urlencode($_GET['eid']);
+            $ks = $this->impersonate($_GET["pid"]);
+            $args = "entryId=" . $eid . "&ks=" . $ks;
+            $ac_rules = $this->curl_request1($args);
+            echo $this->curl_request2($ac_rules, $args);
+        } else {
+            echo 'false';
+        }
     }
 
     public function impersonate($pid) {

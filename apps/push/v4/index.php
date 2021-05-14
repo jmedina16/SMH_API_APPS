@@ -5,8 +5,8 @@ ini_set('error_log', dirname(__FILE__) . '/push.log');
 
 include(dirname(__FILE__) . '/BsfFlavorSelector.php');
 
-class push
-{
+class push {
+
     private $post_data = array();
     private $link = null;
     private $login;
@@ -17,8 +17,7 @@ class push
     private $bsfPush;
     private $service_url = 'https://mediaplatform.streamingmediahosting.com/api_v3/';
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->login = 'smh_mngmt';
         $this->password = '*AC54418D19B5CA7E6195A83CBA66B843ED7CC16C';
         $this->database = 'smh_management';
@@ -27,14 +26,12 @@ class push
         $this->bsfPush = array(13373, 13438, 12773, 10012, 13453);
     }
 
-    public function run()
-    {
+    public function run() {
         $this->post_data = $_POST;
         $this->pushNotification();
     }
 
-    private function pushNotification()
-    {
+    private function pushNotification() {
         if (count($this->post_data)) {
             if (in_array($this->post_data['partner_id'], $this->bsfPush)) {
                 $this->insertPushNotify();
@@ -43,8 +40,7 @@ class push
     }
 
     //connect to database
-    private function connect()
-    {
+    private function connect() {
         if (!is_null($this->link)) {
             return;
         }
@@ -57,8 +53,7 @@ class push
         }
     }
 
-    private function insertPushNotify()
-    {
+    private function insertPushNotify() {
         date_default_timezone_set("UTC");
         $this->connect();
         $flavors_na = array(3, -1, 4);
@@ -86,8 +81,7 @@ class push
         }
     }
 
-    private function entryExists($eid, $fid)
-    {
+    private function entryExists($eid, $fid) {
         $success = array('success' => false);
         $data = array(':partner_id' => $this->post_data['partner_id'], ':entryId' => $eid, ':assetId' => $fid);
         try {
@@ -102,8 +96,7 @@ class push
         return $success;
     }
 
-    private function getFlavors($ks, $eid)
-    {
+    private function getFlavors($ks, $eid) {
         $data = array(
             "service" => "flavorAsset",
             "action" => "list",
@@ -117,8 +110,7 @@ class push
         return $response;
     }
 
-    private function getEntryDetails($ks, $eid)
-    {
+    private function getEntryDetails($ks, $eid) {
         $data = array(
             "service" => "media",
             "action" => "get",
@@ -131,8 +123,7 @@ class push
         return $response;
     }
 
-    private function impersonate($pid)
-    {
+    private function impersonate($pid) {
         $data = array(
             "service" => "session",
             "action" => "impersonate",
@@ -148,8 +139,7 @@ class push
         return $response;
     }
 
-    private function buildPayload($pid, $eid, $ks, $flavor)
-    {
+    private function buildPayload($pid, $eid, $ks, $flavor) {
         $final_push_data = array();
         $root_fileType = '';
         $entry = $this->getEntryDetails($ks, $eid);
@@ -171,8 +161,7 @@ class push
         return $final_push_data;
     }
 
-    private function bsfPush($pid, $payload)
-    {
+    private function bsfPush($pid, $payload) {
         $success = array('success' => false);
         $notification_url = '';
         $response = '';
@@ -195,7 +184,27 @@ class push
             $response = $this->curlPostJsonBSF2($notification_url, $json_str);
         } elseif ((int) $pid === 10012) {
             $json_str = json_encode($payload);
-            error_log("[push->bsfPush] (10012) JSON: " . $json_str);
+            //error_log("[push->bsfPush] (10012) JSON: " . $json_str);
+            //$response = 200;
+            
+            $token_url = 'https://login.microsoftonline.com/3d917cb9-43aa-4c51-ab1f-0cc552d4a6a1/oauth2/v2.0/token';
+            $tokenRequestData = array(
+                "grant_type" => "client_credentials",
+                "client_secret" => "XsfhGPRz~_3id-1f.K4EkAO713-yr~B2_3",
+                "client_id" => "d2e3732a-ad50-47e3-a618-f538e630702c",
+                "scope" => "https://bsfmcaiamdev.onmicrosoft.com/1dafa800-a627-4e9a-9334-a37c5ebd832b/.default openid"
+            );
+            $response = $this->generateBsfToken($token_url, $tokenRequestData);
+
+            if (isset($response['access_token']) && $response['access_token'] != NULL && !empty($response['access_token'])) {
+                $notification_url = 'https://bsf-mca-lecture-process-api-dev.azurewebsites.net/service/v1/smh/process';
+                $response = $this->curlPostJsonBSFNew($pid, $response['access_token'], $notification_url, $json_str);
+            } else {
+                error_log("[push->bsfPush] (" . $pid . ") Error: " . json_encode($response));
+            }
+        } elseif ((int) $pid === 14005) {
+            $json_str = json_encode($payload);
+            error_log("[push->bsfPush] (14005) JSON: " . $json_str);
             $response = 200;
         }
 
@@ -205,8 +214,7 @@ class push
         return $success = array('success' => false);
     }
 
-    private function curlPostJsonBSF1($url, $data)
-    {
+    private function curlPostJsonBSF1($url, $data) {
         error_log("[push->curlPostJsonBSF1] (13453) URL: " . json_encode($url));
         error_log("[push->curlPostJsonBSF1] (13453) JSON: " . json_encode($data));
         $ch = curl_init();
@@ -232,8 +240,7 @@ class push
         return $status;
     }
 
-    private function curlPostJsonBSF2($url, $data)
-    {
+    private function curlPostJsonBSF2($url, $data) {
         error_log("[push->curlPostJsonBSF2] (12773) URL: " . json_encode($url));
         error_log("[push->curlPostJsonBSF2] (12773) JSON: " . json_encode($data));
         $ch = curl_init();
@@ -266,8 +273,7 @@ class push
         return $status;
     }
 
-    private function curlPostJsonBSF3($url, $data)
-    {
+    private function curlPostJsonBSF3($url, $data) {
         error_log("[push->curlPostJsonBSF3] (13438) URL: " . json_encode($url));
         error_log("[push->curlPostJsonBSF3] (13438) JSON: " . json_encode($data));
         $ch = curl_init();
@@ -300,8 +306,7 @@ class push
         return $status;
     }
 
-    private function curlPostJsonBSF4($url, $data)
-    {
+    private function curlPostJsonBSF4($url, $data) {
         error_log("[push->curlPostJsonBSF4] (13373) URL: " . json_encode($url));
         error_log("[push->curlPostJsonBSF4] (13373) JSON: " . json_encode($data));
         $ch = curl_init();
@@ -334,8 +339,7 @@ class push
         return $status;
     }
 
-    private function curlPost($url, $data)
-    {
+    private function curlPost($url, $data) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -345,6 +349,58 @@ class push
 
         return json_decode($response, true);
     }
+
+    private function generateBsfToken($url, $data) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/x-www-form-urlencoded'
+        ));
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return json_decode($response, true);
+    }
+
+    private function curlPostJsonBSFNew($pid, $token, $url, $data) {
+        error_log("[push->curlPostJsonBSFNew] (" . $pid . ") URL: " . json_encode($url));
+        error_log("[push->curlPostJsonBSFNew] (" . $pid . ") JSON: " . json_encode($data));
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_VERBOSE, true);
+        curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $token
+        ));
+        $response = curl_exec($ch);
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $info = curl_getinfo($ch);
+        $ch_error = curl_error($ch);
+        error_log("[push->curlPostJsonBSFNew] (" . $pid . ") curlInfo: " . json_encode($info));
+        error_log("[push->curlPostJsonBSFNew] (" . $pid . ") curlStatus: " . json_encode($status));
+        if ($ch_error) {
+            error_log("[push->curlPostJsonBSFNew] (" . $pid . ") curlError: " . json_encode($ch_error));
+        }
+        error_log("[push->curlPostJsonBSFNew] (" . $pid . ") curlResponse: " . json_encode($response));
+        curl_close($ch);
+
+        return $status;
+    }
+
 }
 
 $push = new push();

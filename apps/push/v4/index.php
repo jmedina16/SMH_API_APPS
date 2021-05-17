@@ -23,7 +23,7 @@ class push {
         $this->database = 'smh_management';
         $this->hostname = '127.0.0.1';
         $this->port = '3306';
-        $this->bsfPush = array(13373, 13438, 12773, 10012, 13453);
+        $this->bsfPush = array(13373, 13438, 12773, 10012, 13453, 14005, 14010, 14015, 14020);
     }
 
     public function run() {
@@ -184,9 +184,9 @@ class push {
             $response = $this->curlPostJsonBSF2($notification_url, $json_str);
         } elseif ((int) $pid === 10012) {
             $json_str = json_encode($payload);
-            //error_log("[push->bsfPush] (10012) JSON: " . $json_str);
-            //$response = 200;
-            
+            error_log("[push->bsfPush] (10012) JSON: " . $json_str);
+            $response = 200;
+        } elseif ((int) $pid === 14005) {
             $token_url = 'https://login.microsoftonline.com/3d917cb9-43aa-4c51-ab1f-0cc552d4a6a1/oauth2/v2.0/token';
             $tokenRequestData = array(
                 "grant_type" => "client_credentials",
@@ -202,10 +202,6 @@ class push {
             } else {
                 error_log("[push->bsfPush] (" . $pid . ") Error: " . json_encode($response));
             }
-        } elseif ((int) $pid === 14005) {
-            $json_str = json_encode($payload);
-            error_log("[push->bsfPush] (14005) JSON: " . $json_str);
-            $response = 200;
         }
 
         if ($response === 200 || $response === 202) {

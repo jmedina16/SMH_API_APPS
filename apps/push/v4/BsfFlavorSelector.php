@@ -80,6 +80,14 @@ class BsfFlavorSelector
             $audio_flavor = 10598;
         } elseif ($pid == 13453) {
             $audio_flavor = 10538;
+        } elseif ($pid === 14005) {
+            $audio_flavor = 10630;
+        } elseif ($pid === 14010) {
+            $audio_flavor = 10635;
+        } elseif ($pid === 14015) {
+            $audio_flavor = 10640;
+        } elseif ($pid === 14020) {
+            $audio_flavor = 10645;
         }
 
         $acceptableVideoCodecs = array("avc","avc1","h264","h.264");
@@ -170,6 +178,14 @@ class BsfFlavorSelector
                 $audio_flavor = 10598;
             } elseif ($pid == 13453) {
                 $audio_flavor = 10538;
+            } elseif ($pid === 14005) {
+                $audio_flavor = 10630;
+            } elseif ($pid === 14010) {
+                $audio_flavor = 10635;
+            } elseif ($pid === 14015) {
+                $audio_flavor = 10640;
+            } elseif ($pid === 14020) {
+                $audio_flavor = 10645;
             }
             array_push($flavors_to_convert, $audio_flavor);
         }

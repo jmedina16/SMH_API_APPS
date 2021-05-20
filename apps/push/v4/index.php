@@ -187,6 +187,7 @@ class push {
             error_log("[push->bsfPush] (10012) JSON: " . $json_str);
             $response = 200;
         } elseif ((int) $pid === 14005) {
+            $json_str = json_encode($payload);
             $token_url = 'https://login.microsoftonline.com/3d917cb9-43aa-4c51-ab1f-0cc552d4a6a1/oauth2/v2.0/token';
             $tokenRequestData = array(
                 "grant_type" => "client_credentials",

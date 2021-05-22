@@ -15,6 +15,7 @@ class push {
     private $hostname;
     private $port;
     private $bsfPush;
+    private $bsfNewService;
     private $service_url = 'https://mediaplatform.streamingmediahosting.com/api_v3/';
 
     public function __construct() {
@@ -24,6 +25,7 @@ class push {
         $this->hostname = '127.0.0.1';
         $this->port = '3306';
         $this->bsfPush = array(13373, 13438, 12773, 10012, 13453, 14005, 14010, 14015, 14020);
+        $this->bsfNewService = false;
     }
 
     public function run() {
@@ -168,8 +170,26 @@ class push {
 
         if ((int) $pid === 13373) {
             $json_str = json_encode($payload);
-            $notification_url = 'https://api.mybsf.org/completeLectureProcess/1.0.0';
-            $response = $this->curlPostJsonBSF4($notification_url, $json_str);
+            if($this->bsfNewService){
+                $token_url = 'https://login.microsoftonline.com/3d917cb9-43aa-4c51-ab1f-0cc552d4a6a1/oauth2/v2.0/token';
+                $tokenRequestData = array(
+                    "grant_type" => "client_credentials",
+                    "client_secret" => "XsfhGPRz~_3id-1f.K4EkAO713-yr~B2_3",
+                    "client_id" => "d2e3732a-ad50-47e3-a618-f538e630702c",
+                    "scope" => "https://bsfmcaiamdev.onmicrosoft.com/1dafa800-a627-4e9a-9334-a37c5ebd832b/.default openid"
+                );
+                $response = $this->generateBsfToken($token_url, $tokenRequestData);
+
+                if (isset($response['access_token']) && $response['access_token'] != NULL && !empty($response['access_token'])) {
+                    $notification_url = 'https://bsf-mca-lecture-process-api-dev.azurewebsites.net/service/v1/smh/process';
+                    $response = $this->curlPostJsonBSFNew($pid, $response['access_token'], $notification_url, $json_str);
+                } else {
+                    error_log("[push->bsfPush] (" . $pid . ") Error: " . json_encode($response));
+                }                
+            } else {
+                $notification_url = 'https://api.mybsf.org/completeLectureProcess/1.0.0';
+                $response = $this->curlPostJsonBSF4($notification_url, $json_str);                
+            }
         } elseif ((int) $pid === 13453) {
             $json_str = "jsonStr=" . json_encode($payload);
             $notification_url = 'https://prodlr70.bsfinternational.org/api/jsonws/media.buildmediarecords/smh-processing-complete/';
@@ -199,6 +219,57 @@ class push {
 
             if (isset($response['access_token']) && $response['access_token'] != NULL && !empty($response['access_token'])) {
                 $notification_url = 'https://bsf-mca-lecture-process-api-dev.azurewebsites.net/service/v1/smh/process';
+                $response = $this->curlPostJsonBSFNew($pid, $response['access_token'], $notification_url, $json_str);
+            } else {
+                error_log("[push->bsfPush] (" . $pid . ") Error: " . json_encode($response));
+            }
+        } elseif ((int) $pid === 14010) {
+            $json_str = json_encode($payload);
+            $token_url = 'https://login.microsoftonline.com/3d917cb9-43aa-4c51-ab1f-0cc552d4a6a1/oauth2/v2.0/token';
+            $tokenRequestData = array(
+                "grant_type" => "client_credentials",
+                "client_secret" => "BJ6NfdBBSB.4-C218y~.WEHL9f13FM~Y7R",
+                "client_id" => "0ec4d0e7-29d0-4ee6-af28-84fae71a96ad",
+                "scope" => "https://bsfmcaiamdev.onmicrosoft.com/1dafa800-a627-4e9a-9334-a37c5ebd832b/.default openid"
+            );
+            $response = $this->generateBsfToken($token_url, $tokenRequestData);
+
+            if (isset($response['access_token']) && $response['access_token'] != NULL && !empty($response['access_token'])) {
+                $notification_url = 'https://bsf-mca-lecture-process-api-qa.azurewebsites.net/service/v1/smh/process';
+                $response = $this->curlPostJsonBSFNew($pid, $response['access_token'], $notification_url, $json_str);
+            } else {
+                error_log("[push->bsfPush] (" . $pid . ") Error: " . json_encode($response));
+            }
+        } elseif ((int) $pid === 14015) {
+            $json_str = json_encode($payload);
+            $token_url = 'https://login.microsoftonline.com/3d917cb9-43aa-4c51-ab1f-0cc552d4a6a1/oauth2/v2.0/token';
+            $tokenRequestData = array(
+                "grant_type" => "client_credentials",
+                "client_secret" => "~Fw4RQkpM35_I.s291PbJn8FG3JE~9Qito",
+                "client_id" => "89ee9c0f-79c3-442b-9389-629dace49707",
+                "scope" => "https://bsfmcaiamdev.onmicrosoft.com/1dafa800-a627-4e9a-9334-a37c5ebd832b/.default openid"
+            );
+            $response = $this->generateBsfToken($token_url, $tokenRequestData);
+
+            if (isset($response['access_token']) && $response['access_token'] != NULL && !empty($response['access_token'])) {
+                $notification_url = 'https://bsf-mca-lecture-process-api-sme.azurewebsites.net/service/v1/smh/process';
+                $response = $this->curlPostJsonBSFNew($pid, $response['access_token'], $notification_url, $json_str);
+            } else {
+                error_log("[push->bsfPush] (" . $pid . ") Error: " . json_encode($response));
+            }
+        } elseif ((int) $pid === 14020) {
+            $json_str = json_encode($payload);
+            $token_url = 'https://login.microsoftonline.com/3d917cb9-43aa-4c51-ab1f-0cc552d4a6a1/oauth2/v2.0/token';
+            $tokenRequestData = array(
+                "grant_type" => "client_credentials",
+                "client_secret" => "L0X6NB-k_p.vM6SzUMXd1_.G6wL9w0YZ7j",
+                "client_id" => "b17c1227-6d2f-4f53-892d-6bbd09b2fed5",
+                "scope" => "https://bsfmcaiamdev.onmicrosoft.com/1dafa800-a627-4e9a-9334-a37c5ebd832b/.default openid"
+            );
+            $response = $this->generateBsfToken($token_url, $tokenRequestData);
+
+            if (isset($response['access_token']) && $response['access_token'] != NULL && !empty($response['access_token'])) {
+                $notification_url = 'https://bsf-mca-lecture-process-api-mca1.azurewebsites.net/service/v1/smh/process';
                 $response = $this->curlPostJsonBSFNew($pid, $response['access_token'], $notification_url, $json_str);
             } else {
                 error_log("[push->bsfPush] (" . $pid . ") Error: " . json_encode($response));
